@@ -1,0 +1,8 @@
+id,Menu,SubMenu,SubSubMenu,Coordenada,OrdenDeSecuencia,ModuloPython,ComandoDeSistema,LoopDeProceso
+44,Config,"Tabla de Secuencias",None,91,1,"FormAltaQtSQL-v2.py TablaDeSecuencias",,0
+45,System,Date,None,11,1,,date,3
+47,Test,"Loop 6 veces",None,31,1,./tests/test1.py,,5
+48,Test,"Escribir archivo",None,32,1,"./tests/test3.py random.txt",,0
+50,Config,"Variables Globales",None,92,1,"FormAltaQtSQL-v2.py VariablesGlobales",NULL,0
+52,Config,"BackUp MySQL",None,93,1,,"mysqldump -u root --password=23101log --databases PyCGI > PyCGI_backup.sql",0
+54,System,Ping,None,12,1,,"ping 127.0.0.1",0

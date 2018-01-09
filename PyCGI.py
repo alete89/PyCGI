@@ -4,6 +4,7 @@ Created on Tue Aug  8 11:23:29 2017
 @author: manuel
 """
 import sys
+import os
 from PyQt4 import QtGui, QtCore, QtSql
 import multiprocessing as mp
 from Highlighter import *
@@ -16,6 +17,8 @@ import csvdb
 idFilaTemp=''
 lock=mp.Lock()
 
+ds = csvdb.getDataFromCsv(os.getcwd() + r"\PyCGI\rs.csv")
+
 class PyCGI(QtGui.QMainWindow):
     
     def __init__(self):
@@ -23,29 +26,37 @@ class PyCGI(QtGui.QMainWindow):
         super(PyCGI, self).__init__()
         self.VentanaPrincipal()
         # CSV
-        ds = csvdb.getDataFromCsv("rs.csv")
+        # ds = csvdb.getDataFromCsv(os.getcwd() + r"\PyCGI\rs.csv")
         distinct = csvdb.distinct(ds,1)
-        order = csvdb.sortDataSet(distinct,4)
-        print order
+        sortedList = csvdb.sortDataSet(distinct,4)
+        menuList = csvdb.getColumn(sortedList,1)
+        
 		#CSV
+        '''
         conexionMySQL(self)
         query.exec_("SELECT DISTINCT Menu FROM TablaDeSecuencias order by Coordenada")
         
         while(query.next()):
             MenuTemp=query.value(0).toString()
             Menu.append(MenuTemp)
-        
-        for MenuTemp in Menu:
-            self.MenuPrincipal(MenuTemp)
+        '''
+        for menu in menuList:
+            self.MenuPrincipal(menu)
         
     def MenuPrincipal(self, MenuTemp):
-        query = QtSql.QSqlQuery()
+        # query = QtSql.QSqlQuery()
         idFila=[]
         SubMenu=[]
         Coordenada=[]
-
+        '''
         query.exec_("SELECT DISTINCT SubMenu,Coordenada FROM TablaDeSecuencias where Menu='"+ str(MenuTemp) +"' and SubMenu is not null order by Coordenada")
 #        db.commit()
+        '''
+        distinct = csvdb.distinct(ds,2)
+        sortedList = csvdb.sortDataSet(distinct,4)
+        subMenuFiltered = csvdb.dataFilter(sortedList,1,MenuTemp)
+        subMenuList = csvdb.getColumn(subMenuFiltered,2)
+
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&'+str(MenuTemp))

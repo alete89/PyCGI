@@ -17,85 +17,61 @@ import csvdb
 idFilaTemp=''
 lock=mp.Lock()
 
-ds = csvdb.getDataFromCsv(os.getcwd() + r"\PyCGI\rs.csv")
+tablaSecuencias = csvdb.getDataFromCsv(os.getcwd() + r"/rs.csv")
 
 class PyCGI(QtGui.QMainWindow):
     
     def __init__(self):
-        Menu=[]
         super(PyCGI, self).__init__()
         self.VentanaPrincipal()
-        # CSV
-        # ds = csvdb.getDataFromCsv(os.getcwd() + r"\PyCGI\rs.csv")
-        distinct = csvdb.distinct(ds,1)
+
+        distinct = csvdb.distinct(tablaSecuencias,1)
         sortedList = csvdb.sortDataSet(distinct,4)
         menuList = csvdb.getColumn(sortedList,1)
         
-		#CSV
-        '''
-        conexionMySQL(self)
-        query.exec_("SELECT DISTINCT Menu FROM TablaDeSecuencias order by Coordenada")
-        
-        while(query.next()):
-            MenuTemp=query.value(0).toString()
-            Menu.append(MenuTemp)
-        '''
         for menu in menuList:
             self.MenuPrincipal(menu)
         
-    def MenuPrincipal(self, MenuTemp):
-        # query = QtSql.QSqlQuery()
-        idFila=[]
-        SubMenu=[]
-        Coordenada=[]
-        '''
-        query.exec_("SELECT DISTINCT SubMenu,Coordenada FROM TablaDeSecuencias where Menu='"+ str(MenuTemp) +"' and SubMenu is not null order by Coordenada")
-#        db.commit()
-        '''
-        distinct = csvdb.distinct(ds,2)
-        sortedList = csvdb.sortDataSet(distinct,4)
-        subMenuFiltered = csvdb.dataFilter(sortedList,1,MenuTemp)
-        subMenuList = csvdb.getColumn(subMenuFiltered,2)
+    def MenuPrincipal(self, menu):
 
+        idFila=[]
+        subMenu=[]
+        Coordenada=[]
+
+        distinct = csvdb.distinct(tablaSecuencias,2)
+        sortedList = csvdb.sortDataSet(distinct,4)
+        subMenuFiltered = csvdb.dataFilter(sortedList,1,menu)
 
         menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&'+str(MenuTemp))
+        newMenu = menubar.addMenu('&'+str(menu))
 
-        while(query.next()):
-            SubMenuTemp=query.value(0).toString()
-            idFilaTemp =query.value(1).toString()
-            SubMenu.append(SubMenuTemp)
-            idFila.append(idFilaTemp)
-        i=0
-        
-        for SubMenuTemp in SubMenu:
-            idFilaTemp = idFila[i]
-            i = i + 1
-            Action = QtGui.QAction(QtGui.QIcon(
-                'exit.png'), '&' + str(SubMenuTemp), self)
-            Action.setStatusTip(str(idFilaTemp) + " - " +
-                                str(SubMenuTemp) + " - " + str(SubMenuTemp))
-            
-            # idFilaTemp siempre tendrá el último valor que tomó.
-            Action.triggered.connect(lambda ignore, idt=idFilaTemp: self.PreEjecutarComandos(idt))
-            self.statusBar()
-            fileMenu.addAction(Action)
-        
-        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')    
+        for fila in subMenuFiltered:
+            idFila.append(fila[0])
+            subMenu.append(fila[2])
+
+        for subm, subid in zip(subMenu,idFila):
+            action = QtGui.QAction('&' + str(subm), self)
+            action.setStatusTip(str(subid) + " - " + str(subm) + " - " + str(subm))
+            action.triggered.connect(lambda ignore, idt=subid: self.PreEjecutarComandos(idt))
+            newMenu.addAction(action)
+
+        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        self.statusBar()
         self.show()
         
     def VentanaPrincipal(self):
         
-        self.model = QtGui.QFileSystemModel()
-        self.model.setRootPath(QtCore.QDir.currentPath())
-        tree = QtGui.QTreeView()
-        tree.setModel(self.model)
-        tree.setAnimated(True)
-        tree.setIndentation(15)
-        tree.setSortingEnabled(True)
-        tree.setColumnWidth(0, 300)
+        self.tree = QtGui.QTreeView(self)
+        self.tree.model = QtGui.QFileSystemModel()
+        self.tree.model.setRootPath(QtCore.QDir.currentPath())
+        self.tree.setRootIndex(self.tree.model.index(QtCore.QDir.currentPath()))
+        self.tree.setModel(self.tree.model)
+        self.tree.setAnimated(True)
+        self.tree.setIndentation(15)
+        self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(0, 300)
         
-        tree.doubleClicked.connect(self.OpenFileNow)
+        self.tree.doubleClicked.connect(self.OpenFileNow)
         
         self.toolbar = self.addToolBar('Editor de texto')
 
@@ -210,7 +186,7 @@ class PyCGI(QtGui.QMainWindow):
         tab3.setLayout(layoutTabs3)         
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
-        splitterHoriz.addWidget(tree)
+        splitterHoriz.addWidget(self.tree)
         splitterHoriz.addWidget(tabs)
         splitterHoriz.setSizes([100,500])
   
@@ -338,7 +314,7 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True
         self.file_name = "NewFile"
         
-    def PreEjecutarComandos(self,idFilaTemp):
+    def PreEjecutarComandos(self,idComando):
         query = QtSql.QSqlQuery()
         global lock
         
@@ -352,10 +328,14 @@ class PyCGI(QtGui.QMainWindow):
         ComandoDeSistema=[]
         LoopDeProceso   =[]
         
-        query.exec_("TRUNCATE TABLE TablaDeSecuenciasTemp")
+        #query.exec_("TRUNCATE TABLE TablaDeSecuenciasTemp")
         
-        query.exec_("SELECT * FROM TablaDeSecuencias where Coordenada='"+str(idFilaTemp) +"' ORDER BY OrdenDeSecuencia")
+        #query.exec_("SELECT * FROM TablaDeSecuencias where Coordenada='"+str(idComando) +"' ORDER BY OrdenDeSecuencia")
+        filtrada = csvdb.dataFilter(tablaSecuencias, 0, idComando)
+        ordenada = csvdb.sortDataSet(filtrada,5)
+
         
+        '''
         while(query.next()):
             
             idTemp                  = query.value(0).toString()
@@ -391,22 +371,23 @@ class PyCGI(QtGui.QMainWindow):
             ModuloPythonTemp        = ModuloPython[i]
             ComandoDeSistemaTemp    = ComandoDeSistema[i]
             LoopDeProcesoTemp       = LoopDeProceso[i] 
-        
-            
+        '''
+        '''
             if ComandoDeSistemaTemp:
                 
                 query.exec_("INSERT INTO TablaDeSecuenciasTemp (id,Menu,SubMenu,SubSubMenu,Coordenada,OrdenDeSecuencia,ModuloPython,ComandoDeSistema,LoopDeProceso) VALUES ('"+str(idTemp)+"','"+str(MenuTemp)+"','"+str(SubMenuTemp)+"','"+str(SubSubMenuTemp)+"','"+str(CoordenadaTemp)+"','"+str(OrdenDeSecuenciaTemp)+"','"+str(ModuloPythonTemp)+"','"+str(ComandoDeSistemaTemp)+"','"+str(LoopDeProcesoTemp)+"')")
                     
             i=i+1
+        '''
             
 #            Hasta aca lo unico que hice fue agarrar todos los datos de un 
 #            proceso y cargarlos en una nueva tabla de secuencias pero temporal
             
 #            Ahora tengo que tomar todos los strings que contiene indicaciones 
 #            entre del tipo '(tipee su comando)' y armar con todos ellos un formulario
-        print 'idFilaTemp: '+str(idFilaTemp)  
+        print 'idFilaTemp: '+str(idComando)  
         
-        self.CargaEntradas=stringFinderV2(idFilaTemp)
+        self.CargaEntradas=stringFinderV2(idComando)
         self.CargaEntradas
 
     def EjecutarComandos(self):

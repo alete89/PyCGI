@@ -15,31 +15,23 @@ class PyCGI(QtGui.QMainWindow):
     def __init__(self):
         super(PyCGI, self).__init__()
         self.VentanaPrincipal()
-        
+        self.statusBar()
+        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')    
+        self.show()
         for menu in core.menuList():
             self.menuPrincipal(menu)
 
 
     def menuPrincipal(self, menu):
         menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&'+str(menu))
+        thisMenu = menubar.addMenu('&'+str(menu))
+        for subMenu, idFila  in zip(core.subMenuList(menu), core.idList(menu)):
+            action = QtGui.QAction('&' + str(subMenu), self)
+            action.setStatusTip(str(idFila) + " - " + str(subMenu))
+            action.triggered.connect(lambda ignore, idt=idFila: self.PreEjecutarComandos(idt))
+            thisMenu.addAction(action)
         
-        for SubMenuTemp in SubMenu:
-            idFilaTemp = idFila[i]
-            i = i + 1
-            Action = QtGui.QAction(QtGui.QIcon(
-                'exit.png'), '&' + str(SubMenuTemp), self)
-            Action.setStatusTip(str(idFilaTemp) + " - " +
-                                str(SubMenuTemp) + " - " + str(SubMenuTemp))
-            
-            # idFilaTemp siempre tendrá el último valor que tomó.
-            Action.triggered.connect(lambda ignore, idt=idFilaTemp: self.PreEjecutarComandos(idt))
-            self.statusBar()
-            fileMenu.addAction(Action)
         
-        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')    
-        self.show()
-
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()
         self.model.setRootPath(QtCore.QDir.currentPath())

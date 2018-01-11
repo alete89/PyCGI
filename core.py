@@ -18,6 +18,13 @@ def menuList(dataSet=fullDataSet()):
     sortedList = csvdb.sortDataSet(distinct,4)
     return csvdb.getColumn(sortedList,1)
 
+def subMenuList(menu, dataSet=fullDataSet()):
+    subMenuFilter = csvdb.dataFilter(dataSet,1,menu)
+    return csvdb.getColumn(subMenuFilter,2)
+
+def idList(menu, dataSet=fullDataSet()):
+    subMenuFilter = csvdb.dataFilter(dataSet,1,menu)
+    return csvdb.getColumn(subMenuFilter,0)
 
 # Processes
 def getOutput():
@@ -40,3 +47,17 @@ class TerminalX(QtCore.QThread):
           
     def run(self):
         self.emit(QtCore.SIGNAL("Activated( QString )"), self.getOutput)
+
+def PreEjecutarComandos(self,idFila):
+    #global lock
+    
+    
+#           Hasta aca lo unico que hice fue agarrar todos los datos de un 
+#           proceso y cargarlos en una nueva tabla de secuencias pero temporal
+        
+#           Ahora tengo que tomar todos los strings que contiene indicaciones 
+#           entre del tipo '(tipee su comando)' y armar con todos ellos un formulario
+    print 'idFila: '+str(idFilaTemp)  
+    
+    self.CargaEntradas=stringFinderV2(idFilaTemp)
+    self.CargaEntradas

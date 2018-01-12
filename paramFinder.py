@@ -2,7 +2,7 @@
 
 import re
 from ProcessFormV3 import *
-import csvdb.py
+import csvdb
 
 def findParameters(idfila, dataset):
     for comando in csvdb.getColumn(dataset,6):

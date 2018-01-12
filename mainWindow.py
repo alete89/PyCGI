@@ -14,6 +14,8 @@ class PyCGI(QtGui.QMainWindow):
 
     def __init__(self):
         super(PyCGI, self).__init__()
+        self.is_new = True  # Flag para el archivo del editor
+        self.file_name = ''  # Nombre del archivo del editor
         self.VentanaPrincipal()
         self.statusBar()
         self.setWindowTitle(

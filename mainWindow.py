@@ -236,8 +236,8 @@ class PyCGI(QtGui.QMainWindow):
             self, 'Save File', str(self.file_name))
         if name:
             textoParaGuardar = self.EditorDeTexto.toPlainText()
-            with open(name, "w") as file:
-                file.write(textoParaGuardar)
+            with open(name, "w") as nFile:
+                nFile.write(textoParaGuardar)
                 self.is_new = False
                 self.file_name = name
 
@@ -246,8 +246,8 @@ class PyCGI(QtGui.QMainWindow):
             self.saveAsDialog()
         else:
             textoParaGuardar = self.EditorDeTexto.toPlainText()
-            with open(self.file_name, "w") as file:
-                file.write(textoParaGuardar)
+            with open(self.file_name, "w") as nFile:
+                nFile.write(textoParaGuardar)
 
     def CloseDialog(self):
         # TO DO preguntar si desea guardar antes de borrar.

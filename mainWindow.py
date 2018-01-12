@@ -216,6 +216,8 @@ class PyCGI(QtGui.QMainWindow):
                 self.file_name = fname
             print 'OpenDialog - fname: ' + str(fname)
             return fname
+        return ''
+
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def OpenFileNow(self, index):
@@ -232,6 +234,7 @@ class PyCGI(QtGui.QMainWindow):
                 self.file_name = fname
             print 'OpenDialog - fname: ' + str(fname)
             return fname
+        return ''
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(

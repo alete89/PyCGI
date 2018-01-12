@@ -5,7 +5,7 @@ import sys
 from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
-from TablaMySQLEmbedded import *
+import TablaMySQLEmbedded
 #from stringFinderV2 import *
 import core
 
@@ -86,10 +86,10 @@ class PyCGI(QtGui.QMainWindow):
         self.killGo.clicked.connect(self.KillAndGo)
 
         self.Exe = QtGui.QPushButton("Exe")
-        self.Exe.clicked.connect(self.EjecutarComandos)
+        self.Exe.clicked.connect(core.EjecutarComandos)
 
         self.Update = QtGui.QPushButton("Update PyCGI")
-        self.Update.clicked.connect(self.UpdateFunc)
+        self.Update.clicked.connect(self.updateFunc)  # restartea la app
 
         self.terminalDeTexto = QtGui.QTextEdit(self)
         self.terminalDeTexto.setReadOnly(True)
@@ -104,7 +104,7 @@ class PyCGI(QtGui.QMainWindow):
         self.terminalDeProceso.setStyleSheet(
             "background-color: #595999; color: #fff")
 
-        cursor = self.terminalDeTexto.textCursor()
+        self.cursor = self.terminalDeTexto.textCursor()
 
         self.EditorDeTexto = QtGui.QPlainTextEdit()
         self.EditorDeTexto = CodeEditor.CodeEditor()
@@ -123,10 +123,10 @@ class PyCGI(QtGui.QMainWindow):
 
         layout = QtGui.QVBoxLayout(widget_central)
 
-        tabs = QTabWidget()
-        tab1 = QWidget()
-        tab2 = QWidget()
-        tab3 = QWidget()
+        tabs = QtGui.QTabWidget()
+        tab1 = QtGui.QWidget()
+        tab2 = QtGui.QWidget()
+        tab3 = QtGui.QWidget()
 #        tab4=QWidget()
 
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
@@ -156,7 +156,7 @@ class PyCGI(QtGui.QMainWindow):
 
         layoutTabs3 = QtGui.QVBoxLayout(tabs)
 
-        self.form = TablaMySQLEmbedded()
+        self.form = TablaMySQLEmbedded.TablaMySQLEmbedded()
         layoutTabs3.addWidget(self.form)
         tab3.setLayout(layoutTabs3)
 
@@ -182,6 +182,98 @@ class PyCGI(QtGui.QMainWindow):
 
     def showOutputInTerminal(self):
         self.terminalDeTexto.append(core.getOutput())
+
+    def KillingProcess(self):
+        self.cursor.insertText('\n --- Process stopped by user --- ')
+        self.cursor.movePosition(self.cursor.End)
+        self.processRun.close()
+
+    def CleaningTerminal(self):
+        self.terminalDeTexto.setText(" ")
+        self.terminalDeProceso.setText(" ")
+
+    def KillAndGo(self):
+        reply = QtGui.QMessageBox.question(self, 'Message',
+                                           "Are you sure to quit?", QtGui.QMessageBox.Yes |
+                                           QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+
+        if reply == QtGui.QMessageBox.Yes:
+            self.cursor.insertText('\n--- Process stopped by user ---')
+            self.processRun.close()
+            exit()
+        else:
+            pass
+
+    def OpenDialog(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+        if fname:
+            with open(fname, 'r') as f:
+                data = f.read()
+                self.EditorDeTexto.setPlainText(data)
+                self.is_new = False
+                self.file_name = fname
+            print 'OpenDialog - fname: ' + str(fname)
+            return fname
+
+    @QtCore.pyqtSlot(QtCore.QModelIndex)
+    def OpenFileNow(self, index):
+
+        indexItem = self.model.index(index.row(), 0, index.parent())
+        filePath = self.model.filePath(indexItem)
+        fname = str(filePath)
+        print 'fname vale: ' + str(fname)
+        if fname:
+            with open(fname, 'r') as f:
+                data = f.read()
+                self.EditorDeTexto.setPlainText(data)
+                self.is_new = False
+                self.file_name = fname
+            print 'OpenDialog - fname: ' + str(fname)
+            return fname
+
+    def saveAsDialog(self):
+        name = QtGui.QFileDialog.getSaveFileName(
+            self, 'Save File', str(self.file_name))
+        if name:
+            textoParaGuardar = self.EditorDeTexto.toPlainText()
+            with open(name, "w") as file:
+                file.write(textoParaGuardar)
+                self.is_new = False
+                self.file_name = name
+
+    def saveDialog(self):
+        if self.is_new:
+            self.saveAsDialog()
+        else:
+            textoParaGuardar = self.EditorDeTexto.toPlainText()
+            with open(self.file_name, "w") as file:
+                file.write(textoParaGuardar)
+
+    def CloseDialog(self):
+        # TO DO preguntar si desea guardar antes de borrar.
+        if self.is_new:
+            msg = QtGui.QMessageBox()
+            msg.setIcon(QtGui.QMessageBox.Warning)
+            msg.setText(
+                u"Se modificó el documento desde la última vez que se guardó")
+            msg.setInformativeText("desea guardar los cambios?")
+            msg.setStandardButtons(
+                QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
+            resultado = msg.exec_()
+            print resultado
+            if resultado == QtGui.QMessageBox.Save:
+                self.saveDialog()
+            elif resultado == QtGui.QMessageBox.Discard:
+                pass
+            elif resultado == QtGui.QMessageBox.Cancel:
+                return
+
+        self.EditorDeTexto.clear()
+        self.is_new = True
+        self.file_name = "NewFile"
+
+    def updateFunc(self):
+        pass
 
 
 def mainLoop():

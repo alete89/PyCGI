@@ -76,6 +76,78 @@ def PreEjecutarComandos(idFila):
     print 'idFila: ' + str(idFila)
     findParameters(idFila, fullDataSet())
 
+def EjecutarComandos():
+        global lock
+
+        idFilaTemp=''
+        query = QtSql.QSqlQuery()
+        query.exec_("SELECT DISTINCT Coordenada FROM TablaDeSecuenciasTemp")
+        
+        while(query.next()):
+            idFilaTemp        =query.value(0).toString()
+
+        ModuloPython        =[]
+        ComandoDeSistema    =[]
+        OrdenDeSecuencia    =[]
+        LoopDeProceso       =[]
+        
+        query.exec_("SELECT ModuloPython,ComandoDeSistema,OrdenDeSecuencia,LoopDeProceso FROM TablaDeSecuenciasTemp where Coordenada='"+ str(idFilaTemp) +"' ORDER BY OrdenDeSecuencia")
+        
+        while(query.next()):
+            
+            ModuloPythonTemp        =query.value(0).toString()
+            ComandoDeSistemaTemp    =query.value(1).toString()
+            OrdenDeSecuenciaTemp    =query.value(2).toString()
+            LoopDeProcesoTemp       =query.value(3).toString()
+            
+            ModuloPython.append(ModuloPythonTemp)
+            ComandoDeSistema.append(ComandoDeSistemaTemp)
+            OrdenDeSecuencia.append(OrdenDeSecuenciaTemp)
+            LoopDeProceso.append(LoopDeProcesoTemp)
+
+        i=0
+        
+        LoopDeProceso=[int(r) for r in LoopDeProceso]
+
+        for OrdenDeSecuenciaTemp in OrdenDeSecuencia:
+            
+            Loop=LoopDeProceso[i]+1
+            
+            for LoopDeProcesoTemp in range(Loop):
+                
+                ComandoDeSistemaTemp=ComandoDeSistema[i]
+                ModuloPythonTemp=ModuloPython[i]
+                
+                if ComandoDeSistemaTemp:
+                    try: 
+                        
+                        cmd=str(ComandoDeSistemaTemp)
+                        self.processRun.waitForFinished()
+                        lock.acquire()
+                        self.terminalDeProceso.append('>>> PROC '+str(OrdenDeSecuenciaTemp) 
+                                                        +': '+str(ComandoDeSistemaTemp)+' - LOOP:'
+                                                        +str(LoopDeProcesoTemp))
+                                                        
+                        self.terminalDeTexto.append('>>> PROC '+str(OrdenDeSecuenciaTemp) +':')
+                        self.processRun.start(cmd)
+                        self.connect(self.TermX,QtCore.SIGNAL("Activated ( QString ) "), self.dataReady)
+                        
+                        lock.release()
+                        
+                        QtCore.QCoreApplication.processEvents()
+                        
+                    except:
+
+                        self.terminalDeProceso.append('>>> ERROR en el proceso '
+                                                        +str(OrdenDeSecuenciaTemp) +': '
+                                                        +str(ComandoDeSistemaTemp)+' - LOOP:'
+                                                        +str(LoopDeProcesoTemp))     
+                                                        
+                        self.terminalDeTexto.append('>>> PROC: '+str(ComandoDeSistemaTemp)+'\n')
+                        break
+
+            i=i+1
+
 
 def findParameters(idfila, dataset):
     for comando in csvdb.getColumn(dataset, 6):

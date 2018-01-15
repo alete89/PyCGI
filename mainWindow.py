@@ -16,27 +16,29 @@ class PyCGI(QtGui.QMainWindow):
         super(PyCGI, self).__init__()
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
-        self.VentanaPrincipal()
-        self.statusBar()
+
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        self.VentanaPrincipal()
+        self.menuPrincipal()
+        self.statusBar()
         self.show()
-        for menu in core.menuList():
-            self.menuPrincipal(menu)
 
-    def menuPrincipal(self, menu):
+    def menuPrincipal(self):
         menubar = self.menuBar()
-        thisMenu = menubar.addMenu('&' + str(menu))
-        for subMenu, idFila in zip(core.subMenuList(menu), core.idList(menu)):
-            action = QtGui.QAction('&' + str(subMenu), self)
-            action.setStatusTip(str(idFila) + " - " + str(subMenu))
-            action.triggered.connect(
-                lambda ignore, idt=idFila: self.PreEjecutarComandos(idt))
-            thisMenu.addAction(action)
+        for menu in core.menuList():
+            thisMenu = menubar.addMenu('&' + str(menu))
+            for subMenu, idFila in zip(core.subMenuList(menu), core.idList(menu)):
+                action = QtGui.QAction('&' + str(subMenu), self)
+                action.setStatusTip(str(idFila) + " - " + str(subMenu))
+                action.triggered.connect(
+                    lambda ignore, idt=idFila: core.PreEjecutarComandos(idt))
+                thisMenu.addAction(action)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()
         self.model.setRootPath(QtCore.QDir.currentPath())
+
         tree = QtGui.QTreeView()
         tree.setModel(self.model)
         tree.setAnimated(True)
@@ -46,31 +48,6 @@ class PyCGI(QtGui.QMainWindow):
 
         # tree.doubleClicked.connect(self.OpenFileNow)
 
-        self.toolbar = self.addToolBar('Editor de texto')
-
-        OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
-        OpenIcon.setShortcut('Ctrl+o')
-        OpenIcon.triggered.connect(self.OpenDialog)
-        self.toolbar.addAction(OpenIcon)
-
-        SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
-        SaveIcon.setShortcut('Ctrl+s')
-        SaveIcon.triggered.connect(self.saveDialog)
-        self.toolbar.addAction(SaveIcon)
-
-        SaveAsIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/saveAs.png'), 'Save as', self)
-        SaveAsIcon.setShortcut('Ctrl+g')
-        SaveAsIcon.triggered.connect(self.saveAsDialog)
-        self.toolbar.addAction(SaveAsIcon)
-
-        CloseIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/closeFile.png'), 'Close', self)
-        CloseIcon.setShortcut('Ctrl+x')
-        CloseIcon.triggered.connect(self.CloseDialog)
-        self.toolbar.addAction(CloseIcon)
-
-        self.setWindowTitle('Toolbar')
         self.setMinimumWidth(650)
         self.setMinimumHeight(600)
 
@@ -125,11 +102,12 @@ class PyCGI(QtGui.QMainWindow):
 
         layout = QtGui.QVBoxLayout(widget_central)
 
+        # No tendríamos que cargar las tabs dinamicamente también?
         tabs = QtGui.QTabWidget()
         tab1 = QtGui.QWidget()
         tab2 = QtGui.QWidget()
         tab3 = QtGui.QWidget()
-#        tab4=QWidget()
+        # tab4=QWidget()
 
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killButton)
@@ -153,6 +131,7 @@ class PyCGI(QtGui.QMainWindow):
         tab1.setLayout(layoutTabs1)
 
         layoutTabs2 = QtGui.QVBoxLayout(tabs)
+        layoutTabs2.addWidget(self.theToolbar())
         layoutTabs2.addWidget(self.EditorDeTexto)
         tab2.setLayout(layoutTabs2)
 
@@ -184,6 +163,32 @@ class PyCGI(QtGui.QMainWindow):
 
     def showOutputInTerminal(self):
         self.terminalDeTexto.append(core.getOutput())
+
+    def theToolbar(self):
+        toolbar = self.addToolBar("Editor de texto Toolbar")
+
+        OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
+        OpenIcon.setShortcut('Ctrl+o')
+        OpenIcon.triggered.connect(self.OpenDialog)
+        toolbar.addAction(OpenIcon)
+
+        SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
+        SaveIcon.setShortcut('Ctrl+s')
+        SaveIcon.triggered.connect(self.saveDialog)
+        toolbar.addAction(SaveIcon)
+
+        SaveAsIcon = QtGui.QAction(QtGui.QIcon(
+            'icons/saveAs.png'), 'Save as', self)
+        SaveAsIcon.setShortcut('Ctrl+g')
+        SaveAsIcon.triggered.connect(self.saveAsDialog)
+        toolbar.addAction(SaveAsIcon)
+
+        CloseIcon = QtGui.QAction(QtGui.QIcon(
+            'icons/closeFile.png'), 'Close', self)
+        CloseIcon.setShortcut('Ctrl+x')
+        CloseIcon.triggered.connect(self.CloseDialog)
+        toolbar.addAction(CloseIcon)
+        return toolbar
 
     def KillingProcess(self):
         self.cursor.insertText('\n --- Process stopped by user --- ')

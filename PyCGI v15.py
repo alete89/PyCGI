@@ -11,25 +11,26 @@ from CodeEditor import *
 from TablaMySQLEmbedded import *
 from stringFinderV2 import *
 
-import csvdb
-
 idFilaTemp=''
 lock=mp.Lock()
 
 class PyCGI(QtGui.QMainWindow):
     
     def __init__(self):
+        
         Menu=[]
         super(PyCGI, self).__init__()
+        
         self.VentanaPrincipal()
-#        db = QtSql.QSqlDatabase.addDatabase('PyCGI')
+        
+#        db = QtSql.QSqlDatabase.addDatabase('QMYSQL')
 #        db.setHostName('localhost')
 #        db.setDatabaseName('PyCGI')
 #        db.setUserName('root')
-#        db.setPassword('1234')
+#        db.setPassword('23101log')
 #        db.open()
-        
-        query = QtSql.QSqlQuery()   
+#        
+#        query = QtSql.QSqlQuery()        
         conexionMySQL(self)
         query.exec_("SELECT DISTINCT Menu FROM TablaDeSecuencias order by Coordenada")
         
@@ -163,11 +164,11 @@ class PyCGI(QtGui.QMainWindow):
         
         layout = QtGui.QVBoxLayout(widget_central)
         
-        tabs=QtGui.QTabWidget()
-        tab1=QtGui.QWidget()
-        tab2=QtGui.QWidget()
-        tab3=QtGui.QWidget()
-#        tab4=QWidget()
+        tabs=QTabWidget()
+        tab1=QWidget()
+        tab2=QWidget()
+        tab3=QWidget()
+        tab4=QWidget()
          
         BotoneraInferior=QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killButton)
@@ -218,9 +219,8 @@ class PyCGI(QtGui.QMainWindow):
         
         self.setLayout(BotoneraInferior)
         self.show()
-        
 
-        
+          
     def UpdateFunc(self):
         from OpenClose import OpenClose
         self.close()
@@ -478,7 +478,7 @@ class TerminalX(QtCore.QThread):
         QtCore.QThread.__init__(self,parent)
           
     def run(self):
-        self.emit(QtCore.SIGNAL("Activated( QString )"), PyCGI.dataReady)
+        self.emit(QtCore.SIGNAL("Activated( QString )"), self.dataReady)
 
 def conexionMySQL(self):
     global query

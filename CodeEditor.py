@@ -5,7 +5,7 @@ Created on Fri Nov 17 14:06:45 2017
 @author: manuel
 """
 
-''' TODO: usar nuevos signal slot en lugar de old-style'''
+# TO DO: usar nuevos signal slot en lugar de old-style
 
 import sys
 from PyQt4 import QtGui, QtCore

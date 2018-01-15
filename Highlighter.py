@@ -5,6 +5,7 @@ Created on Tue Aug  8 11:23:29 2017
 """
 from PyQt4 import QtGui, QtCore
 
+
 class Highlighter(QtGui.QSyntaxHighlighter):
     def __init__(self, parent=None):
         super(Highlighter, self).__init__(parent)
@@ -14,26 +15,25 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         keywordFormat.setFontWeight(QtGui.QFont.Bold)
 
         keywordPatterns = [' and ', 'assert', 'break', 'class', 'continue', ' def ',
-        ' del ', 'elif', 'else', 'except', 'exec', 'finally',
-        ' for ', 'from', 'global', ' if ', 'import', ' in ',
-        ' is ', 'lambda', 'not', ' or ', 'pass', 'print',
-        'raise', 'return', 'try', 'while', 'yield',
-        'None', 'True', 'False','self',]
+                           ' del ', 'elif', 'else', 'except', 'exec', 'finally',
+                           ' for ', 'from', 'global', ' if ', 'import', ' in ',
+                           ' is ', 'lambda', 'not', ' or ', 'pass', 'print',
+                           'raise', 'return', 'try', 'while', 'yield',
+                           'None', 'True', 'False', 'self', ]
 
         self.highlightingRules = [(QtCore.QRegExp(pattern), keywordFormat)
-                for pattern in keywordPatterns]
-  
+                                  for pattern in keywordPatterns]
 
         classFormat = QtGui.QTextCharFormat()
         classFormat.setFontWeight(QtGui.QFont.Bold)
         classFormat.setForeground(QtCore.Qt.darkMagenta)
         self.highlightingRules.append((QtCore.QRegExp("\\bQ[A-Za-z]+\\b"),
-                classFormat))
+                                       classFormat))
 
         singleLineCommentFormat = QtGui.QTextCharFormat()
         singleLineCommentFormat.setForeground(QtCore.Qt.red)
         self.highlightingRules.append((QtCore.QRegExp("//[^\n]*"),
-                singleLineCommentFormat))
+                                       singleLineCommentFormat))
 
         self.multiLineCommentFormat = QtGui.QTextCharFormat()
         self.multiLineCommentFormat.setForeground(QtCore.Qt.red)
@@ -41,39 +41,39 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground(QtCore.Qt.darkGreen)
         self.highlightingRules.append((QtCore.QRegExp("\".*\""),
-                quotationFormat))
+                                       quotationFormat))
 
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground(QtCore.Qt.darkGreen)
-        self.highlightingRules.append((QtCore.QRegExp("\`.*\`"),
-                quotationFormat))
-                
+        self.highlightingRules.append((QtCore.QRegExp("`.*`"),
+                                       quotationFormat))
+
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground(QtCore.Qt.darkGreen)
         self.highlightingRules.append((QtCore.QRegExp("\'.*\'"),
-                quotationFormat))
-	
+                                       quotationFormat))
+
         functionFormat = QtGui.QTextCharFormat()
         functionFormat.setFontItalic(True)
         functionFormat.setForeground(QtCore.Qt.red)
         self.highlightingRules.append((QtCore.QRegExp("\\b[A-Za-z0-9_]+(?=\\()"),
-                functionFormat))
+                                       functionFormat))
 
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground(QtCore.Qt.darkGray)
-        self.highlightingRules.append((QtCore.QRegExp("\#.*"),
-                quotationFormat))
-                
+        self.highlightingRules.append((QtCore.QRegExp("#.*"),
+                                       quotationFormat))
+
         self.commentStartExpression = QtCore.QRegExp("/\\*")
         self.commentEndExpression = QtCore.QRegExp("\\*/")
 
     def highlightBlock(self, text):
-        for pattern, format in self.highlightingRules:
+        for pattern, formato in self.highlightingRules:
             expression = QtCore.QRegExp(pattern)
             index = expression.indexIn(text)
             while index >= 0:
                 length = expression.matchedLength()
-                self.setFormat(index, length, format)
+                self.setFormat(index, length, formato)
                 index = expression.indexIn(text, index + length)
 
         self.setCurrentBlockState(0)
@@ -89,9 +89,10 @@ class Highlighter(QtGui.QSyntaxHighlighter):
                 self.setCurrentBlockState(1)
                 commentLength = len(text) - startIndex
             else:
-                commentLength = endIndex - startIndex + self.commentEndExpression.matchedLength()
+                commentLength = endIndex - startIndex + \
+                    self.commentEndExpression.matchedLength()
 
             self.setFormat(startIndex, commentLength,
-                    self.multiLineCommentFormat)
+                           self.multiLineCommentFormat)
             startIndex = self.commentStartExpression.indexIn(text,
-                    startIndex + commentLength);
+                                                             startIndex + commentLength)

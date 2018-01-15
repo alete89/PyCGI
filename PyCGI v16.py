@@ -22,12 +22,14 @@ class PyCGI(QtGui.QMainWindow):
         Menu=[]
         super(PyCGI, self).__init__()
         self.VentanaPrincipal()
-        # CSV
-        ds = csvdb.getDataFromCsv("rs.csv")
-        distinct = csvdb.distinct(ds,1)
-        order = csvdb.sortDataSet(distinct,4)
-        print order
-		#CSV
+        db = QtSql.QSqlDatabase.addDatabase('PyCGI')
+        db.setHostName('localhost')
+        db.setDatabaseName('PyCGI')
+        db.setUserName('root')
+        db.setPassword('1234')
+        db.open()
+        
+        query = QtSql.QSqlQuery()   
         conexionMySQL(self)
         query.exec_("SELECT DISTINCT Menu FROM TablaDeSecuencias order by Coordenada")
         
@@ -161,10 +163,10 @@ class PyCGI(QtGui.QMainWindow):
         
         layout = QtGui.QVBoxLayout(widget_central)
         
-        tabs=QTabWidget()
-        tab1=QWidget()
-        tab2=QWidget()
-        tab3=QWidget()
+        tabs=QtGui.QTabWidget()
+        tab1=QtGui.QWidget()
+        tab2=QtGui.QWidget()
+        tab3=QtGui.QWidget()
 #        tab4=QWidget()
          
         BotoneraInferior=QtGui.QHBoxLayout(widget_central)
@@ -476,7 +478,7 @@ class TerminalX(QtCore.QThread):
         QtCore.QThread.__init__(self,parent)
           
     def run(self):
-        self.emit(QtCore.SIGNAL("Activated( QString )"), self.dataReady)
+        self.emit(QtCore.SIGNAL("Activated( QString )"), PyCGI.dataReady)
 
 def conexionMySQL(self):
     global query

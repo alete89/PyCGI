@@ -4,7 +4,7 @@
 import os
 import multiprocessing as mp
 from PyQt4 import QtCore
-# import paramFinder
+import paramFinder
 import csvdb
 import re
 
@@ -74,7 +74,8 @@ def PreEjecutarComandos(idFila):
     # ¿lo hacía para evitar un error más adelante? hace falta?
 
     print 'idFila: ' + str(idFila)
-    findParameters(idFila, fullDataSet())
+    secuencia = csvdb.dataFilter(fullDataSet(),0,idFila)
+    paramFinder.findParameters(idFila, secuencia)
 
 
 def EjecutarComandos():

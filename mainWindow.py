@@ -201,7 +201,7 @@ class PyCGI(QtGui.QMainWindow):
 
     def KillAndGo(self):
         reply = QtGui.QMessageBox.question(self, 'Message',
-                                           "Are you sure to quit?", QtGui.QMessageBox.Yes |
+                                           "Are you sure you want to quit?", QtGui.QMessageBox.Yes |
                                            QtGui.QMessageBox.No, QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:

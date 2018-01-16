@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
 '''
@@ -7,11 +6,12 @@ usa ';' por defecto como separador de columnas en un CSV. Tras unificar criterio
 se puede cambiar por ',' o el que nosotros elijamos.
 '''
 
-import sys, csv
+import csv
 
 COLUMN_DELIMITER = ','
 
-def SaveCSV(path, dataset, header): 
+
+def SaveCSV(path, dataset, header):
     with open(unicode(path), 'wb') as stream:
         writer = csv.writer(stream, delimiter=COLUMN_DELIMITER)
         writer.writerow(header)
@@ -25,6 +25,7 @@ def SaveCSV(path, dataset, header):
                     rowdata.append('')
             writer.writerow(rowdata)
 
+
 def getDataFromCsv(path):
     dataSet = []
     with open(unicode(path), 'rb') as stream:
@@ -33,6 +34,7 @@ def getDataFromCsv(path):
         for rowdata in reader:
             dataSet.append(rowdata)
     return dataSet
+
 
 def dataFilter(dataset, columna, valor):
     # ejemplo de query para tener en cuenta qué/cómo necesito poder filtrar
@@ -43,6 +45,7 @@ def dataFilter(dataset, columna, valor):
             filteredDataSet.append(rowdata)
     return filteredDataSet
 
+
 def distinct(dataset, columna):
     filteredDataSet = []
     for rowdata in dataset:
@@ -50,15 +53,19 @@ def distinct(dataset, columna):
             filteredDataSet.append(rowdata)
     return filteredDataSet
 
+
 def getColumn(dataset, columna):
     return [fila[columna] for fila in dataset]
 
+
 def getHeader(path):
     with open(unicode(path), 'rb') as stream:
-            reader = csv.reader(stream, delimiter=COLUMN_DELIMITER)
-            header = reader.next()
-            return header
+        reader = csv.reader(stream, delimiter=COLUMN_DELIMITER)
+        header = reader.next()
+        return header
+
 
 def sortDataSet(dataset, column, invertido=False):
-    sortedDataSet = sorted(dataset, key=lambda col: col[column], reverse=invertido)
+    sortedDataSet = sorted(
+        dataset, key=lambda col: col[column], reverse=invertido)
     return sortedDataSet

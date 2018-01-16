@@ -7,9 +7,10 @@ from PyQt4 import QtCore
 import paramFinder
 import csvdb
 import re
+import mainWindow
 
 lock = mp.Lock()
-default_path = os.getcwd() + r"/rs.csv"
+default_path = os.getcwd() + r"/nuevo.csv"
 
 # Startup
 
@@ -20,13 +21,14 @@ def fullDataSet(path=default_path):
 
 def menuList(dataSet=fullDataSet()):
     distinct = csvdb.distinct(dataSet, 1)
-    sortedList = csvdb.sortDataSet(distinct, 4)
+    sortedList = csvdb.sortDataSet(distinct, 1)
     return csvdb.getColumn(sortedList, 1)
 
 
 def subMenuList(menu, dataSet=fullDataSet()):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    return csvdb.getColumn(subMenuFilter, 2)
+    subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
+    return csvdb.sortDataSet(subMenuColumn,3)
 
 
 def idList(menu, dataSet=fullDataSet()):
@@ -157,10 +159,6 @@ def EjecutarComandos():
         i = i + 1
 
 
-def findParameters(idfila, dataset):
-    for comando in csvdb.getColumn(dataset, 6):
-        parentesisList = re.findall(r'\(.*?\)', comando)
-        for char in parentesisList:
-            char.replace(')', '')
-            char.replace('(', '')
-            # query.exec_("INSERT INTO Formulario (id, Menu, SubMenu, Command, Value) VALUES ('"+str(idCampoTemp)+"', '"+str(MenuTemp)+"','"+str(SubMenuTemp)+"','"+str(j)+"','');")
+
+if __name__ == '__main__':
+    mainWindow.mainLoop()

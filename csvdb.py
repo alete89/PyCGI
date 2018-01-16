@@ -8,7 +8,7 @@ se puede cambiar por ',' o el que nosotros elijamos.
 
 import csv
 
-COLUMN_DELIMITER = ','
+COLUMN_DELIMITER = ';'
 
 
 def SaveCSV(path, dataset, header):

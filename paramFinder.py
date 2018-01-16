@@ -6,7 +6,7 @@ import csvdb
 
 
 def findParameters(idfila, dataset):
-    for comando in csvdb.getColumn(dataset, 6):
+    for comando in csvdb.getColumn(dataset, 4):
         print comando  # Debug
         parentesisList = re.findall('\(.*?\)', comando)
         for char in parentesisList:

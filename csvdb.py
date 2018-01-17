@@ -28,11 +28,12 @@ def SaveCSV(path, dataset, header):
 
 def getDataFromCsv(path):
     dataSet = []
-    with open(unicode(path), 'rb') as stream:
+    with open(unicode(path), 'r') as stream:
         reader = csv.reader(stream, delimiter=COLUMN_DELIMITER)
         reader.next()
         for rowdata in reader:
-            dataSet.append(rowdata)
+            if any(x.strip() for x in rowdata):  # if any(x for x in rowdata):
+                dataSet.append(rowdata)
     return dataSet
 
 

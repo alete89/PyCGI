@@ -1,9 +1,11 @@
-id;menu;submenu;posición en menu;orden en secuencia;comando;loop
+id;menu;submenu;posiciï¿½n en menu;orden en secuencia;comando;loop
 1;archivo;abrir;2;1;./prueba/abrir.py;1
-2;edición;copiar;2;1;./prueba/copiar.py;1
+2;ediciï¿½n;copiar;2;1;./prueba/copiar.py;1
+;;;;;;
 3;ver;ping;1;1;ping 127.0.0.1;1
 4;archivo;guardar como;1;1;./prueba/guardar.py;1
-5;edición;pegar;1;1;./prueba/pegar.py;2
+5;ediciï¿½n;pegar;1;1;./prueba/pegar.py;2
+;;;;;;
 6;ver;ping;2;2;ping google.com;1
 ;;;;;;
 ;;;;;;

@@ -28,7 +28,8 @@ def menuList(dataSet=fullDataSet()):
 def subMenuList(menu, dataSet=fullDataSet()):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
     subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
-    return csvdb.sortDataSet(subMenuColumn,3)
+    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3)
+    return csvdb.distinct(subMenuSorted, 2)
 
 
 def idList(menu, dataSet=fullDataSet()):
@@ -64,7 +65,7 @@ class TerminalX(QtCore.QThread):
         self.emit(QtCore.SIGNAL("Activated( QString )"), getOutput)
 
 
-def PreEjecutarComandos(idFila):
+def PreEjecutarComandos(subMenu):
     #global lock
     # Hasta aca lo unico que hice fue agarrar todos los datos de un
     # proceso y cargarlos en una nueva tabla de secuencias pero temporal
@@ -75,9 +76,9 @@ def PreEjecutarComandos(idFila):
     # entiendo que agregaba a la tabladesecuenciatemp sólo lo que tenía un comando escrito
     # ¿lo hacía para evitar un error más adelante? hace falta?
 
-    print 'idFila: ' + str(idFila)
-    secuencia = csvdb.dataFilter(fullDataSet(),0,idFila)
-    paramFinder.findParameters(idFila, secuencia)
+    print 'idFila: ' + str(subMenu)
+    secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
+    paramFinder.findParameters(subMenu, secuencia)
 
 
 def EjecutarComandos():
@@ -157,7 +158,6 @@ def EjecutarComandos():
                     break
 
         i = i + 1
-
 
 
 if __name__ == '__main__':

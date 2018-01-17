@@ -32,7 +32,7 @@ class PyCGI(QtGui.QMainWindow):
                 action = QtGui.QAction('&' + str(subMenu), self)
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
                 action.triggered.connect(
-                    lambda ignore, idt=idFila: core.PreEjecutarComandos(idt))
+                    lambda ignore, idt=subMenu: core.PreEjecutarComandos(idt))
                 thisMenu.addAction(action)
 
     def VentanaPrincipal(self):
@@ -222,7 +222,6 @@ class PyCGI(QtGui.QMainWindow):
             print 'OpenDialog - fname: ' + str(fname)
             return fname
         return ''
-
 
     @QtCore.pyqtSlot(QtCore.QModelIndex)
     def OpenFileNow(self, index):

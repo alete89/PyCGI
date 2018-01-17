@@ -5,8 +5,8 @@ import ProcessFormV3
 import csvdb
 
 
-def findParameters(idfila, dataset):
-    for comando in csvdb.getColumn(dataset, 4):
+def findParameters(subMenu, dataset):
+    for comando in csvdb.getColumn(dataset, 5):
         print comando  # Debug
         parentesisList = re.findall('\(.*?\)', comando)
         for char in parentesisList:

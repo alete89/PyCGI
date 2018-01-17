@@ -3,16 +3,23 @@
 import re
 #import ProcessFormV3
 import csvdb
+import enterParametersForm
 
 
 def findParameters(dataset):
+    parametro = None
+    parametros = []
     for comando in csvdb.getColumn(dataset, 5):
-        print comando  # Debug
-        parentesisList = re.findall('(.*?)', comando)
-        for char in parentesisList:
-            char.replace(')', '')
-            char.replace('(', '')
-            # query.exec_("INSERT INTO Formulario (id, Menu, SubMenu, Command, Value) VALUES ('"+str(idCampoTemp)+"', '"+str(MenuTemp)+"','"+str(SubMenuTemp)+"','"+str(j)+"','');")
+        print "antes: " + comando  # Debug
+        indicacionParametros = re.findall('\(.*?\)', comando)
+        for parametro in indicacionParametros:
+            parametro = parametro.replace("(", "")
+            parametro = parametro.replace(")", "")
+        if parametro:
+            parametros.append(parametro)
+    if len(parametros):
+        enterParametersForm.enterParametersForm(parametros)
+
 
 # ESTO ES todo GUI VER DÓNDE LO METEMOS:
 #widgetFormulario = QtGui.QWidget(self)

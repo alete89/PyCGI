@@ -66,19 +66,10 @@ class TerminalX(QtCore.QThread):
 
 
 def PreEjecutarComandos(subMenu):
-    #global lock
-    # Hasta aca lo unico que hice fue agarrar todos los datos de un
-    # proceso y cargarlos en una nueva tabla de secuencias pero temporal
-    # Ahora tengo que tomar todos los strings que contiene indicaciones
-    # entre del tipo '(tipee su comando)' y armar con todos ellos un formulario
-
-    # acá había un ciclo y un if ComandoDeSistemaTem:
-    # entiendo que agregaba a la tabladesecuenciatemp sólo lo que tenía un comando escrito
-    # ¿lo hacía para evitar un error más adelante? hace falta?
-
-    print 'idFila: ' + str(subMenu)
+    print 'Seleccionado: ' + str(subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
-    paramFinder.findParameters(secuencia)
+    ordenada = csvdb.sortDataSet(secuencia, 4)
+    return paramFinder.findParameters(ordenada)
 
 
 def EjecutarComandos():

@@ -78,7 +78,7 @@ def PreEjecutarComandos(subMenu):
 
     print 'idFila: ' + str(subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
-    paramFinder.findParameters(subMenu, secuencia)
+    paramFinder.findParameters(secuencia)
 
 
 def EjecutarComandos():

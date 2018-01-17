@@ -6,12 +6,11 @@ from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
 import TablaMySQLEmbedded
-#from stringFinderV2 import *
+import enterParametersForm
 import core
 
 
 class PyCGI(QtGui.QMainWindow):
-
     def __init__(self):
         super(PyCGI, self).__init__()
         self.is_new = True  # Flag para el archivo del editor
@@ -32,8 +31,11 @@ class PyCGI(QtGui.QMainWindow):
                 action = QtGui.QAction('&' + str(subMenu), self)
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
                 action.triggered.connect(
-                    lambda ignore, idt=subMenu: core.PreEjecutarComandos(idt))
+                    lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
                 thisMenu.addAction(action)
+
+    def subMenuOptionClicked(self, subMenu):
+        core.PreEjecutarComandos(subMenu)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()

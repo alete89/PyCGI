@@ -3,7 +3,6 @@
 import re
 #import ProcessFormV3
 import csvdb
-import enterParametersForm
 
 
 def findParameters(dataset):
@@ -18,7 +17,7 @@ def findParameters(dataset):
         if parametro:
             parametros.append(parametro)
     if len(parametros):
-        enterParametersForm.enterParametersForm(parametros)
+        return parametros
 
 
 # ESTO ES todo GUI VER DÓNDE LO METEMOS:

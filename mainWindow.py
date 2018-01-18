@@ -6,7 +6,9 @@ from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
 import TablaMySQLEmbedded
-import enterParametersForm
+# import enterParametersForm # probando processformv3
+import paramForm
+import ProcessFormV3
 import core
 
 
@@ -35,7 +37,9 @@ class PyCGI(QtGui.QMainWindow):
                 thisMenu.addAction(action)
 
     def subMenuOptionClicked(self, subMenu):
-        core.PreEjecutarComandos(subMenu)
+        params = core.PreEjecutarComandos(subMenu)
+        paramForm.paramForm(params)
+        ProcessFormV3.ProcessFormV3(params)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()
@@ -289,13 +293,8 @@ class PyCGI(QtGui.QMainWindow):
 
 def mainLoop():
     app = QtGui.QApplication(sys.argv)
-    ex = PyCGI()
-    ex.show()
-
-    # proceso1=mp.Pool(4)
-    # proceso1.map(PyCGI.EjecutarComandos,idFilaTemp)
-    # proceso1.close()
-    # proceso1.join()
+    gui = PyCGI()
+    gui.show()
     sys.exit(app.exec_())
 
 

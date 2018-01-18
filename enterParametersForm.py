@@ -1,23 +1,25 @@
 #-*- encoding:utf-8 -*-
 
 from PyQt4 import QtGui
+import sys
 
 
-class enterParametersForm(QtGui.QMainWindow):
-    def __init__(self, indicaciones):
+class enterParametersForm(QtGui.QDialog):
+    def __init__(self, params):
         super(enterParametersForm, self).__init__()
 
-        self.table = QtGui.QTableWidget()
-        self.llenarFormulario(indicaciones)
+        self.table = QtGui.QTableWidget(self)
 
-        self.acceptButton = QtGui.QPushButton("Confirmar")
+        self.acceptButton = QtGui.QPushButton("Confirmar", self)
         self.acceptButton.clicked.connect(self.confirmarFormulario)
 
+        self.llenarFormulario(params)
         # Layout
         layout = QtGui.QVBoxLayout(self)
         layout.addWidget(self.table)
         layout.addWidget(self.acceptButton)
         self.setLayout(layout)
+        self.show()
 
     def llenarFormulario(self, indicaciones):
         for i, indicacion in enumerate(indicaciones):
@@ -26,6 +28,14 @@ class enterParametersForm(QtGui.QMainWindow):
             self.table.setColumnCount(2)
             item = QtGui.QTableWidgetItem(indicacion.decode('utf8'))
             self.table.setItem(i, 0, item)
+        self.show()
 
     def confirmarFormulario(self):
         pass
+
+
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    gui = enterParametersForm()
+    gui.show()
+    sys.exit(app.exec_())

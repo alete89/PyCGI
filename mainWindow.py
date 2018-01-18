@@ -6,9 +6,7 @@ from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
 import TablaMySQLEmbedded
-# import enterParametersForm # probando processformv3
 import paramForm
-import ProcessFormV3
 import core
 
 
@@ -38,8 +36,11 @@ class PyCGI(QtGui.QMainWindow):
 
     def subMenuOptionClicked(self, subMenu):
         params = core.PreEjecutarComandos(subMenu)
-        paramForm.paramForm(params)
-        ProcessFormV3.ProcessFormV3(params)
+        newParams, ok = paramForm.paramForm.getNewParams(params)
+        if ok:
+            print newParams  # OK: parsear resultado
+        else:
+            pass  # Cancel: no hacer nada.
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()

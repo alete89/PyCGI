@@ -1,6 +1,7 @@
 #-*- encoding:utf-8 -*-
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
+from PyQt4.QtGui import QDialog
 import sys
 
 
@@ -18,19 +19,27 @@ class paramForm(QtGui.QDialog):
 
         for p, parametro in enumerate(params):
             self.labels[p] = QtGui.QLabel(parametro, self)
-            self.texts[p] = QtGui.QTextEdit(self)
+            self.texts[p] = QtGui.QLineEdit(self)
             layout.addWidget(self.labels[p], p, 0)
             layout.addWidget(self.texts[p], p, 1)
 
-        self.acceptButton = QtGui.QPushButton("Confirmar", self)
-        self.acceptButton.clicked.connect(self.confirmarFormulario)
+        buttons = QtGui.QDialogButtonBox(
+            QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel,
+            QtCore.Qt.Horizontal, self)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
 
-        layout.addWidget(self.acceptButton)
+        layout.addWidget(buttons)
         self.setLayout(layout)
-        self.show()
+        self.setModal(True)
 
-    def confirmarFormulario(self):
-        pass
+    @staticmethod
+    def getNewParams(oldParams):
+        dialog = paramForm(oldParams)
+        result = dialog.exec_()
+        params = [str(obj.text()) for obj in dialog.texts.values()]
+        return (params, result == QDialog.Accepted)
 
 
 if __name__ == '__main__':

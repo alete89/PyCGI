@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-# import os
 from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
@@ -290,14 +288,3 @@ class PyCGI(QtGui.QMainWindow):
 
     def updateFunc(self):
         pass
-
-
-def mainLoop():
-    app = QtGui.QApplication(sys.argv)
-    gui = PyCGI()
-    gui.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    mainLoop()

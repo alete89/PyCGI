@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 # import sys
+from PyQt4.QtGui import QApplication
+import sys
 import os
 import multiprocessing as mp
 from PyQt4 import QtCore
 import paramFinder
 import csvdb
-import re
 import mainWindow
+
 
 lock = mp.Lock()
 default_path = os.getcwd() + r"/nuevo.csv"
@@ -121,5 +123,12 @@ def EjecutarComandos():
         i = i + 1
 
 
+def mainLoop():
+    app = QApplication(sys.argv)
+    vp = mainWindow.PyCGI()
+    vp.show()
+    sys.exit(app.exec_())
+
+
 if __name__ == '__main__':
-    mainWindow.mainLoop()
+    mainLoop()

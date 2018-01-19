@@ -36,6 +36,8 @@ class paramForm(QtGui.QDialog):
 
     @staticmethod
     def getNewParams(oldParams):
+        if not oldParams:
+            return ([''], 1)
         dialog = paramForm(oldParams)
         result = dialog.exec_()
         params = [str(obj.text()) for obj in dialog.texts.values()]

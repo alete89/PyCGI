@@ -4,7 +4,6 @@ from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
 import TablaMySQLEmbedded
-import paramForm
 import core
 
 
@@ -33,12 +32,7 @@ class PyCGI(QtGui.QMainWindow):
                 thisMenu.addAction(action)
 
     def subMenuOptionClicked(self, subMenu):
-        params = core.PreEjecutarComandos(subMenu)
-        newParams, ok = paramForm.paramForm.getNewParams(params)
-        if ok:
-            print newParams  # OK: resultado
-        else:
-            pass  # Cancel: no hacer nada.
+        core.PreEjecutarComandos(subMenu)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()

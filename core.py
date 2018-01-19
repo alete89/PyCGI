@@ -3,7 +3,6 @@
 # Default
 import sys
 import os
-import multiprocessing as mp
 # Lib
 import csvdb
 import paramFinder
@@ -13,52 +12,47 @@ from PyQt4 import QtCore
 # Forms
 import mainWindow
 import paramForm
+import process
 
 
-lock = mp.Lock()
 default_path = os.getcwd() + r"/nuevo.csv"
 
 
-def fullDataSet(path=default_path):
-    return csvdb.getDataFromCsv(path)
+class Core():
+    def __init__(self):
+        self.proc = process.Process()
 
+    def fullDataSet(self, path=default_path):
+        return csvdb.getDataFromCsv(path)
 
-def menuList(dataSet=fullDataSet()):
-    distinct = csvdb.distinct(dataSet, 1)
-    sortedList = csvdb.sortDataSet(distinct, 1)
-    return csvdb.getColumn(sortedList, 1)
+    def menuList(self, dataSet):
+        distinct = csvdb.distinct(dataSet, 1)
+        sortedList = csvdb.sortDataSet(distinct, 1)
+        return csvdb.getColumn(sortedList, 1)
 
+    def subMenuList(self, menu, dataSet):
+        subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
+        subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
+        subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
+        return csvdb.distinct(subMenuSorted, 2)
 
-def subMenuList(menu, dataSet=fullDataSet()):
-    subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
-    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
-    return csvdb.distinct(subMenuSorted, 2)
+    def idList(self, menu, dataSet):
+        subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
+        return csvdb.getColumn(subMenuFilter, 0)
 
+    def PreEjecutarComandos(self, subMenu):
+        secuencia = csvdb.dataFilter(self.fullDataSet(), 2, subMenu)
+        ordenada = csvdb.sortDataSet(secuencia, 4)
 
-def idList(menu, dataSet=fullDataSet()):
-    subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    return csvdb.getColumn(subMenuFilter, 0)
+        cmd, params = paramFinder.findParameters(ordenada)
 
-# Processes
+        newParams, ok = paramForm.paramForm.getNewParams(params)
+        loops = csvdb.getColumn(ordenada, 6)
 
-
-def getOutput():
-    salida = 'OUT: ' + str(processRun.readAllStandardOutput()).strip()
-    error = 'ERR: ' + str(processRun.readAllStandardError()).strip()
-    if salida:
-        return salida
-    else:
-        return error
-
-
-# esto?
-
-processRun = QtCore.QProcess()
-processRun.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-processRun.setReadChannelMode(QtCore.QProcess.MergedChannels)
-processRun.readyRead.connect(getOutput)
-# /esto?
+        if ok:
+            for exec_data in enumerate(cmd):
+                # print list(exec_data)
+                self.proc.EjecutarComandos(cmd, newParams, loops)
 
 
 class TerminalX(QtCore.QThread):
@@ -66,72 +60,10 @@ class TerminalX(QtCore.QThread):
         QtCore.QThread.__init__(self, parent)
 
     def run(self):
-        self.emit(QtCore.SIGNAL("Activated( QString )"), getOutput)
+        self.emit(QtCore.SIGNAL("Activated( QString )"), core.proc.getOutput())
 
 
-def PreEjecutarComandos(subMenu):
-    secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
-    ordenada = csvdb.sortDataSet(secuencia, 4)
-
-    cmd, params = paramFinder.findParameters(ordenada)
-
-    newParams, ok = paramForm.paramForm.getNewParams(params)
-    if ok:
-        for listo in zip(cmd, newParams):
-            print list(listo)
-    else:
-        pass  # Cancel: no hacer nada.
-
-    return
-
-
-def EjecutarComandos():
-
-    LoopDeProceso = [int(r) for r in LoopDeProceso]
-
-    for OrdenDeSecuenciaTemp in OrdenDeSecuencia:
-
-        Loop = LoopDeProceso[i] + 1
-
-        for LoopDeProcesoTemp in range(Loop):
-
-            ComandoDeSistemaTemp = ComandoDeSistema[i]
-            ModuloPythonTemp = ModuloPython[i]
-
-            if ComandoDeSistemaTemp:
-                try:
-
-                    cmd = str(ComandoDeSistemaTemp)
-                    self.processRun.waitForFinished()
-                    lock.acquire()
-                    self.terminalDeProceso.append('>>> PROC ' + str(OrdenDeSecuenciaTemp)
-                                                  + ': ' +
-                                                  str(ComandoDeSistemaTemp) +
-                                                  ' - LOOP:'
-                                                    + str(LoopDeProcesoTemp))
-
-                    self.terminalDeTexto.append(
-                        '>>> PROC ' + str(OrdenDeSecuenciaTemp) + ':')
-                    self.processRun.start(cmd)
-                    self.connect(self.TermX, QtCore.SIGNAL(
-                        "Activated ( QString ) "), self.dataReady)
-
-                    lock.release()
-
-                    QtCore.QCoreApplication.processEvents()
-
-                except:
-
-                    self.terminalDeProceso.append('>>> ERROR en el proceso '
-                                                  + str(OrdenDeSecuenciaTemp) + ': '
-                                                  + str(ComandoDeSistemaTemp) + ' - LOOP:'
-                                                  + str(LoopDeProcesoTemp))
-
-                    self.terminalDeTexto.append(
-                        '>>> PROC: ' + str(ComandoDeSistemaTemp) + '\n')
-                    break
-
-        i = i + 1
+core = Core()
 
 
 def mainLoop():

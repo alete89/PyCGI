@@ -13,6 +13,8 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
 
+        self.core = core.Core()
+
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
         self.VentanaPrincipal()
@@ -22,9 +24,9 @@ class PyCGI(QtGui.QMainWindow):
 
     def menuPrincipal(self):
         menubar = self.menuBar()
-        for menu in core.menuList():
+        for menu in self.core.menuList(self.core.fullDataSet()):
             thisMenu = menubar.addMenu('&' + str(menu))
-            for subMenu, idFila in zip(core.subMenuList(menu), core.idList(menu)):
+            for subMenu, idFila in zip(self.core.subMenuList(menu, self.core.fullDataSet()), self.core.idList(menu, self.core.fullDataSet())):
                 action = QtGui.QAction('&' + str(subMenu), self)
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
                 action.triggered.connect(
@@ -32,7 +34,7 @@ class PyCGI(QtGui.QMainWindow):
                 thisMenu.addAction(action)
 
     def subMenuOptionClicked(self, subMenu):
-        core.PreEjecutarComandos(subMenu)
+        self.core.PreEjecutarComandos(subMenu)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()
@@ -64,7 +66,7 @@ class PyCGI(QtGui.QMainWindow):
         self.killGo.clicked.connect(self.KillAndGo)
 
         self.Exe = QtGui.QPushButton("Exe")
-        self.Exe.clicked.connect(core.EjecutarComandos)
+        # self.Exe.clicked.connect(self.core.proc.EjecutarComandos)
 
         self.Update = QtGui.QPushButton("Update PyCGI")
         self.Update.clicked.connect(self.updateFunc)  # restartea la app
@@ -161,7 +163,7 @@ class PyCGI(QtGui.QMainWindow):
         self.show()
 
     def showOutputInTerminal(self):
-        self.terminalDeTexto.append(core.getOutput())
+        self.terminalDeTexto.append(self.core.proc.getOutput())
 
     def theToolbar(self):
         toolbar = self.addToolBar("Editor de texto Toolbar")

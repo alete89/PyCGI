@@ -73,36 +73,6 @@ def PreEjecutarComandos(subMenu):
 
 
 def EjecutarComandos():
-    # global lock
-
-    idFilaTemp = ''
-    query = QtSql.QSqlQuery()  # reemplazar por CSV
-    query.exec_("SELECT DISTINCT Coordenada FROM TablaDeSecuenciasTemp")
-
-    while(query.next()):
-        idFilaTemp = query.value(0).toString()
-
-    ModuloPython = []
-    ComandoDeSistema = []
-    OrdenDeSecuencia = []
-    LoopDeProceso = []
-
-    query.exec_("SELECT ModuloPython,ComandoDeSistema,OrdenDeSecuencia,LoopDeProceso FROM TablaDeSecuenciasTemp where Coordenada='" +
-                str(idFilaTemp) + "' ORDER BY OrdenDeSecuencia")
-
-    while(query.next()):
-
-        ModuloPythonTemp = query.value(0).toString()
-        ComandoDeSistemaTemp = query.value(1).toString()
-        OrdenDeSecuenciaTemp = query.value(2).toString()
-        LoopDeProcesoTemp = query.value(3).toString()
-
-        ModuloPython.append(ModuloPythonTemp)
-        ComandoDeSistema.append(ComandoDeSistemaTemp)
-        OrdenDeSecuencia.append(OrdenDeSecuenciaTemp)
-        LoopDeProceso.append(LoopDeProcesoTemp)
-
-    i = 0
 
     LoopDeProceso = [int(r) for r in LoopDeProceso]
 

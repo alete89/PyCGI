@@ -38,7 +38,7 @@ class PyCGI(QtGui.QMainWindow):
         params = core.PreEjecutarComandos(subMenu)
         newParams, ok = paramForm.paramForm.getNewParams(params)
         if ok:
-            print newParams  # OK: parsear resultado
+            print newParams  # OK: resultado
         else:
             pass  # Cancel: no hacer nada.
 

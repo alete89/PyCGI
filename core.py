@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 
-# import sys
-from PyQt4.QtGui import QApplication
+# Default
 import sys
 import os
 import multiprocessing as mp
-from PyQt4 import QtCore
-import paramFinder
+# Lib
 import csvdb
+import paramFinder
+# GUI
+from PyQt4.QtGui import QApplication
+from PyQt4 import QtCore
+# Forms
 import mainWindow
+import paramForm
 
 
 lock = mp.Lock()
 default_path = os.getcwd() + r"/nuevo.csv"
-
-# Startup
 
 
 def fullDataSet(path=default_path):
@@ -68,10 +70,19 @@ class TerminalX(QtCore.QThread):
 
 
 def PreEjecutarComandos(subMenu):
-    print 'Seleccionado: ' + str(subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
-    return paramFinder.findParameters(ordenada)
+
+    cmd, params = paramFinder.findParameters(ordenada)
+
+    newParams, ok = paramForm.paramForm.getNewParams(params)
+    if ok:
+        for listo in zip(cmd, newParams):
+            print list(listo)
+    else:
+        pass  # Cancel: no hacer nada.
+
+    return
 
 
 def EjecutarComandos():

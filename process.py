@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # Default
-import sys
-import os
 import multiprocessing as mp
 # GUI
-from PyQt4.QtGui import QApplication
 from PyQt4 import QtCore
 # Forms
-import mainWindow
-import core
 
 
 lock = mp.Lock()
@@ -18,18 +13,25 @@ lock = mp.Lock()
 class Process():
     def __init__(self):
         self.processRun = QtCore.QProcess()
-
-    def EjecutarComandos(self, comando, parametros, iteraciones):
+        # El canal stdout y stderr juntos
         self.processRun.setProcessChannelMode(QtCore.QProcess.MergedChannels)
         self.processRun.setReadChannelMode(QtCore.QProcess.MergedChannels)
+        # Slot cuando haya algo para leer
         self.processRun.readyRead.connect(self.getOutput)
 
-        # DEBUG
-        print comando, parametros, iteraciones
+    def EjecutarComandos(self, comandos, parametros, iteraciones, instanciaVentanaPrincipal):
+        for c, comando in enumerate(comandos):
+            parametro = parametros[c]
+            iteracion = iteraciones[c]
+            for _ in range(int(iteracion)):
+                print comando, parametro
+                self.processRun.waitForFinished()
+                # o mandarle el string? '>>> PROC ' + str(comando) + ' - LOOP:' + str(it)
+                instanciaVentanaPrincipal.showOutputInTerminal()
+
         return
 
-        for iteracion in enumerate(iteraciones):
-            try:
+        '''
                 self.processRun.waitForFinished()
                 lock.acquire()
                 terminalDeProceso.append(
@@ -49,6 +51,7 @@ class Process():
                                               + str(LoopDeProcesoTemp))
                 self.terminalDeTexto.append(
                     '>>> PROC: ' + str(ComandoDeSistemaTemp) + '\n')
+'''
 
     def getOutput(self):
         salida = 'OUT: ' + str(self.processRun.readAllStandardOutput()).strip()

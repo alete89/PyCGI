@@ -151,12 +151,6 @@ class PyCGI(QtGui.QMainWindow):
 
         layout.addLayout(BotoneraInferior)
 
-        self.processRun = QtCore.QProcess(self)
-        self.processRun.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        self.processRun.setReadChannelMode(QtCore.QProcess.MergedChannels)
-
-        # dataready debería venir de core
-        self.processRun.readyRead.connect(self.showOutputInTerminal)
         self.TermX = core.TerminalX(self)
 
         self.setLayout(BotoneraInferior)
@@ -194,11 +188,11 @@ class PyCGI(QtGui.QMainWindow):
     def KillingProcess(self):
         self.cursor.insertText('\n --- Process stopped by user --- ')
         self.cursor.movePosition(self.cursor.End)
-        self.processRun.close()
+        # self.processRun.close()
 
     def CleaningTerminal(self):
-        self.terminalDeTexto.setText(" ")
-        self.terminalDeProceso.setText(" ")
+        self.terminalDeTexto.setText("")
+        self.terminalDeProceso.setText("")
 
     def KillAndGo(self):
         reply = QtGui.QMessageBox.question(self, 'Message',
@@ -207,7 +201,7 @@ class PyCGI(QtGui.QMainWindow):
 
         if reply == QtGui.QMessageBox.Yes:
             self.cursor.insertText('\n--- Process stopped by user ---')
-            self.processRun.close()
+            # self.processRun.close()
             exit()
         else:
             pass

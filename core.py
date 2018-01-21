@@ -50,9 +50,7 @@ class Core():
         loops = csvdb.getColumn(ordenada, 6)
 
         if ok:
-            for exec_data in enumerate(cmd):
-                # print list(exec_data)
-                self.proc.EjecutarComandos(cmd, newParams, loops)
+            self.proc.EjecutarComandos(cmd, newParams, loops, vp)
 
 
 class TerminalX(QtCore.QThread):
@@ -66,12 +64,8 @@ class TerminalX(QtCore.QThread):
 core = Core()
 
 
-def mainLoop():
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     vp = mainWindow.PyCGI()
     vp.show()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    mainLoop()

@@ -12,7 +12,7 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
 
-        self.core = Core()
+        self.core = Core(self)
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
@@ -155,8 +155,8 @@ class PyCGI(QtGui.QMainWindow):
         self.setLayout(BotoneraInferior)
         self.show()
 
-    def showOutputInTerminal(self):
-        self.terminalDeTexto.append(self.core.proc.getOutput())
+    def showOutputInTerminal(self, text):
+        self.terminalDeTexto.append(text)
 
     def theToolbar(self):
         toolbar = self.addToolBar("Editor de texto Toolbar")

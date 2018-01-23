@@ -11,7 +11,8 @@ lock = mp.Lock()
 
 
 class Process():
-    def __init__(self):
+    def __init__(self, instanciamw):
+        self.mainWindow = instanciamw
         self.processRun = QtCore.QProcess()
         # El canal stdout y stderr juntos
         self.processRun.setProcessChannelMode(QtCore.QProcess.MergedChannels)
@@ -35,6 +36,6 @@ class Process():
         salida = 'OUT: ' + str(self.processRun.readAllStandardOutput()).strip()
         error = 'ERR: ' + str(self.processRun.readAllStandardError()).strip()
         if salida:
-            print salida
+            self.mainWindow.showOutputInTerminal(salida)
         else:
-            print error
+            self.mainWindow.showOutputInTerminal(error)

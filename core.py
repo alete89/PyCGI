@@ -19,8 +19,10 @@ default_path = os.getcwd() + r"/nuevo.csv"
 
 
 class Core():
-    def __init__(self):
-        self.proc = process.Process()
+    def __init__(self, instanciamw):
+        self.mw = instanciamw
+        self.proc = process.Process(self.mw)
+        
 
     def fullDataSet(self, path=default_path):
         return csvdb.getDataFromCsv(path)
@@ -58,10 +60,11 @@ class TerminalX(QtCore.QThread):
         QtCore.QThread.__init__(self, parent)
 
     def run(self):
-        self.emit(QtCore.SIGNAL("Activated( QString )"), core.proc.getOutput())
+        pass
+        #self.emit(QtCore.SIGNAL("Activated( QString )"), core.proc.getOutput())
 
 
-core = Core()
+#core = Core()
 
 
 if __name__ == '__main__':

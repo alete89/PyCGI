@@ -27,9 +27,10 @@ class Process():
             for _ in range(int(iteracion)):
                 print comando, parametro
                 self.processRun.waitForFinished()
-                # o mandarle el string? '>>> PROC ' + str(comando) + ' - LOOP:' + str(it)
-                self.processRun.start(comando, [parametro])
-                #self.processRun.start([comando, parametro])
+                if not parametro:
+                    self.processRun.start(comando)
+                else:
+                    self.processRun.start(comando, [parametro])
                 QtCore.QCoreApplication.processEvents()
 
     def getOutput(self):

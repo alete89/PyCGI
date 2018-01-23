@@ -12,7 +12,7 @@ lock = mp.Lock()
 
 class Process():
     def __init__(self, instanciamw):
-        self.mainWindow = instanciamw
+        self.mainWindow = instanciamw  # La instancia de la ventana actual
         self.process = QtCore.QProcess()
         self.lista = []
         # El canal stdout y stderr juntos
@@ -34,7 +34,10 @@ class Process():
             self.runNow()
         else:
             sublist[2] = str(int(sublist[2]) - 1)
-            self.process.start(sublist[0], [sublist[1]])
+            if not sublist[1]:
+                self.process.start(sublist[0])
+            else:
+                self.process.start(sublist[0], [sublist[1]])
 
     def hayParaEscribir(self):
         self.mainWindow.showOutputInTerminal(self.process.readAll().data())

@@ -22,7 +22,6 @@ class Core():
     def __init__(self, instanciamw):
         self.mw = instanciamw
         self.proc = process.Process(self.mw)
-        
 
     def fullDataSet(self, path=default_path):
         return csvdb.getDataFromCsv(path)

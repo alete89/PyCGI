@@ -3,8 +3,7 @@
 from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
-import TablaMySQLEmbedded
-import core
+from core import TerminalX, Core
 
 
 class PyCGI(QtGui.QMainWindow):
@@ -13,7 +12,7 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
 
-        self.core = core.Core()
+        self.core = Core()
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
@@ -138,8 +137,8 @@ class PyCGI(QtGui.QMainWindow):
 
         layoutTabs3 = QtGui.QVBoxLayout(tabs)
 
-        self.form = TablaMySQLEmbedded.TablaMySQLEmbedded()
-        layoutTabs3.addWidget(self.form)
+        #self.form = TablaMySQLEmbedded.TablaMySQLEmbedded()
+        #layoutTabs3.addWidget(self.form)
         tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
@@ -151,7 +150,7 @@ class PyCGI(QtGui.QMainWindow):
 
         layout.addLayout(BotoneraInferior)
 
-        self.TermX = core.TerminalX(self)
+        self.TermX = TerminalX(self)
 
         self.setLayout(BotoneraInferior)
         self.show()

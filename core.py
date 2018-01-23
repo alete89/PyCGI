@@ -50,7 +50,7 @@ class Core():
         loops = csvdb.getColumn(ordenada, 6)
 
         if ok:
-            self.proc.EjecutarComandos(cmd, newParams, loops, vp)
+            self.proc.EjecutarComandos(cmd, newParams, loops)
 
 
 class TerminalX(QtCore.QThread):

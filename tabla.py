@@ -6,7 +6,9 @@ class Tabla(QtGui.QTableWidget):
         super(Tabla, self).__init__()
         self.dataset = []
 
-    def ShowDataSet(self, dataset, header=[]):
+    def ShowDataSet(self, dataset, header=None):
+        if header is None:
+            header = []
         self.dataset = dataset
         self.setRowCount(0)
         self.setColumnCount(0)

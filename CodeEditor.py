@@ -5,8 +5,6 @@ Created on Fri Nov 17 14:06:45 2017
 @author: manuel
 """
 
-# TO DO: usar nuevos signal slot en lugar de old-style
-
 import sys
 from PyQt4 import QtGui, QtCore
 
@@ -27,14 +25,9 @@ class CodeEditor(QtGui.QPlainTextEdit):
     def __init__(self):
         super(CodeEditor, self).__init__()
         self.lineNumberArea = LineNumberArea(self)
-
-        #self.connect(self, QtCore.SIGNAL('blockCountChanged(int)'), self.updateLineNumberAreaWidth)
-        #self.connect(self, QtCore.SIGNAL('updateRequest(QRect,int)'), self.updateLineNumberArea)
-        #self.connect(self, QtCore.SIGNAL('cursorPositionChanged()'), self.highlightCurrentLine)
         self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
         self.updateRequest.connect(self.updateLineNumberArea)
         self.cursorPositionChanged.connect(self.highlightCurrentLine)
-
         self.updateLineNumberAreaWidth(0)
 
     def lineNumberAreaWidth(self):

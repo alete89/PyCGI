@@ -4,6 +4,7 @@ from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
 from core import TerminalX, Core
+import tabla
 
 
 class PyCGI(QtGui.QMainWindow):
@@ -137,8 +138,9 @@ class PyCGI(QtGui.QMainWindow):
 
         layoutTabs3 = QtGui.QVBoxLayout(tabs)
 
-        #self.form = TablaMySQLEmbedded.TablaMySQLEmbedded()
-        # layoutTabs3.addWidget(self.form)
+        self.tabla = tabla.Tabla()
+        self.tabla.ShowDataSet(self.core.fullDataSet(), self.core.getHeaders())
+        layoutTabs3.addWidget(self.tabla)
         tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)

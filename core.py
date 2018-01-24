@@ -56,6 +56,9 @@ class Core():
     def matarProceso(self):
         self.proc.killCurrentProcess()
 
+    def getHeaders(self, path=default_path):
+        return csvdb.getHeader(path)
+
 
 class TerminalX(QtCore.QThread):
     def __init__(self, parent=None):

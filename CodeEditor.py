@@ -12,7 +12,6 @@ from PyQt4 import QtGui, QtCore
 
 
 class LineNumberArea(QtGui.QWidget):
-
     def __init__(self, editor):
         super(LineNumberArea, self).__init__(editor)
         self.myeditor = editor
@@ -29,12 +28,12 @@ class CodeEditor(QtGui.QPlainTextEdit):
         super(CodeEditor, self).__init__()
         self.lineNumberArea = LineNumberArea(self)
 
-        self.connect(self, QtCore.SIGNAL('blockCountChanged(int)'),
-                     self.updateLineNumberAreaWidth)
-        self.connect(self, QtCore.SIGNAL('updateRequest(QRect,int)'),
-                     self.updateLineNumberArea)
-        self.connect(self, QtCore.SIGNAL('cursorPositionChanged()'),
-                     self.highlightCurrentLine)
+        #self.connect(self, QtCore.SIGNAL('blockCountChanged(int)'), self.updateLineNumberAreaWidth)
+        #self.connect(self, QtCore.SIGNAL('updateRequest(QRect,int)'), self.updateLineNumberArea)
+        #self.connect(self, QtCore.SIGNAL('cursorPositionChanged()'), self.highlightCurrentLine)
+        self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
+        self.updateRequest.connect(self.updateLineNumberArea)
+        self.cursorPositionChanged.connect(self.highlightCurrentLine)
 
         self.updateLineNumberAreaWidth(0)
 

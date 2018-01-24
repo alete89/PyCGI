@@ -138,7 +138,7 @@ class PyCGI(QtGui.QMainWindow):
         layoutTabs3 = QtGui.QVBoxLayout(tabs)
 
         #self.form = TablaMySQLEmbedded.TablaMySQLEmbedded()
-        #layoutTabs3.addWidget(self.form)
+        # layoutTabs3.addWidget(self.form)
         tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
@@ -185,9 +185,8 @@ class PyCGI(QtGui.QMainWindow):
         return toolbar
 
     def KillingProcess(self):
-        self.cursor.insertText('\n --- Process stopped by user --- ')
-        self.cursor.movePosition(self.cursor.End)
-        # self.processRun.close()
+        self.terminalDeTexto.append("Matando proceso")
+        self.core.matarProceso()
 
     def CleaningTerminal(self):
         self.terminalDeTexto.setText("")

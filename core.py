@@ -53,6 +53,9 @@ class Core():
         if ok:
             self.proc.EjecutarComandos(cmd, newParams, loops)
 
+    def matarProceso(self):
+        self.proc.killCurrentProcess()
+
 
 class TerminalX(QtCore.QThread):
     def __init__(self, parent=None):

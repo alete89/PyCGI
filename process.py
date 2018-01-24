@@ -2,6 +2,9 @@
 
 # Default
 import multiprocessing as mp
+import sys
+# no entiendo por qué no funciona importando ctypes directamente.
+import ctypes.wintypes
 # GUI
 from PyQt4 import QtCore
 # Forms
@@ -41,3 +44,26 @@ class Process():
 
     def hayParaEscribir(self):
         self.mainWindow.showOutputInTerminal(self.process.readAll().data())
+
+    def getPid(self):
+        if sys.platform == 'win32':
+            LPWinProcInfo = ctypes.POINTER(WinProcInfo)
+            struct = ctypes.cast(int(self.process.pid()), LPWinProcInfo)
+            pid = struct.contents.dwProcessID
+        else:
+            pid = int(self.process.pid())
+        return pid
+
+    def killCurrentProcess(self):
+        self.mainWindow.showOutputInTerminal(str(self.getPid()))
+        self.process.kill()
+
+
+# windows only:
+class WinProcInfo(ctypes.Structure):
+    _fields_ = [
+        ('hProcess', ctypes.wintypes.HANDLE),
+        ('hThread', ctypes.wintypes.HANDLE),
+        ('dwProcessID', ctypes.wintypes.DWORD),
+        ('dwThreadID', ctypes.wintypes.DWORD),
+    ]

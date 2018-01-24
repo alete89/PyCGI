@@ -26,16 +26,3 @@ def findParameters(dataset):
         if parametro:
             lista_de_parametros.append(parametro)
     return lista_de_comandos, lista_de_parametros
-
-
-# ESTO ES todo GUI VER DÓNDE LO METEMOS:
-# widgetFormulario = QtGui.QWidget(self)
-# widgetFormulario.setGeometry(5,5,900,250)
-# layout = QtGui.QVBoxLayout(widgetFormulario)
-# print 'idFilaTemp vale: '+str(idFilaTemp)
-# self.form=ProcessFormV3(idFilaTemp)
-# layout.addWidget(self.form)
-# self.show()
-
-# if __name__ == "__main__":
-#    findParameters()

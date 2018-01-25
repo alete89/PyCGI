@@ -9,7 +9,7 @@ import paramForm
 import process
 
 
-default_path = os.getcwd() + r"/nuevo.csv"
+default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
 
 
 def fullDataSet(path=default_path):

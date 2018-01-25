@@ -50,8 +50,8 @@ def getPid():
     return pid
 
 
-def killCurrentProcess():
-    WINDOW_INSTANCE.showOutputInTerminal(str(getPid()))
+def killCurrentProcess(mw):
+    mw.showOutputInTerminal(str(getPid()))
     nProcess.kill()
 
 

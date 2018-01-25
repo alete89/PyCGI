@@ -175,7 +175,7 @@ class PyCGI(QtGui.QMainWindow):
 
     def KillingProcess(self):
         self.terminalDeTexto.append("Matando proceso")
-        core.matarProceso()
+        core.matarProceso(self)
 
     def CleaningTerminal(self):
         self.terminalDeTexto.setText("")
@@ -188,7 +188,7 @@ class PyCGI(QtGui.QMainWindow):
 
         if reply == QtGui.QMessageBox.Yes:
             self.cursor.insertText('\n--- Process stopped by user ---')
-            core.matarProceso()
+            core.matarProceso(self)
             exit()
         else:
             pass

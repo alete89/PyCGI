@@ -46,8 +46,8 @@ def PreEjecutarComandos(subMenu, mw):
         process.EjecutarComandos(cmd, newParams, loops, mw)
 
 
-def matarProceso():
-    process.killCurrentProcess()
+def matarProceso(mw):
+    process.killCurrentProcess(mw)
 
 
 def getHeaders(path=default_path):

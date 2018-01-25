@@ -3,7 +3,7 @@
 from PyQt4 import QtGui, QtCore
 import Highlighter
 import CodeEditor
-from core import TerminalX, Core
+import core
 import tabla
 
 
@@ -12,8 +12,6 @@ class PyCGI(QtGui.QMainWindow):
         super(PyCGI, self).__init__()
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
-
-        self.core = Core(self)
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
@@ -24,9 +22,9 @@ class PyCGI(QtGui.QMainWindow):
 
     def menuPrincipal(self):
         menubar = self.menuBar()
-        for menu in self.core.menuList(self.core.fullDataSet()):
+        for menu in core.menuList(core.fullDataSet()):
             thisMenu = menubar.addMenu('&' + str(menu))
-            for subMenu, idFila in zip(self.core.subMenuList(menu, self.core.fullDataSet()), self.core.idList(menu, self.core.fullDataSet())):
+            for subMenu, idFila in zip(core.subMenuList(menu, core.fullDataSet()), core.idList(menu, core.fullDataSet())):
                 action = QtGui.QAction('&' + str(subMenu), self)
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
                 action.triggered.connect(
@@ -34,7 +32,7 @@ class PyCGI(QtGui.QMainWindow):
                 thisMenu.addAction(action)
 
     def subMenuOptionClicked(self, subMenu):
-        self.core.PreEjecutarComandos(subMenu)
+        core.PreEjecutarComandos(subMenu, self)
 
     def VentanaPrincipal(self):
         self.model = QtGui.QFileSystemModel()
@@ -53,8 +51,8 @@ class PyCGI(QtGui.QMainWindow):
         self.setMinimumHeight(600)
 
         font = QtGui.QFont()
-        font.setFamily('Monospace')
-        font.setPointSize(11)
+        font.setFamily("Consolas, 'Courier New', monospace")
+        font.setPointSize(11)  # size in points
 
         self.killButton = QtGui.QPushButton("kill process")
         self.killButton.clicked.connect(self.KillingProcess)
@@ -64,12 +62,6 @@ class PyCGI(QtGui.QMainWindow):
 
         self.killGo = QtGui.QPushButton("kill and Go")
         self.killGo.clicked.connect(self.KillAndGo)
-
-        self.Exe = QtGui.QPushButton("Exe")
-        # self.Exe.clicked.connect(self.core.proc.EjecutarComandos)
-
-        self.Update = QtGui.QPushButton("Update PyCGI")
-        self.Update.clicked.connect(self.updateFunc)  # restartea la app
 
         self.terminalDeTexto = QtGui.QTextEdit(self)
         self.terminalDeTexto.setReadOnly(True)
@@ -86,7 +78,6 @@ class PyCGI(QtGui.QMainWindow):
 
         self.cursor = self.terminalDeTexto.textCursor()
 
-        self.EditorDeTexto = QtGui.QPlainTextEdit()
         self.EditorDeTexto = CodeEditor.CodeEditor()
         self.highlighter = Highlighter.Highlighter(
             self.EditorDeTexto.document())
@@ -113,9 +104,7 @@ class PyCGI(QtGui.QMainWindow):
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killButton)
         BotoneraInferior.addWidget(self.CleanTerminal)
-        BotoneraInferior.addWidget(self.Update)
         BotoneraInferior.addWidget(self.killGo)
-        BotoneraInferior.addWidget(self.Exe)
 
         splitterVert = QtGui.QSplitter(QtCore.Qt.Vertical)
 
@@ -139,7 +128,7 @@ class PyCGI(QtGui.QMainWindow):
         layoutTabs3 = QtGui.QVBoxLayout(tabs)
 
         self.tabla = tabla.Tabla()
-        self.tabla.ShowDataSet(self.core.fullDataSet(), self.core.getHeaders())
+        self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
         layoutTabs3.addWidget(self.tabla)
         tab3.setLayout(layoutTabs3)
 
@@ -151,8 +140,6 @@ class PyCGI(QtGui.QMainWindow):
         layout.addWidget(splitterHoriz)
 
         layout.addLayout(BotoneraInferior)
-
-        self.TermX = TerminalX(self)
 
         self.setLayout(BotoneraInferior)
         self.show()
@@ -188,7 +175,7 @@ class PyCGI(QtGui.QMainWindow):
 
     def KillingProcess(self):
         self.terminalDeTexto.append("Matando proceso")
-        self.core.matarProceso()
+        core.matarProceso()
 
     def CleaningTerminal(self):
         self.terminalDeTexto.setText("")
@@ -201,7 +188,7 @@ class PyCGI(QtGui.QMainWindow):
 
         if reply == QtGui.QMessageBox.Yes:
             self.cursor.insertText('\n--- Process stopped by user ---')
-            # self.processRun.close()
+            core.matarProceso()
             exit()
         else:
             pass
@@ -275,6 +262,3 @@ class PyCGI(QtGui.QMainWindow):
         self.EditorDeTexto.clear()
         self.is_new = True
         self.file_name = "NewFile"
-
-    def updateFunc(self):
-        pass

@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # Default
-import sys
 import os
 # Lib
 import csvdb
 import paramFinder
-# GUI
-from PyQt4.QtGui import QApplication
-from PyQt4 import QtCore
-# Forms
-import mainWindow
 import paramForm
 import process
 
@@ -18,61 +12,52 @@ import process
 default_path = os.getcwd() + r"/nuevo.csv"
 
 
-class Core():
-    def __init__(self, instanciamw):
-        self.mw = instanciamw
-        self.proc = process.Process(self.mw)
-
-    def fullDataSet(self, path=default_path):
-        return csvdb.getDataFromCsv(path)
-
-    def menuList(self, dataSet):
-        distinct = csvdb.distinct(dataSet, 1)
-        sortedList = csvdb.sortDataSet(distinct, 1)
-        return csvdb.getColumn(sortedList, 1)
-
-    def subMenuList(self, menu, dataSet):
-        subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-        subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
-        subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
-        return csvdb.distinct(subMenuSorted, 2)
-
-    def idList(self, menu, dataSet):
-        subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-        return csvdb.getColumn(subMenuFilter, 0)
-
-    def PreEjecutarComandos(self, subMenu):
-        secuencia = csvdb.dataFilter(self.fullDataSet(), 2, subMenu)
-        ordenada = csvdb.sortDataSet(secuencia, 4)
-
-        cmd, params = paramFinder.findParameters(ordenada)
-
-        newParams, ok = paramForm.paramForm.getNewParams(params)
-        loops = csvdb.getColumn(ordenada, 6)
-
-        if ok:
-            self.proc.EjecutarComandos(cmd, newParams, loops)
-
-    def matarProceso(self):
-        self.proc.killCurrentProcess()
-
-    def getHeaders(self, path=default_path):
-        return csvdb.getHeader(path)
+def fullDataSet(path=default_path):
+    return csvdb.getDataFromCsv(path)
 
 
-class TerminalX(QtCore.QThread):
-    def __init__(self, parent=None):
-        QtCore.QThread.__init__(self, parent)
-
-    def run(self):
-        pass
-        #self.emit(QtCore.SIGNAL("Activated( QString )"), core.proc.getOutput())
+def menuList(dataSet):
+    distinct = csvdb.distinct(dataSet, 1)
+    sortedList = csvdb.sortDataSet(distinct, 1)
+    return csvdb.getColumn(sortedList, 1)
 
 
-#core = Core()
+def subMenuList(menu, dataSet):
+    subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
+    subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
+    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
+    return csvdb.distinct(subMenuSorted, 2)
+
+
+def idList(menu, dataSet):
+    subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
+    return csvdb.getColumn(subMenuFilter, 0)
+
+
+def PreEjecutarComandos(subMenu, mw):
+    secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
+    ordenada = csvdb.sortDataSet(secuencia, 4)
+
+    cmd, params = paramFinder.findParameters(ordenada)
+
+    newParams, ok = paramForm.paramForm.getNewParams(params)
+    loops = csvdb.getColumn(ordenada, 6)
+    if ok:
+        process.EjecutarComandos(cmd, newParams, loops, mw)
+
+
+def matarProceso():
+    process.killCurrentProcess()
+
+
+def getHeaders(path=default_path):
+    return csvdb.getHeader(path)
 
 
 if __name__ == '__main__':
+    import sys
+    import mainWindow
+    from PyQt4.QtGui import QApplication
     app = QApplication(sys.argv)
     vp = mainWindow.PyCGI()
     vp.show()

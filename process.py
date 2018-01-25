@@ -1,65 +1,71 @@
 # -*- coding: utf-8 -*-
 
 # Default
-import multiprocessing as mp
 import sys
 # no entiendo por qué no funciona importando ctypes directamente.
 import ctypes.wintypes
 # GUI
-from PyQt4 import QtCore
-# Forms
+import PyQt4.QtCore
 
 
-lock = mp.Lock()
+nProcess = PyQt4.QtCore.QProcess()
+lista = []
+WINDOW_INSTANCE = None
 
 
-class Process():
-    def __init__(self, instanciamw):
-        self.mainWindow = instanciamw  # La instancia de la ventana actual
-        self.process = QtCore.QProcess()
-        self.lista = []
-        # El canal stdout y stderr juntos
-        self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
-        self.process.setReadChannelMode(QtCore.QProcess.MergedChannels)
-        self.process.finished.connect(self.runNow)
-        self.process.readyRead.connect(self.hayParaEscribir)
+def EjecutarComandos(comandos, parametros, iteraciones, mw):
+    global lista
+    global WINDOW_INSTANCE
+    WINDOW_INSTANCE = mw
+    lista = map(list, zip(comandos, parametros, iteraciones))
+    runNow()
 
-    def EjecutarComandos(self, comandos, parametros, iteraciones):
-        self.lista = map(list, zip(comandos, parametros, iteraciones))
-        self.runNow()
 
-    def runNow(self):
-        if (len(self.lista) == 0):
-            return
-        sublist = self.lista[0]
-        if int(sublist[2]) == 0:
-            del self.lista[0]
-            self.runNow()
+def runNow():
+    if (len(lista) == 0):
+        return
+    sublist = lista[0]
+    if int(sublist[2]) == 0:
+        del lista[0]
+        runNow()
+    else:
+        sublist[2] = str(int(sublist[2]) - 1)
+        if not sublist[1]:
+            nProcess.start(sublist[0])
         else:
-            sublist[2] = str(int(sublist[2]) - 1)
-            if not sublist[1]:
-                self.process.start(sublist[0])
-            else:
-                self.process.start(sublist[0], [sublist[1]])
-
-    def hayParaEscribir(self):
-        self.mainWindow.showOutputInTerminal(self.process.readAll().data())
-
-    def getPid(self):
-        if sys.platform == 'win32':
-            LPWinProcInfo = ctypes.POINTER(WinProcInfo)
-            struct = ctypes.cast(int(self.process.pid()), LPWinProcInfo)
-            pid = struct.contents.dwProcessID
-        else:
-            pid = int(self.process.pid())
-        return pid
-
-    def killCurrentProcess(self):
-        self.mainWindow.showOutputInTerminal(str(self.getPid()))
-        self.process.kill()
+            nProcess.start(sublist[0], [sublist[1]])
 
 
-# windows only:
+def hayParaEscribir():
+    WINDOW_INSTANCE.showOutputInTerminal(nProcess.readAll().data())
+
+
+def getPid():
+    if sys.platform == 'win32':
+        LPWinProcInfo = ctypes.POINTER(WinProcInfo)
+        struct = ctypes.cast(int(nProcess.pid()), LPWinProcInfo)
+        pid = struct.contents.dwProcessID
+    else:
+        pid = int(nProcess.pid())
+    return pid
+
+
+def killCurrentProcess():
+    WINDOW_INSTANCE.showOutputInTerminal(str(getPid()))
+    nProcess.kill()
+
+
+nProcess.setProcessChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
+nProcess.setReadChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
+nProcess.finished.connect(runNow)
+nProcess.readyRead.connect(hayParaEscribir)
+
+
+'''
+windows only
+'''
+
+
 class WinProcInfo(ctypes.Structure):
     _fields_ = [
         ('hProcess', ctypes.wintypes.HANDLE),

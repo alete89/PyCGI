@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 17 14:06:45 2017
-
-@author: manuel
-"""
 
 import sys
 from PyQt4 import QtGui, QtCore
@@ -25,10 +20,19 @@ class CodeEditor(QtGui.QPlainTextEdit):
     def __init__(self):
         super(CodeEditor, self).__init__()
         self.lineNumberArea = LineNumberArea(self)
+
         self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
         self.updateRequest.connect(self.updateLineNumberArea)
         self.cursorPositionChanged.connect(self.highlightCurrentLine)
+
         self.updateLineNumberAreaWidth(0)
+        self.setTabStopWidth(32)
+
+        font = QtGui.QFont()
+        font.setFamily("Consolas, 'Courier New', monospace")
+        font.setPointSize(11)
+        self.setFont(font)
+        self.setMinimumHeight(100)
 
     def lineNumberAreaWidth(self):
         digits = 1
@@ -43,40 +47,32 @@ class CodeEditor(QtGui.QPlainTextEdit):
         self.setViewportMargins(self.lineNumberAreaWidth(), 0, 0, 0)
 
     def updateLineNumberArea(self, rect, dy):
-
         if dy:
             self.lineNumberArea.scroll(0, dy)
         else:
-            self.lineNumberArea.update(0, rect.y(), self.lineNumberArea.width(),
-                                       rect.height())
-
+            self.lineNumberArea.update(
+                0, rect.y(), self.lineNumberArea.width(), rect.height())
         if rect.contains(self.viewport().rect()):
             self.updateLineNumberAreaWidth(0)
-
         cr = self.contentsRect()
-        self.lineNumberArea.setGeometry(QtCore.QRect(cr.left(), cr.top(),
-                                                     self.lineNumberAreaWidth(), cr.height()))
+        self.lineNumberArea.setGeometry(QtCore.QRect(
+            cr.left(), cr.top(), self.lineNumberAreaWidth(), cr.height()))
 
     def lineNumberAreaPaintEvent(self, event):
         mypainter = QtGui.QPainter(self.lineNumberArea)
-
         mypainter.fillRect(event.rect(), QtCore.Qt.lightGray)
-
         block = self.firstVisibleBlock()
         blockNumber = block.blockNumber()
         top = self.blockBoundingGeometry(
             block).translated(self.contentOffset()).top()
         bottom = top + self.blockBoundingRect(block).height()
-
-        # Just to make sure I use the right font
         height = self.fontMetrics().height()
         while block.isValid() and (top <= event.rect().bottom()):
             if block.isVisible() and (bottom >= event.rect().top()):
                 number = str(blockNumber + 1)
                 mypainter.setPen(QtCore.Qt.black)
-                mypainter.drawText(0, top, self.lineNumberArea.width(), height,
-                                   QtCore.Qt.AlignRight, number)
-
+                mypainter.drawText(0, top, self.lineNumberArea.width(
+                ), height, QtCore.Qt.AlignRight, number)
             block = block.next()
             top = bottom
             bottom = top + self.blockBoundingRect(block).height()
@@ -84,12 +80,9 @@ class CodeEditor(QtGui.QPlainTextEdit):
 
     def highlightCurrentLine(self):
         extraSelections = []
-
         if not self.isReadOnly():
             selection = QtGui.QTextEdit.ExtraSelection()
-
             lineColor = QtGui.QColor(QtCore.Qt.yellow).lighter(160)
-
             selection.format.setBackground(lineColor)
             selection.format.setProperty(
                 QtGui.QTextFormat.FullWidthSelection, True)

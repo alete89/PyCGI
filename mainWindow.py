@@ -21,6 +21,7 @@ class PyCGI(QtGui.QMainWindow):
         self.show()
 
     def menuPrincipal(self):
+        self.menuBar().clear()
         menubar = self.menuBar()
         for menu in core.menuList(core.fullDataSet()):
             thisMenu = menubar.addMenu('&' + str(menu))
@@ -135,9 +136,13 @@ class PyCGI(QtGui.QMainWindow):
         self.saveTableButton.clicked.connect(
             lambda ignore, tabl=self.tabla: core.saveTable(tabl))
 
+        self.updateMenuBarButton = QtGui.QPushButton("actualizar menu")
+        self.updateMenuBarButton.clicked.connect(self.menuPrincipal)
+
         layoutTabs3.addWidget(self.tabla)
         layoutTabs3.addWidget(self.addRowButton)
         layoutTabs3.addWidget(self.saveTableButton)
+        layoutTabs3.addWidget(self.updateMenuBarButton)
         tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)

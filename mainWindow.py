@@ -129,7 +129,15 @@ class PyCGI(QtGui.QMainWindow):
 
         self.tabla = tabla.Tabla()
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
+        self.addRowButton = QtGui.QPushButton("Agregar fila")
+        self.addRowButton.clicked.connect(self.tabla.addRow)
+        self.saveTableButton = QtGui.QPushButton("Guardar cambios")
+        self.saveTableButton.clicked.connect(
+            lambda ignore, tabl=self.tabla: core.saveTable(tabl))
+
         layoutTabs3.addWidget(self.tabla)
+        layoutTabs3.addWidget(self.addRowButton)
+        layoutTabs3.addWidget(self.saveTableButton)
         tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)

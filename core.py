@@ -54,6 +54,11 @@ def getHeaders(path=default_path):
     return csvdb.getHeader(path)
 
 
+def saveTable(table, path=default_path, header=getHeaders()):
+    dataset = table.getDataSet()
+    csvdb.SaveCSV(path, dataset, header)
+
+
 if __name__ == '__main__':
     import sys
     import mainWindow

@@ -46,7 +46,7 @@ class PyCGI(QtGui.QMainWindow):
         tree.setSortingEnabled(True)
         tree.setColumnWidth(0, 300)
 
-        # tree.doubleClicked.connect(self.OpenFileNow)
+        tree.doubleClicked.connect(self.openFileFromTree)
 
         self.setMinimumWidth(650)
         self.setMinimumHeight(600)
@@ -165,7 +165,7 @@ class PyCGI(QtGui.QMainWindow):
 
         OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         OpenIcon.setShortcut('Ctrl+o')
-        OpenIcon.triggered.connect(self.OpenDialog)
+        OpenIcon.triggered.connect(self.openFile)
         toolbar.addAction(OpenIcon)
 
         SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
@@ -206,34 +206,23 @@ class PyCGI(QtGui.QMainWindow):
         else:
             pass
 
-    def OpenDialog(self):
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+    def openFile(self, fname):
+        if not fname:
+            fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
         if fname:
             with open(fname, 'r') as f:
                 data = f.read()
                 self.EditorDeTexto.setPlainText(data)
                 self.is_new = False
                 self.file_name = fname
-            print 'OpenDialog - fname: ' + str(fname)
             return fname
         return ''
 
-    @QtCore.pyqtSlot(QtCore.QModelIndex)
-    def OpenFileNow(self, index):
-
+    def openFileFromTree(self, index):
         indexItem = self.model.index(index.row(), 0, index.parent())
         filePath = self.model.filePath(indexItem)
         fname = str(filePath)
-        print 'fname vale: ' + str(fname)
-        if fname:
-            with open(fname, 'r') as f:
-                data = f.read()
-                self.EditorDeTexto.setPlainText(data)
-                self.is_new = False
-                self.file_name = fname
-            print 'OpenDialog - fname: ' + str(fname)
-            return fname
-        return ''
+        self.openFile(fname)
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(

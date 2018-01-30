@@ -96,10 +96,10 @@ class PyCGI(QtGui.QMainWindow):
         layout = QtGui.QVBoxLayout(widget_central)
 
         # No tendríamos que cargar las tabs dinamicamente también?
-        tabs = QtGui.QTabWidget()
-        tab1 = QtGui.QWidget()
-        tab2 = QtGui.QWidget()
-        tab3 = QtGui.QWidget()
+        self.tabs = QtGui.QTabWidget()
+        self.tab1 = QtGui.QWidget()
+        self.tab2 = QtGui.QWidget()
+        self.tab3 = QtGui.QWidget()
         # tab4=QWidget()
 
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
@@ -113,20 +113,20 @@ class PyCGI(QtGui.QMainWindow):
         splitterVert.addWidget(self.terminalDeProceso)
         splitterVert.setSizes([200, 200])
 
-        tabs.addTab(tab1, "Proceso")
-        tabs.addTab(tab2, "Editor")
-        tabs.addTab(tab3, "Tabla de secuencias")
+        self.tabs.addTab(self.tab1, "Proceso")
+        self.tabs.addTab(self.tab2, "Editor")
+        self.tabs.addTab(self.tab3, "Tabla de secuencias")
 
-        layoutTabs1 = QtGui.QVBoxLayout(tabs)
+        layoutTabs1 = QtGui.QVBoxLayout(self.tabs)
         layoutTabs1.addWidget(splitterVert)
-        tab1.setLayout(layoutTabs1)
+        self.tab1.setLayout(layoutTabs1)
 
-        layoutTabs2 = QtGui.QVBoxLayout(tabs)
+        layoutTabs2 = QtGui.QVBoxLayout(self.tabs)
         layoutTabs2.addWidget(self.theToolbar())
         layoutTabs2.addWidget(self.EditorDeTexto)
-        tab2.setLayout(layoutTabs2)
+        self.tab2.setLayout(layoutTabs2)
 
-        layoutTabs3 = QtGui.QVBoxLayout(tabs)
+        layoutTabs3 = QtGui.QVBoxLayout(self.tabs)
 
         self.tabla = tabla.Tabla()
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
@@ -143,11 +143,11 @@ class PyCGI(QtGui.QMainWindow):
         layoutTabs3.addWidget(self.addRowButton)
         layoutTabs3.addWidget(self.saveTableButton)
         layoutTabs3.addWidget(self.updateMenuBarButton)
-        tab3.setLayout(layoutTabs3)
+        self.tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitterHoriz.addWidget(tree)
-        splitterHoriz.addWidget(tabs)
+        splitterHoriz.addWidget(self.tabs)
         splitterHoriz.setSizes([100, 500])
 
         layout.addWidget(splitterHoriz)
@@ -223,6 +223,8 @@ class PyCGI(QtGui.QMainWindow):
         filePath = self.model.filePath(indexItem)
         fname = str(filePath)
         self.openFile(fname)
+        self.tabs.setCurrentWidget(self.tab2)
+        
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(

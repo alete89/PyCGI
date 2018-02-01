@@ -41,13 +41,16 @@ def hayParaEscribir():
 
 
 def getPid():
-    if sys.platform == 'win32':
-        LPWinProcInfo = ctypes.POINTER(WinProcInfo)
-        struct = ctypes.cast(int(nProcess.pid()), LPWinProcInfo)
-        pid = struct.contents.dwProcessID
-    else:
-        pid = int(nProcess.pid())
-    return pid
+    try:
+        if sys.platform == 'win32':
+            LPWinProcInfo = ctypes.POINTER(WinProcInfo)
+            struct = ctypes.cast(int(nProcess.pid()), LPWinProcInfo)
+            pid = struct.contents.dwProcessID
+        else:
+            pid = int(nProcess.pid())
+        return pid
+    except UserWarning:
+        pass
 
 
 def killCurrentProcess(mw):

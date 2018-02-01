@@ -56,6 +56,32 @@ class PyCGI(QtGui.QMainWindow):
         self.EditorDeTexto.setStyleSheet("background-color: #f1f1f1;")
         self.EditorDeTexto.setMinimumHeight(100)
 
+    def crearToolbar(self):
+        toolbar = self.addToolBar("Editor de texto Toolbar")
+
+        OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
+        OpenIcon.setShortcut('Ctrl+o')
+        OpenIcon.triggered.connect(self.openFile)
+        toolbar.addAction(OpenIcon)
+
+        SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
+        SaveIcon.setShortcut('Ctrl+s')
+        SaveIcon.triggered.connect(self.saveDialog)
+        toolbar.addAction(SaveIcon)
+
+        SaveAsIcon = QtGui.QAction(QtGui.QIcon(
+            'icons/saveAs.png'), 'Save as', self)
+        SaveAsIcon.setShortcut('Ctrl+g')
+        SaveAsIcon.triggered.connect(self.saveAsDialog)
+        toolbar.addAction(SaveAsIcon)
+
+        CloseIcon = QtGui.QAction(QtGui.QIcon(
+            'icons/closeFile.png'), 'Close', self)
+        CloseIcon.setShortcut('Ctrl+x')
+        CloseIcon.triggered.connect(self.CloseDialog)
+        toolbar.addAction(CloseIcon)
+        return toolbar
+
     def VentanaPrincipal(self):
 
         self.setMinimumWidth(650)
@@ -98,7 +124,7 @@ class PyCGI(QtGui.QMainWindow):
         self.tab1.setLayout(layoutTabs1)
 
         layoutTabs2 = QtGui.QVBoxLayout(self.tabs)
-        layoutTabs2.addWidget(self.theToolbar())
+        layoutTabs2.addWidget(self.crearToolbar())
         layoutTabs2.addWidget(self.EditorDeTexto)
         self.tab2.setLayout(layoutTabs2)
 
@@ -150,32 +176,6 @@ class PyCGI(QtGui.QMainWindow):
 
     def showOutputInTerminal(self, text):
         self.terminalDeTexto.append(text)
-
-    def theToolbar(self):
-        toolbar = self.addToolBar("Editor de texto Toolbar")
-
-        OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
-        OpenIcon.setShortcut('Ctrl+o')
-        OpenIcon.triggered.connect(self.openFile)
-        toolbar.addAction(OpenIcon)
-
-        SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
-        SaveIcon.setShortcut('Ctrl+s')
-        SaveIcon.triggered.connect(self.saveDialog)
-        toolbar.addAction(SaveIcon)
-
-        SaveAsIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/saveAs.png'), 'Save as', self)
-        SaveAsIcon.setShortcut('Ctrl+g')
-        SaveAsIcon.triggered.connect(self.saveAsDialog)
-        toolbar.addAction(SaveAsIcon)
-
-        CloseIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/closeFile.png'), 'Close', self)
-        CloseIcon.setShortcut('Ctrl+x')
-        CloseIcon.triggered.connect(self.CloseDialog)
-        toolbar.addAction(CloseIcon)
-        return toolbar
 
     def KillingProcess(self):
         self.terminalDeTexto.append("Matando proceso")

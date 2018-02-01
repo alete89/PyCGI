@@ -254,3 +254,12 @@ class PyCGI(QtGui.QMainWindow):
         self.EditorDeTexto.clear()
         self.is_new = True
         self.file_name = "NewFile"
+
+
+if __name__ == '__main__':
+    import sys
+    from PyQt4.QtGui import QApplication
+    app = QApplication(sys.argv)
+    vp = PyCGI()
+    vp.show()
+    sys.exit(app.exec_())

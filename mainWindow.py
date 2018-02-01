@@ -15,77 +15,60 @@ class PyCGI(QtGui.QMainWindow):
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        self.treeWidget()
+        self.crearTerminal()
+        self.crearEditorDeTexto()
         self.VentanaPrincipal()
-        self.menuPrincipal()
+        self.crearMenu()
         self.statusBar()
         self.show()
 
-    def menuPrincipal(self):
-        self.menuBar().clear()
-        menubar = self.menuBar()
-        for menu in core.menuList(core.fullDataSet()):
-            thisMenu = menubar.addMenu('&' + str(menu))
-            for subMenu, idFila in zip(core.subMenuList(menu, core.fullDataSet()), core.idList(menu, core.fullDataSet())):
-                action = QtGui.QAction('&' + str(subMenu), self)
-                action.setStatusTip(str(idFila) + " - " + str(subMenu))
-                action.triggered.connect(
-                    lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
-                thisMenu.addAction(action)
-
-    def subMenuOptionClicked(self, subMenu):
-        core.PreEjecutarComandos(subMenu, self)
-
-    def VentanaPrincipal(self):
+    def treeWidget(self):
         self.model = QtGui.QFileSystemModel()
         self.model.setRootPath(QtCore.QDir.currentPath())
 
-        tree = QtGui.QTreeView()
-        tree.setModel(self.model)
-        tree.setAnimated(True)
-        tree.setIndentation(15)
-        tree.setSortingEnabled(True)
-        tree.setColumnWidth(0, 300)
+        self.tree = QtGui.QTreeView()
+        self.tree.setModel(self.model)
+        self.tree.setAnimated(True)
+        self.tree.setIndentation(15)
+        self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(0, 300)
+        self.tree.doubleClicked.connect(self.openFileFromTree)
 
-        tree.doubleClicked.connect(self.openFileFromTree)
-
-        self.setMinimumWidth(650)
-        self.setMinimumHeight(600)
-
-        font = QtGui.QFont()
-        font.setFamily("Consolas, 'Courier New', monospace")
-        font.setPointSize(11)  # size in points
-
-        self.killButton = QtGui.QPushButton("kill process")
-        self.killButton.clicked.connect(self.KillingProcess)
-
-        self.CleanTerminal = QtGui.QPushButton("clean")
-        self.CleanTerminal.clicked.connect(self.CleaningTerminal)
-
-        self.killGo = QtGui.QPushButton("kill and Go")
-        self.killGo.clicked.connect(self.KillAndGo)
-
+    def crearTerminal(self):
+        self.font = QtGui.QFont()
+        self.font.setFamily("Consolas, 'Courier New', monospace")
+        self.font.setPointSize(11)  # size in points
         self.terminalDeTexto = QtGui.QTextEdit(self)
         self.terminalDeTexto.setReadOnly(True)
-        self.terminalDeTexto.setFont(font)
+        self.terminalDeTexto.setFont(self.font)
         self.terminalDeTexto.setStyleSheet(
             "background-color: #585858; color: #fff")
 
-        self.terminalDeProceso = QtGui.QTextEdit(self)
-
-        self.terminalDeProceso.setReadOnly(True)
-        self.terminalDeProceso.setFont(font)
-        self.terminalDeProceso.setStyleSheet(
-            "background-color: #595999; color: #fff")
-
         self.cursor = self.terminalDeTexto.textCursor()
 
+    def crearEditorDeTexto(self):
         self.EditorDeTexto = CodeEditor.CodeEditor()
         self.highlighter = Highlighter.Highlighter(
             self.EditorDeTexto.document())
 
-        self.EditorDeTexto.setFont(font)
+        self.EditorDeTexto.setFont(self.font)
         self.EditorDeTexto.setStyleSheet("background-color: #f1f1f1;")
         self.EditorDeTexto.setMinimumHeight(100)
+
+    def VentanaPrincipal(self):
+
+        self.setMinimumWidth(650)
+        self.setMinimumHeight(600)
+
+        self.killButton = QtGui.QPushButton("Kill process")
+        self.killButton.clicked.connect(self.KillingProcess)
+
+        self.cleanTerminalButton = QtGui.QPushButton("Clean terminal")
+        self.cleanTerminalButton.clicked.connect(self.cleanTerminal)
+
+        self.killGo = QtGui.QPushButton("Quit")
+        self.killGo.clicked.connect(self.KillAndGo)
 
         self.terminalDeTexto.setMinimumHeight(100)
         self.cursor = QtGui.QTextCursor(self.terminalDeTexto.document())
@@ -100,25 +83,18 @@ class PyCGI(QtGui.QMainWindow):
         self.tab1 = QtGui.QWidget()
         self.tab2 = QtGui.QWidget()
         self.tab3 = QtGui.QWidget()
-        # tab4=QWidget()
 
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killButton)
-        BotoneraInferior.addWidget(self.CleanTerminal)
+        BotoneraInferior.addWidget(self.cleanTerminalButton)
         BotoneraInferior.addWidget(self.killGo)
-
-        splitterVert = QtGui.QSplitter(QtCore.Qt.Vertical)
-
-        splitterVert.addWidget(self.terminalDeTexto)
-        splitterVert.addWidget(self.terminalDeProceso)
-        splitterVert.setSizes([200, 200])
 
         self.tabs.addTab(self.tab1, "Proceso")
         self.tabs.addTab(self.tab2, "Editor")
         self.tabs.addTab(self.tab3, "Tabla de secuencias")
 
         layoutTabs1 = QtGui.QVBoxLayout(self.tabs)
-        layoutTabs1.addWidget(splitterVert)
+        layoutTabs1.addWidget(self.terminalDeTexto)
         self.tab1.setLayout(layoutTabs1)
 
         layoutTabs2 = QtGui.QVBoxLayout(self.tabs)
@@ -137,7 +113,7 @@ class PyCGI(QtGui.QMainWindow):
             lambda ignore, tabl=self.tabla: core.saveTable(tabl))
 
         self.updateMenuBarButton = QtGui.QPushButton("actualizar menu")
-        self.updateMenuBarButton.clicked.connect(self.menuPrincipal)
+        self.updateMenuBarButton.clicked.connect(self.crearMenu)
 
         layoutTabs3.addWidget(self.tabla)
         layoutTabs3.addWidget(self.addRowButton)
@@ -146,7 +122,7 @@ class PyCGI(QtGui.QMainWindow):
         self.tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
-        splitterHoriz.addWidget(tree)
+        splitterHoriz.addWidget(self.tree)
         splitterHoriz.addWidget(self.tabs)
         splitterHoriz.setSizes([100, 500])
 
@@ -156,6 +132,21 @@ class PyCGI(QtGui.QMainWindow):
 
         self.setLayout(BotoneraInferior)
         self.show()
+
+    def crearMenu(self):
+        self.menuBar().clear()
+        menubar = self.menuBar()
+        for menu in core.menuList(core.fullDataSet()):
+            thisMenu = menubar.addMenu('&' + str(menu))
+            for subMenu, idFila in zip(core.subMenuList(menu, core.fullDataSet()), core.idList(menu, core.fullDataSet())):
+                action = QtGui.QAction('&' + str(subMenu), self)
+                action.setStatusTip(str(idFila) + " - " + str(subMenu))
+                action.triggered.connect(
+                    lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
+                thisMenu.addAction(action)
+
+    def subMenuOptionClicked(self, subMenu):
+        core.PreEjecutarComandos(subMenu, self)
 
     def showOutputInTerminal(self, text):
         self.terminalDeTexto.append(text)
@@ -190,9 +181,8 @@ class PyCGI(QtGui.QMainWindow):
         self.terminalDeTexto.append("Matando proceso")
         core.matarProceso(self)
 
-    def CleaningTerminal(self):
+    def cleanTerminal(self):
         self.terminalDeTexto.setText("")
-        self.terminalDeProceso.setText("")
 
     def KillAndGo(self):
         reply = QtGui.QMessageBox.question(self, 'Message',
@@ -200,8 +190,7 @@ class PyCGI(QtGui.QMainWindow):
                                            QtGui.QMessageBox.No, QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:
-            self.cursor.insertText('\n--- Process stopped by user ---')
-            core.matarProceso(self)
+            # core.matarProceso(self)
             exit()
         else:
             pass
@@ -224,7 +213,6 @@ class PyCGI(QtGui.QMainWindow):
         fname = str(filePath)
         self.openFile(fname)
         self.tabs.setCurrentWidget(self.tab2)
-        
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(

@@ -33,7 +33,7 @@ def runNow():
         if not sublist[1]:
             nProcess.start(sublist[0])
         else:
-            nProcess.start(sublist[0], [sublist[1]])
+            nProcess.start(sublist[0], sublist[1])
 
 
 def hayParaEscribir():
@@ -64,12 +64,8 @@ nProcess.finished.connect(runNow)
 nProcess.readyRead.connect(hayParaEscribir)
 
 
-'''
-windows only
-'''
-
-
 class WinProcInfo(ctypes.Structure):
+    '''windows only'''
     _fields_ = [
         ('hProcess', ctypes.wintypes.HANDLE),
         ('hThread', ctypes.wintypes.HANDLE),

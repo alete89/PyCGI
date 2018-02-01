@@ -15,6 +15,7 @@ class PyCGI(QtGui.QMainWindow):
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        
         self.treeWidget()
         self.crearTerminal()
         self.crearEditorDeTexto()
@@ -94,7 +95,7 @@ class PyCGI(QtGui.QMainWindow):
         self.cleanTerminalButton.clicked.connect(self.cleanTerminal)
 
         self.killGo = QtGui.QPushButton("Quit")
-        self.killGo.clicked.connect(self.KillAndGo)
+        self.killGo.clicked.connect(self.quitApp)
 
         self.terminalDeTexto.setMinimumHeight(100)
         self.cursor = QtGui.QTextCursor(self.terminalDeTexto.document())
@@ -156,7 +157,6 @@ class PyCGI(QtGui.QMainWindow):
 
         layout.addLayout(BotoneraInferior)
 
-        self.setLayout(BotoneraInferior)
         self.show()
 
     def crearMenu(self):
@@ -184,7 +184,7 @@ class PyCGI(QtGui.QMainWindow):
     def cleanTerminal(self):
         self.terminalDeTexto.setText("")
 
-    def KillAndGo(self):
+    def quitApp(self):
         reply = QtGui.QMessageBox.question(self, 'Message',
                                            "Are you sure you want to quit?", QtGui.QMessageBox.Yes |
                                            QtGui.QMessageBox.No, QtGui.QMessageBox.No)

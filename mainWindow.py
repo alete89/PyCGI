@@ -15,7 +15,7 @@ class PyCGI(QtGui.QMainWindow):
 
         self.setWindowTitle(
             'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
-        
+
         self.treeWidget()
         self.crearTerminal()
         self.crearEditorDeTexto()
@@ -50,12 +50,13 @@ class PyCGI(QtGui.QMainWindow):
 
     def crearEditorDeTexto(self):
         self.EditorDeTexto = CodeEditor.CodeEditor()
-        self.highlighter = Highlighter.Highlighter(
-            self.EditorDeTexto.document())
 
         self.EditorDeTexto.setFont(self.font)
         self.EditorDeTexto.setStyleSheet("background-color: #f1f1f1;")
         self.EditorDeTexto.setMinimumHeight(100)
+
+        self.pythonHighlighter = Highlighter.Highlighter(
+            self.EditorDeTexto.document())
 
     def crearToolbar(self):
         toolbar = self.addToolBar("Editor de texto Toolbar")
@@ -204,8 +205,10 @@ class PyCGI(QtGui.QMainWindow):
                 self.EditorDeTexto.setPlainText(data)
                 self.is_new = False
                 self.file_name = fname
-            return fname
-        return ''
+        if fname[-3:] == ".py":
+            self.pythonHighlighter.setDocument(self.EditorDeTexto.document())
+        else:
+            self.pythonHighlighter.setDocument(None)  # quitar higlight
 
     def openFileFromTree(self, index):
         indexItem = self.model.index(index.row(), 0, index.parent())

@@ -17,6 +17,7 @@ def EjecutarComandos(comandos, parametros, iteraciones, mw):
     global lista
     global WINDOW_INSTANCE
     WINDOW_INSTANCE = mw
+    # aca esta el problema
     lista = map(list, zip(comandos, parametros, iteraciones))
     runNow()
 

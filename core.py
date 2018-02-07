@@ -35,6 +35,7 @@ def idList(menu, dataSet):
 
 
 def PreEjecutarComandos(subMenu, mw):
+    mw.tabs.setCurrentWidget(mw.tab1)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 

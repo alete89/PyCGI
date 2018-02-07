@@ -4,7 +4,6 @@ import ctypes.wintypes
 
 
 class WinProcInfo(ctypes.Structure):
-    '''windows only'''
     _fields_ = [
         ('hProcess', ctypes.wintypes.HANDLE),
         ('hThread', ctypes.wintypes.HANDLE),

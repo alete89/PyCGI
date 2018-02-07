@@ -4,6 +4,7 @@
 import sys
 # no entiendo por qué no funciona importando ctypes directamente.
 if sys.platform == "win32":
+    '''windows only'''
     from winstructs import WinProcInfo
     import ctypes
 # GUI
@@ -53,7 +54,7 @@ def getPid():
             pid = int(nProcess.pid())
         return pid
     except UserWarning:
-        pass
+        pass  # VER
 
 
 def killCurrentProcess(mw):

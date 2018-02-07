@@ -137,16 +137,11 @@ class PyCGI(QtGui.QMainWindow):
         self.addRowButton = QtGui.QPushButton("Agregar fila")
         self.addRowButton.clicked.connect(self.tabla.addRow)
         self.saveTableButton = QtGui.QPushButton("Guardar cambios")
-        self.saveTableButton.clicked.connect(
-            lambda ignore, tabl=self.tabla: core.saveTable(tabl))
-
-        self.updateMenuBarButton = QtGui.QPushButton("actualizar menu")
-        self.updateMenuBarButton.clicked.connect(self.crearMenu)
+        self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
 
         layoutTabs3.addWidget(self.tabla)
         layoutTabs3.addWidget(self.addRowButton)
         layoutTabs3.addWidget(self.saveTableButton)
-        layoutTabs3.addWidget(self.updateMenuBarButton)
         self.tab3.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
@@ -184,6 +179,10 @@ class PyCGI(QtGui.QMainWindow):
 
     def cleanTerminal(self):
         self.terminalDeTexto.setText("")
+
+    def guardarCambiosClicked(self):
+        core.saveTable(self.tabla)
+        self.crearMenu()
 
     def quitApp(self):
         reply = QtGui.QMessageBox.question(self, 'Message',

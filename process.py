@@ -3,7 +3,8 @@
 # Default
 import sys
 # no entiendo por qué no funciona importando ctypes directamente.
-import ctypes.wintypes
+if sys.platform == "win32":
+    import ctypes.wintypes
 # GUI
 import PyQt4.QtCore
 

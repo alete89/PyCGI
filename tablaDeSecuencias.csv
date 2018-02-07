@@ -9,3 +9,4 @@ id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
 8;prueba;numeros;1;1;python ./scripts/uno.py;1
 9;prueba;numeros;2;2;python ./scripts/dos.py;1
 10;prueba;numeros;3;3;python ./scripts/tres.py;1
+11;prueba;numeros;4;4;ping (ip);1

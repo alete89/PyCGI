@@ -4,7 +4,8 @@
 import sys
 # no entiendo por qué no funciona importando ctypes directamente.
 if sys.platform == "win32":
-    import ctypes.wintypes
+    from winstructs import WinProcInfo
+    import ctypes
 # GUI
 import PyQt4.QtCore
 
@@ -64,13 +65,3 @@ nProcess.setProcessChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
 nProcess.setReadChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
 nProcess.finished.connect(runNow)
 nProcess.readyRead.connect(hayParaEscribir)
-
-
-class WinProcInfo(ctypes.Structure):
-    '''windows only'''
-    _fields_ = [
-        ('hProcess', ctypes.wintypes.HANDLE),
-        ('hThread', ctypes.wintypes.HANDLE),
-        ('dwProcessID', ctypes.wintypes.DWORD),
-        ('dwThreadID', ctypes.wintypes.DWORD),
-    ]

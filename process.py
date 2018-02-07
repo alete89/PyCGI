@@ -3,8 +3,9 @@
 # Default
 import sys
 # no entiendo por qué no funciona importando ctypes directamente.
+'''windows only'''
 if sys.platform == "win32":
-    '''windows only'''
+
     from winstructs import WinProcInfo
     import ctypes
 # GUI
@@ -14,6 +15,7 @@ import PyQt4.QtCore
 nProcess = PyQt4.QtCore.QProcess()
 lista = []
 WINDOW_INSTANCE = None
+current_process = ""
 
 
 def EjecutarComandos(comandos, parametros, iteraciones, mw):
@@ -34,6 +36,10 @@ def runNow():
         runNow()
     else:
         sublist[2] = str(int(sublist[2]) - 1)
+        global current_process
+        current_process = sublist[0]
+        WINDOW_INSTANCE.showOutputInTerminal(
+            "iniciando proceso: " + current_process)
         if not sublist[1]:
             nProcess.start(sublist[0])
         else:
@@ -41,7 +47,7 @@ def runNow():
 
 
 def hayParaEscribir():
-    WINDOW_INSTANCE.showOutputInTerminal(nProcess.readAll().data())
+    WINDOW_INSTANCE.showOutputInTerminal(unicode(nProcess.readAll().data()))
 
 
 def getPid():
@@ -62,7 +68,12 @@ def killCurrentProcess(mw):
     nProcess.kill()
 
 
+def processJustFinished():
+    WINDOW_INSTANCE.showOutputInTerminal("fin de proceso: " + current_process)
+    runNow()
+
+
 nProcess.setProcessChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
 nProcess.setReadChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
-nProcess.finished.connect(runNow)
+nProcess.finished.connect(processJustFinished)
 nProcess.readyRead.connect(hayParaEscribir)

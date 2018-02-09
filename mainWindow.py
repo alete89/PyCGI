@@ -174,7 +174,7 @@ class PyCGI(QtGui.QMainWindow):
         self.terminalDeTexto.append(text)
 
     def KillingProcess(self):
-        self.terminalDeTexto.append("Matando proceso")
+        self.terminalDeTexto.append("Matando proceso:")
         core.matarProceso(self)
 
     def cleanTerminal(self):

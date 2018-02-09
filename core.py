@@ -47,7 +47,7 @@ def PreEjecutarComandos(subMenu, mw):
     newParams, ok = paramForm.paramForm.getNewParams(params)
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
-        process.EjecutarComandos(cmd, newParams, loops, mw)
+        process.ejecutarSecuencia(cmd, newParams, loops, mw)
 
 
 def matarProceso(mw):

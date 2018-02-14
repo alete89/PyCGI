@@ -6,7 +6,7 @@ from PyQt4 import QtCore
 
 if sys.platform == "win32":
     # Windows only
-    from winstructs import WinProcInfo
+    from .winstructs import WinProcInfo
     import ctypes
 
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui, QtCore
-import Highlighter
-import CodeEditor
-import core
-import tabla
+from ..logic import core
+from . import Highlighter
+from . import CodeEditor
+from . import tabla
 
 
 class PyCGI(QtGui.QMainWindow):

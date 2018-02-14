@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Default
 import os
-# Lib
-import csvdb
-import paramFinder
-import paramForm
-#import process
-import process
+from . import csvdb
+from . import paramFinder
+from . import process
+from ..gui import paramForm
 
 
 default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
@@ -61,13 +58,3 @@ def getHeaders(path=default_path):
 def saveTable(table, path=default_path, header=getHeaders()):
     dataset = table.getDataSet()
     csvdb.SaveCSV(path, dataset, header)
-
-
-if __name__ == '__main__':
-    import sys
-    import mainWindow
-    from PyQt4.QtGui import QApplication
-    app = QApplication(sys.argv)
-    vp = mainWindow.PyCGI()
-    vp.show()
-    sys.exit(app.exec_())

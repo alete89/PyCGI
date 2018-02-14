@@ -23,9 +23,10 @@ def menuList(dataSet):
 
 def subMenuList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
+    subMenuDistinct = csvdb.distinct(subMenuFilter, 2)
+    subMenuColumn = csvdb.getColumn(subMenuDistinct, 2)
     subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
-    return csvdb.distinct(subMenuSorted, 2)
+    return subMenuSorted
 
 
 def idList(menu, dataSet):

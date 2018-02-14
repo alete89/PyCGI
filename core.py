@@ -7,11 +7,11 @@ import csvdb
 import paramFinder
 import paramForm
 #import process
-import ProcessClass
+import process
 
 
 default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
-process = ProcessClass.Process()
+process = process.Process()
 
 
 def fullDataSet(path=default_path):

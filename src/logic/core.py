@@ -36,7 +36,6 @@ def idList(menu, dataSet):
 
 def PreEjecutarComandos(subMenu, mw):
     mw.tabs.setCurrentWidget(mw.tab1)
-    mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 
@@ -45,6 +44,7 @@ def PreEjecutarComandos(subMenu, mw):
     newParams, ok = paramForm.paramForm.getNewParams(params)
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
+        mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
         process.ejecutarSecuencia(cmd, newParams, loops, mw)
 
 

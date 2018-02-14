@@ -6,10 +6,12 @@ import os
 import csvdb
 import paramFinder
 import paramForm
+#import process
 import process
 
 
 default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
+process = process.Process()
 
 
 def fullDataSet(path=default_path):
@@ -35,6 +37,8 @@ def idList(menu, dataSet):
 
 
 def PreEjecutarComandos(subMenu, mw):
+    mw.tabs.setCurrentWidget(mw.tab1)
+    mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 
@@ -43,7 +47,7 @@ def PreEjecutarComandos(subMenu, mw):
     newParams, ok = paramForm.paramForm.getNewParams(params)
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
-        process.EjecutarComandos(cmd, newParams, loops, mw)
+        process.ejecutarSecuencia(cmd, newParams, loops, mw)
 
 
 def matarProceso(mw):
@@ -52,6 +56,11 @@ def matarProceso(mw):
 
 def getHeaders(path=default_path):
     return csvdb.getHeader(path)
+
+
+def saveTable(table, path=default_path, header=getHeaders()):
+    dataset = table.getDataSet()
+    csvdb.SaveCSV(path, dataset, header)
 
 
 if __name__ == '__main__':

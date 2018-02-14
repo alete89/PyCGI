@@ -20,3 +20,20 @@ class Tabla(QtGui.QTableWidget):
                 item = QtGui.QTableWidgetItem(data.decode('utf8'))
                 self.setItem(row, column, item)
         self.setHorizontalHeaderLabels(header)
+
+    def addRow(self):
+        self.insertRow(self.rowCount())
+
+    def getDataSet(self):
+        self.updateDataSet()
+        return self.dataset
+
+    def updateDataSet(self):
+        dataset = []
+        for row in range(self.rowCount()):
+            rowData = []
+            for column in range(self.columnCount()):
+                currentItem = self.item(row, column)
+                rowData.append(currentItem.text())
+            dataset.append(rowData)
+        self.dataset = dataset

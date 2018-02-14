@@ -2,74 +2,71 @@
 
 # Default
 import sys
-# no entiendo por qué no funciona importando ctypes directamente.
-import ctypes.wintypes
-# GUI
-import PyQt4.QtCore
+from PyQt4 import QtCore
+
+if sys.platform == "win32":
+    # Windows only
+    from winstructs import WinProcInfo
+    import ctypes
 
 
-nProcess = PyQt4.QtCore.QProcess()
-lista = []
-WINDOW_INSTANCE = None
+class Process():
+    def __init__(self):
+        self.proc = QtCore.QProcess()
+        self.proc.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+        self.proc.setReadChannelMode(QtCore.QProcess.MergedChannels)
+        self.proc.finished.connect(self.processJustFinished)
+        self.proc.readyRead.connect(self.hayParaEscribir)
 
+        self.secuencia = []
+        self.MainWindowInstance = None
+        self.current_process = ""
 
-def EjecutarComandos(comandos, parametros, iteraciones, mw):
-    global lista
-    global WINDOW_INSTANCE
-    WINDOW_INSTANCE = mw
-    lista = map(list, zip(comandos, parametros, iteraciones))
-    runNow()
+    def ejecutarSecuencia(self, comandos, parametros, iteraciones, mw):
+        self.MainWindowInstance = mw
+        self.secuencia = map(list, zip(comandos, parametros, iteraciones))
+        self.runNow()
 
+    def runNow(self):
+        if not self.secuencia:
+            return
+        instruccion = self.secuencia[0]
+        if int(instruccion[2]) == 0:  # Iteraciones restantes
+            # Si no hay más iteraciones, la saco de la lista.
+            del self.secuencia[0]
+            self.runNow()
+        else:  # Quedan iteraciones
+            instruccion[2] = str(int(instruccion[2]) - 1)  # Iteraciones -1
+            self.current_process = instruccion[0]
+            self.MainWindowInstance.showOutputInTerminal(
+                "iniciando proceso: " + self.current_process)
+            if not instruccion[1]:  # Si no hay parámetros
+                self.proc.start(instruccion[0])  # lanzo sin parámetros
+            else:
+                # lanzo con parámetros
+                self.proc.start(instruccion[0], instruccion[1])
 
-def runNow():
-    if (len(lista) == 0):
-        return
-    sublist = lista[0]
-    if int(sublist[2]) == 0:
-        del lista[0]
-        runNow()
-    else:
-        sublist[2] = str(int(sublist[2]) - 1)
-        if not sublist[1]:
-            nProcess.start(sublist[0])
-        else:
-            nProcess.start(sublist[0], [sublist[1]])
+    def hayParaEscribir(self):
+        output = self.proc.readAll().data()
+        self.MainWindowInstance.showOutputInTerminal(output)
 
+    def getPid(self):
+        try:
+            if sys.platform == 'win32':
+                LPWinProcInfo = ctypes.POINTER(WinProcInfo)
+                struct = ctypes.cast(int(self.proc.pid()), LPWinProcInfo)
+                pid = struct.contents.dwProcessID
+            else:
+                pid = int(self.proc.pid())
+            return pid
+        except TypeError:
+            return "No hay proceso corriendo"
 
-def hayParaEscribir():
-    WINDOW_INSTANCE.showOutputInTerminal(nProcess.readAll().data())
+    def killCurrentProcess(self, mw):
+        mw.showOutputInTerminal(str(self.getPid()))
+        self.proc.kill()
 
-
-def getPid():
-    if sys.platform == 'win32':
-        LPWinProcInfo = ctypes.POINTER(WinProcInfo)
-        struct = ctypes.cast(int(nProcess.pid()), LPWinProcInfo)
-        pid = struct.contents.dwProcessID
-    else:
-        pid = int(nProcess.pid())
-    return pid
-
-
-def killCurrentProcess(mw):
-    mw.showOutputInTerminal(str(getPid()))
-    nProcess.kill()
-
-
-nProcess.setProcessChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
-nProcess.setReadChannelMode(PyQt4.QtCore.QProcess.MergedChannels)
-nProcess.finished.connect(runNow)
-nProcess.readyRead.connect(hayParaEscribir)
-
-
-'''
-windows only
-'''
-
-
-class WinProcInfo(ctypes.Structure):
-    _fields_ = [
-        ('hProcess', ctypes.wintypes.HANDLE),
-        ('hThread', ctypes.wintypes.HANDLE),
-        ('dwProcessID', ctypes.wintypes.DWORD),
-        ('dwThreadID', ctypes.wintypes.DWORD),
-    ]
+    def processJustFinished(self):
+        self.MainWindowInstance.showOutputInTerminal(
+            "fin de proceso: " + self.current_process)
+        self.runNow()

@@ -1,12 +1,11 @@
-import os
 import unittest
 import src.logic.csvdb as csvdb
 
 
 class TestCore(unittest.TestCase):
     def setUp(self):
-        self.path = os.getcwd() + "/test/tabla_test.csv"
-        self.testcsv = "test.csv"
+        self.path = "./test/tabla_test.csv"
+        self.temp_csv = "./test/temp.csv"
         self.test_dataset = [
             ['1', 'archivo', 'abrir', '2', '1', 'python ./scripts/abrir.py', '1'],
             ['2', 'edicion', 'copiar', '2', '1',
@@ -25,8 +24,9 @@ class TestCore(unittest.TestCase):
         ]
 
     def tearDown(self):
+        import os
         try:
-            os.remove(self.testcsv)
+            os.remove(self.temp_csv)
         except OSError:
             pass
 
@@ -54,9 +54,10 @@ class TestCore(unittest.TestCase):
     def test_saveCSV(self):
         self.test_dataset.append(
             ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis"])
-        csvdb.SaveCSV("test.csv", self.test_dataset,
+        csvdb.SaveCSV(self.temp_csv, self.test_dataset,
                       csvdb.getHeader(self.path))
-        self.assertEqual(self.test_dataset, csvdb.getDataFromCsv(self.testcsv))
+        self.assertEqual(self.test_dataset,
+                         csvdb.getDataFromCsv(self.temp_csv))
 
     def test_distinct(self):
         columna = 1
@@ -70,6 +71,34 @@ class TestCore(unittest.TestCase):
         ]
         self.assertEqual(csvdb.distinct(
             self.test_dataset, columna), distinct_expected)
+
+    def test_getColumn(self):
+        columna = 1
+        column_expected = ["archivo", "edicion", "ver", "archivo",
+                           "edicion", "ver", "Dibujo", "prueba", "prueba", "prueba", "prueba"]
+        self.assertEqual(csvdb.getColumn(
+            self.test_dataset, columna), column_expected)
+
+    def test_sortDataSet(self):
+        columna = 1
+        test_dataset = [['2', 'edicion', 'copiar', '2', '1',
+                         'python ./scripts/copiar.py', '5'],
+                        ['1', 'archivo', 'abrir', '2', '1',
+                            'python ./scripts/abrir.py', '1'],
+                        ['3', 'ver', 'ping', '1', '2', 'ping (ingrese una IP)', '2']]
+        sorted_expected = [['1', 'archivo', 'abrir', '2', '1', 'python ./scripts/abrir.py', '1'],
+                           ['2', 'edicion', 'copiar', '2', '1',
+                            'python ./scripts/copiar.py', '5'],
+                           ['3', 'ver', 'ping', '1', '2', 'ping (ingrese una IP)', '2']]
+        sorted_backwards = [['3', 'ver', 'ping', '1', '2', 'ping (ingrese una IP)', '2'],
+                            ['2', 'edicion', 'copiar', '2', '1',
+                             'python ./scripts/copiar.py', '5'],
+                            ['1', 'archivo', 'abrir', '2', '1',
+                             'python ./scripts/abrir.py', '1']]
+        self.assertEqual(csvdb.sortDataSet(
+            test_dataset, columna), sorted_expected)
+        self.assertEqual(csvdb.sortDataSet(
+            test_dataset, columna, True), sorted_backwards)
 
 
 if __name__ == '__main__':

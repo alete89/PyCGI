@@ -1,9 +1,12 @@
 import unittest
 import src.logic.csvdb as csvdb
+import src.logic.core as core
+import os
 
 
 class TestCore(unittest.TestCase):
     def setUp(self):
+        self.testcsv = "test.csv"
         self.dataset = [
             ['1', 'archivo', 'abrir', '2', '1', 'python ./scripts/abrir.py', '1'],
             ['2', 'edicion', 'copiar', '2', '1',
@@ -13,7 +16,7 @@ class TestCore(unittest.TestCase):
                 'python ./scripts/guardar.py', '1'],
             ['5', 'edicion', 'pegar', '1', '1', 'python ./scripts/pegar.py', '2'],
             ['6', 'ver', 'ping', '2', '1',
-                'ping (ingrese un sitio) (modificador)', '1'],
+                'ping (ingrese un sitio)(modificador)', '1'],
             ['7', 'Dibujo', 'Paint', '1', '1', 'mspaint', '2'],
             ['8', 'prueba', 'numeros', '1', '2', 'python ./scripts/uno.py', '1'],
             ['9', 'prueba', 'numeros', '2', '3', 'python ./scripts/dos.py', '1'],
@@ -27,10 +30,32 @@ class TestCore(unittest.TestCase):
             ['4', 'archivo', 'guardar como', '1', '1',
                 'python ./scripts/guardar.py', '1']
         ]
+        self.header = ["id", "menu", "submenu", "posicion en menu",
+                       "orden en secuencia", "comando", "loop"]
+
+    def tearDown(self):
+        try:
+            os.remove(self.testcsv)
+        except OSError:
+            pass
 
     def test_dataFilter(self):
         self.assertEqual(csvdb.dataFilter(self.dataset, self.columna,
-                                          self.valor), self.dataset_filtrado_expected, "no coincide")
+                                          self.valor), self.dataset_filtrado_expected)
+
+    def test_getDataFromCsv(self):
+        #self.maxDiff = 0
+        self.assertEqual(csvdb.getDataFromCsv(core.default_path), self.dataset)
+
+    def test_getHeader(self):
+        self.assertEqual(csvdb.getHeader(core.default_path), self.header)
+
+    def test_saveCSV(self):
+        self.dataset.append(
+            ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis"])
+        csvdb.SaveCSV("test.csv", self.dataset,
+                      csvdb.getHeader(core.default_path))
+        self.assertEqual(self.dataset, csvdb.getDataFromCsv(self.testcsv))
 
 
 if __name__ == '__main__':

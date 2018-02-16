@@ -1,5 +1,0 @@
-- y si el proceso lanzado en terminal necesita interactuar con el usuario?
-
-- mostrar el proceso actual que se ejecuta en otro campo de texto.
-
--arreglar funcion "distinct" de csvdb que no devuelve todos los elementos en el caso [ping, pingt]

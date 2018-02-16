@@ -12,4 +12,7 @@ Windows: download latest zip release which includes binaries and an example CSV 
 Linux: download latest source from releases, launch by `python PyCGI.py` in main directory
 
 ## Screenshots:
-![lanzando un script](https://i.imgur.com/Jfw081f.jpg)
+![lanzando un script](https://user-images.githubusercontent.com/4999277/36319436-b029f710-1321-11e8-8099-fe7406b83f3f.png)
+![editor de texto](https://user-images.githubusercontent.com/4999277/36319402-996a0e98-1321-11e8-8115-4e2e6fb4950e.png)
+![editor de secuencias](https://user-images.githubusercontent.com/4999277/36319511-e2f57b38-1321-11e8-972b-d0b5d2fa370f.png)
+

@@ -27,6 +27,7 @@ class Tabla(QtGui.QTableWidget):
 
     def delRow(self):
         self.removeRow(self.currentRow())
+        self.setCurrentItem(None)
 
     def getDataSet(self):
         self.updateDataSet()

@@ -3,7 +3,8 @@ A Configurable Graphic user Interface written in Python 2.7 and PyQt4
 
 ## Description
 This app allows you to add any program or command into it's menu and then launch them, capturing and showing it's standard output in the main screen.
-A text editor is included within the app, it supports Python syntax highlighning for `.py` files
+A text editor is included within the app, it supports Python syntax highlighning for `.py` files.
+App also includes a TreeView where you can browse local files in order to open them into the text editor.
 Menus are loaded from a CSV (example is included), you can add, remove or edit them from the app itself (3rd tab)
 
 ## Usage

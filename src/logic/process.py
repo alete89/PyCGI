@@ -6,7 +6,7 @@ from PyQt4 import QtCore
 
 if sys.platform == "win32":
     # Windows only
-    from winstructs import WinProcInfo
+    from .winstructs import WinProcInfo
     import ctypes
 
 
@@ -24,27 +24,32 @@ class Process():
 
     def ejecutarSecuencia(self, comandos, parametros, iteraciones, mw):
         self.MainWindowInstance = mw
-        self.secuencia = map(list, zip(comandos, parametros, iteraciones))
+        for i, _ in enumerate(comandos):
+            instruccion = dict(
+                comando=comandos[i], parametro=parametros[i], iteraciones=iteraciones[i])
+            self.secuencia.append(instruccion)
         self.runNow()
 
     def runNow(self):
         if not self.secuencia:
             return
         instruccion = self.secuencia[0]
-        if int(instruccion[2]) == 0:  # Iteraciones restantes
+        if int(instruccion['iteraciones']) == 0:  # Iteraciones restantes
             # Si no hay más iteraciones, la saco de la lista.
             del self.secuencia[0]
             self.runNow()
         else:  # Quedan iteraciones
-            instruccion[2] = str(int(instruccion[2]) - 1)  # Iteraciones -1
-            self.current_process = instruccion[0]
+            instruccion['iteraciones'] = str(
+                int(instruccion['iteraciones']) - 1)  # Iteraciones -1
+            self.current_process = instruccion['comando']
             self.MainWindowInstance.showOutputInTerminal(
                 "iniciando proceso: " + self.current_process)
-            if not instruccion[1]:  # Si no hay parámetros
-                self.proc.start(instruccion[0])  # lanzo sin parámetros
+            if not instruccion['parametro']:  # Si no hay parámetros
+                self.proc.start(instruccion['comando'])  # lanzo sin parámetros
             else:
                 # lanzo con parámetros
-                self.proc.start(instruccion[0], instruccion[1])
+                self.proc.start(
+                    instruccion['comando'], instruccion['parametro'])
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()

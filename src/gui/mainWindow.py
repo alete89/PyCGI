@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-
+import sys
 from PyQt4 import QtGui, QtCore
-import Highlighter
-import CodeEditor
-import core
-import tabla
+from ..logic import core
+from . import Highlighter
+from . import CodeEditor
+from . import tabla
 
 
 class PyCGI(QtGui.QMainWindow):
@@ -191,7 +191,7 @@ class PyCGI(QtGui.QMainWindow):
 
         if reply == QtGui.QMessageBox.Yes:
             # core.matarProceso(self)
-            exit()
+            sys.exit()
         else:
             pass
 
@@ -259,7 +259,6 @@ class PyCGI(QtGui.QMainWindow):
 
 
 if __name__ == '__main__':
-    import sys
     from PyQt4.QtGui import QApplication
     app = QApplication(sys.argv)
     vp = PyCGI()

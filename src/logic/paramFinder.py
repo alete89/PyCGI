@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-# import ProcessFormV3
-import csvdb
+from . import csvdb
 
 
 def findParameters(dataset):

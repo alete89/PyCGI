@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Default
 import os
-# Lib
-import csvdb
-import paramFinder
-import paramForm
-#import process
-import process
+from . import csvdb
+from . import paramFinder
+from . import process
+from ..gui import paramForm
 
 
 default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
@@ -26,9 +23,10 @@ def menuList(dataSet):
 
 def subMenuList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    subMenuColumn = csvdb.getColumn(subMenuFilter, 2)
+    subMenuDistinct = csvdb.distinct(subMenuFilter, 2)
+    subMenuColumn = csvdb.getColumn(subMenuDistinct, 2)
     subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
-    return csvdb.distinct(subMenuSorted, 2)
+    return subMenuSorted
 
 
 def idList(menu, dataSet):
@@ -38,7 +36,6 @@ def idList(menu, dataSet):
 
 def PreEjecutarComandos(subMenu, mw):
     mw.tabs.setCurrentWidget(mw.tab1)
-    mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 
@@ -47,6 +44,7 @@ def PreEjecutarComandos(subMenu, mw):
     newParams, ok = paramForm.paramForm.getNewParams(params)
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
+        mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
         process.ejecutarSecuencia(cmd, newParams, loops, mw)
 
 
@@ -61,13 +59,3 @@ def getHeaders(path=default_path):
 def saveTable(table, path=default_path, header=getHeaders()):
     dataset = table.getDataSet()
     csvdb.SaveCSV(path, dataset, header)
-
-
-if __name__ == '__main__':
-    import sys
-    import mainWindow
-    from PyQt4.QtGui import QApplication
-    app = QApplication(sys.argv)
-    vp = mainWindow.PyCGI()
-    vp.show()
-    sys.exit(app.exec_())

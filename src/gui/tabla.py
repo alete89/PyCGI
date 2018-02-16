@@ -5,6 +5,7 @@ class Tabla(QtGui.QTableWidget):
     def __init__(self):
         super(Tabla, self).__init__()
         self.dataset = []
+        self.setSortingEnabled(True)
 
     def ShowDataSet(self, dataset, header=None):
         if header is None:

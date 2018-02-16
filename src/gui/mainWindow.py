@@ -136,11 +136,14 @@ class PyCGI(QtGui.QMainWindow):
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
         self.addRowButton = QtGui.QPushButton("Agregar fila")
         self.addRowButton.clicked.connect(self.tabla.addRow)
+        self.delRowButton = QtGui.QPushButton("Borrar fila")
+        self.delRowButton.clicked.connect(self.tabla.delRow)
         self.saveTableButton = QtGui.QPushButton("Guardar cambios")
         self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
 
         layoutTabs3.addWidget(self.tabla)
         layoutTabs3.addWidget(self.addRowButton)
+        layoutTabs3.addWidget(self.delRowButton)
         layoutTabs3.addWidget(self.saveTableButton)
         self.tab3.setLayout(layoutTabs3)
 

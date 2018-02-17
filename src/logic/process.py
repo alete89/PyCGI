@@ -25,8 +25,10 @@ class Process():
     def ejecutarSecuencia(self, comandos, parametros, iteraciones, mw):
         self.MainWindowInstance = mw
         for i, _ in enumerate(comandos):
-            instruccion = dict(
-                comando=comandos[i], parametro=parametros[i], iteraciones=iteraciones[i])
+            instruccion = dict(comando=comandos[i],
+                               parametro=parametros[i], iteraciones=iteraciones[i])
+            instruccion["parametro"] = [x for x in instruccion["parametro"]
+                                        if x.strip()]  # Elimino parámetros vacíos
             self.secuencia.append(instruccion)
         self.runNow()
 

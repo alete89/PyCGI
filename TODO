@@ -3,5 +3,3 @@
 - mostrar el proceso actual que se ejecuta en otro campo de texto.
 
 -no enviar parámetros cuando es vacío (ejemplo de ping con modificador): el ping no se ejecuta por error en parametro
-
-- layout: botones de terminal sólo en terminal.

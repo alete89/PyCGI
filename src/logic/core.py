@@ -44,7 +44,7 @@ def PreEjecutarComandos(subMenu, mw):
     newParams, ok = paramForm.paramForm.getNewParams(params)
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
-        mw.terminalDeTexto.append("iniciando secuencia: " + subMenu)
+        mw.terminalOutput.append("iniciando secuencia: " + subMenu)
         process.ejecutarSecuencia(cmd, newParams, loops, mw)
 
 

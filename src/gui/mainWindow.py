@@ -44,6 +44,7 @@ class PyCGI(QtGui.QMainWindow):
         self.indicadorSecuencia.setReadOnly(True)
         self.indicadorSecuencia.setFont(self.font)
         self.indicadorSecuencia.setMaximumHeight(50)
+        self.indicadorSecuencia.setFontWeight(75)  # BOLD sólo para la instrucción actual!
 
     def crearTerminal(self):
         self.terminalOutput = QtGui.QTextEdit(self)
@@ -182,7 +183,8 @@ class PyCGI(QtGui.QMainWindow):
         core.matarProceso(self)
 
     def cleanTerminal(self):
-        self.terminalOutput.setText("")
+        self.terminalOutput.clear()
+        self.indicadorSecuencia.clear()
 
     def guardarCambiosClicked(self):
         core.saveTable(self.tabla)

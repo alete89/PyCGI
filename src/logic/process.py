@@ -80,6 +80,7 @@ class Process():
         self.runNow()
 
     def secuenciaList(self, window_instance):
+        window_instance.indicadorSecuencia.clear()
         secuencia = self.secuencia
         for instruccion in secuencia:
             printable_instruccion = str(instruccion["comando"]) + " " + str(

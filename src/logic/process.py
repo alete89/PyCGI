@@ -30,6 +30,7 @@ class Process():
             instruccion["parametro"] = [x for x in instruccion["parametro"]
                                         if x.strip()]  # Elimino parámetros vacíos
             self.secuencia.append(instruccion)
+        self.secuenciaList(mw)
         self.runNow()
 
     def runNow(self):
@@ -77,3 +78,10 @@ class Process():
         self.MainWindowInstance.showOutputInTerminal(
             "fin de proceso: " + self.current_process)
         self.runNow()
+
+    def secuenciaList(self, window_instance):
+        secuencia = self.secuencia
+        for instruccion in secuencia:
+            printable_instruccion = str(instruccion["comando"]) + " " + str(
+                instruccion["parametro"]) + " (" + str(instruccion["iteraciones"]) + ")"
+            window_instance.indicadorSecuencia.append(printable_instruccion)

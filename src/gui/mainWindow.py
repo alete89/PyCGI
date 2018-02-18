@@ -16,6 +16,7 @@ class PyCGI(QtGui.QMainWindow):
         self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
 
         self.treeWidget()
+        self.crearIndicadorSecuencia()
         self.crearTerminal()
         self.crearEditorDeTexto()
         self.VentanaPrincipal()
@@ -35,10 +36,16 @@ class PyCGI(QtGui.QMainWindow):
         self.tree.setColumnWidth(0, 300)
         self.tree.doubleClicked.connect(self.openFileFromTree)
 
-    def crearTerminal(self):
+    def crearIndicadorSecuencia(self):
         self.font = QtGui.QFont()
         self.font.setFamily("Consolas, 'Courier New', monospace")
         self.font.setPointSize(11)  # font size in points
+        self.indicadorSecuencia = QtGui.QTextEdit(self)
+        self.indicadorSecuencia.setReadOnly(True)
+        self.indicadorSecuencia.setFont(self.font)
+        self.indicadorSecuencia.setMaximumHeight(50)
+
+    def crearTerminal(self):
         self.terminalOutput = QtGui.QTextEdit(self)
         self.terminalOutput.setReadOnly(True)
         self.terminalOutput.setFont(self.font)
@@ -114,6 +121,7 @@ class PyCGI(QtGui.QMainWindow):
         self.tabs.addTab(self.tab3, "Tabla de secuencias")
 
         layoutTab1 = QtGui.QVBoxLayout(self.tabs)
+        layoutTab1.addWidget(self.indicadorSecuencia)
         layoutTab1.addWidget(self.terminalOutput)
         layoutTab1.addWidget(self.killButton)
         layoutTab1.addWidget(self.cleanTerminalButton)

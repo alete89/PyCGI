@@ -19,7 +19,7 @@ class PyCGI(QtGui.QMainWindow):
         self.crearIndicadorSecuencia()
         self.crearTerminal()
         self.crearEditorDeTexto()
-        self.VentanaPrincipal()
+        self.ventanaPrincipal()
         self.crearMenu()
         self.statusBar()
         self.show()
@@ -87,7 +87,7 @@ class PyCGI(QtGui.QMainWindow):
         toolbar.addAction(CloseIcon)
         return toolbar
 
-    def VentanaPrincipal(self):
+    def ventanaPrincipal(self):
 
         self.setMinimumWidth(650)
         self.setMinimumHeight(600)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+import os
 from PyQt4 import QtGui, QtCore
 from ..logic import core
 from . import Highlighter
@@ -84,16 +85,20 @@ class PyCGI(QtGui.QMainWindow):
 
     def crearEditorDeTexto(self):
         self.EditorDeTexto = CodeEditor.CodeEditor()
-
+        
         self.EditorDeTexto.setFont(self.font)
         self.EditorDeTexto.setStyleSheet("background-color: #f1f1f1;")
         self.EditorDeTexto.setMinimumHeight(100)
-
         self.pythonHighlighter = Highlighter.Highlighter(
             self.EditorDeTexto.document())
 
     def crearToolbar(self):
         toolbar = self.addToolBar("Editor de texto Toolbar")
+
+        NewOne = QtGui.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
+        NewOne.setShortcut('Ctrl+n')
+        NewOne.triggered.connect(self.newFile)
+        toolbar.addAction(NewOne)
 
         OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         OpenIcon.setShortcut('Ctrl+o')
@@ -105,14 +110,12 @@ class PyCGI(QtGui.QMainWindow):
         SaveIcon.triggered.connect(self.saveDialog)
         toolbar.addAction(SaveIcon)
 
-        SaveAsIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/saveAs.png'), 'Save as', self)
+        SaveAsIcon = QtGui.QAction(QtGui.QIcon('icons/saveAs.png'), 'Save as', self)
         SaveAsIcon.setShortcut('Ctrl+g')
         SaveAsIcon.triggered.connect(self.saveAsDialog)
         toolbar.addAction(SaveAsIcon)
 
-        CloseIcon = QtGui.QAction(QtGui.QIcon(
-            'icons/closeFile.png'), 'Close', self)
+        CloseIcon = QtGui.QAction(QtGui.QIcon('icons/closeFile.png'), 'Close', self)
         CloseIcon.setShortcut('Ctrl+x')
         CloseIcon.triggered.connect(self.CloseDialog)
         toolbar.addAction(CloseIcon)
@@ -144,25 +147,38 @@ class PyCGI(QtGui.QMainWindow):
         self.tab1 = QtGui.QWidget()
         self.tab2 = QtGui.QWidget()
         self.tab3 = QtGui.QWidget()
+        
+        self.tabsInternas = QtGui.QTabWidget()
+        self.tabsConfiguracion = QtGui.QTabWidget()
 
+        self.configTab1 = QtGui.QWidget()
+        self.configTab2 = QtGui.QWidget()
+        self.configTab3 = QtGui.QWidget()
+        
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killGo)
-
+        
         self.tabs.addTab(self.tab1, "Proceso")
         self.tabs.addTab(self.tab2, "Editor")
-        self.tabs.addTab(self.tab3, "Tabla de secuencias")
 
-        layoutTab1 = QtGui.QVBoxLayout(self.tabs)
-        layoutTab1.addWidget(self.indicadorSecuencia)
-        layoutTab1.addWidget(self.terminalOutput)
-        layoutTab1.addWidget(self.killButton)
-        layoutTab1.addWidget(self.cleanTerminalButton)
-        self.tab1.setLayout(layoutTab1)
-
-        layoutTab2 = QtGui.QVBoxLayout(self.tabs)
-        layoutTab2.addWidget(self.crearToolbar())
-        layoutTab2.addWidget(self.EditorDeTexto)
-        self.tab2.setLayout(layoutTab2)
+        self.tabs.addTab(self.tab3, "Configuracion")
+        
+        layoutTabs1 = QtGui.QVBoxLayout(self.tabs)
+        layoutTabs1.addWidget(self.terminalDeTexto)
+        self.tab1.setLayout(layoutTabs1)
+        
+        layoutTabsConfig = QtGui.QVBoxLayout(self.tab3)
+        layoutTabsConfig.addWidget(self.tabsConfiguracion)
+        
+        self.tab3.setLayout(layoutTabsConfig)
+        self.tabsConfiguracion.addTab(self.configTab1, "Tabla de Secuencias")
+        self.tabsConfiguracion.addTab(self.configTab2, "Variables Globales")
+        self.tabsConfiguracion.addTab(self.configTab3, "Configuracion automatica")        
+        
+        layoutTabs2 = QtGui.QVBoxLayout(self.tab2)
+        layoutTabs2.addWidget(self.crearToolbar()) 
+        layoutTabs2.addWidget(self.tabsInternas)
+        self.tab2.setLayout(layoutTabs2)
 
         layoutTab3 = QtGui.QVBoxLayout(self.tabs)
 
@@ -175,11 +191,12 @@ class PyCGI(QtGui.QMainWindow):
         self.saveTableButton = QtGui.QPushButton("Guardar cambios")
         self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
 
-        layoutTab3.addWidget(self.tabla)
-        layoutTab3.addWidget(self.addRowButton)
-        layoutTab3.addWidget(self.delRowButton)
-        layoutTab3.addWidget(self.saveTableButton)
-        self.tab3.setLayout(layoutTab3)
+
+        layoutTabs3.addWidget(self.tabla)
+        layoutTabs3.addWidget(self.addRowButton)
+		layoutTabs3.addWidget(self.delRowButton)
+        layoutTabs3.addWidget(self.saveTableButton)
+        self.configTab1.setLayout(layoutTabs3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitterHoriz.addWidget(self.tree)
@@ -231,26 +248,56 @@ class PyCGI(QtGui.QMainWindow):
         else:
             pass
 
+    def newFile(self, fname):
+        self.NewFileTab('New')
+    
+    def NewFileTab(self, fname):
+
+        if fname=='New':
+            newTabName = 'Temp'
+        else:
+            if os.path.isfile(fname):
+                newTabName = str(fname)
+                
+        self.newTab = QtGui.QWidget()
+        indexTab = self.tabsInternas.addTab(self.newTab, str(newTabName))
+        newTabLayout = QtGui.QVBoxLayout(self.newTab)
+        self.crearEditorDeTexto()
+        newTabLayout.addWidget(self.EditorDeTexto)
+        self.newTab.setLayout(newTabLayout)
+        self.tabsInternas.setCurrentWidget(self.newTab)
+        self.openFile(fname)        
+            
+            
     def openFile(self, fname):
         if not fname:
             fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+            self.NewFileTab(fname)
+            
         if fname:
             with open(fname, 'r') as f:
                 data = f.read()
                 self.EditorDeTexto.setPlainText(data)
                 self.is_new = False
                 self.file_name = fname
+                
         if fname[-3:] == ".py":
             self.pythonHighlighter.setDocument(self.EditorDeTexto.document())
         else:
             self.pythonHighlighter.setDocument(None)  # quitar higlight
+                
+
+                
 
     def openFileFromTree(self, index):
         indexItem = self.model.index(index.row(), 0, index.parent())
         filePath = self.model.filePath(indexItem)
+        fileName = self.model.fileName(indexItem)
         fname = str(filePath)
-        self.openFile(fname)
-        self.tabs.setCurrentWidget(self.tab2)
+        
+        # Genero solapas dinamicamente para cada nuevo archivo  
+        # que se abra desde el arbol de directorios
+        self.NewFileTab(fname)
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(
@@ -269,8 +316,15 @@ class PyCGI(QtGui.QMainWindow):
             textoParaGuardar = self.EditorDeTexto.toPlainText()
             with open(self.file_name, "w") as nFile:
                 nFile.write(textoParaGuardar)
-
+    
+    def removeTabFile(self):
+        # Remueve la solapa que esta en uso
+        self.tabsInternas.removeTab(self.tabsInternas.currentIndex())
+        
     def CloseDialog(self):
+        
+        # TO DO preguntar si desea guardar antes de borrar.
+
         if self.is_new:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
@@ -284,10 +338,11 @@ class PyCGI(QtGui.QMainWindow):
             if resultado == QtGui.QMessageBox.Save:
                 self.saveDialog()
             elif resultado == QtGui.QMessageBox.Discard:
-                pass
+                self.removeTabFile()
             elif resultado == QtGui.QMessageBox.Cancel:
                 return
+#        else:
+#            self.removeTabFile()
 
-        self.EditorDeTexto.clear()
         self.is_new = True
         self.file_name = "NewFile"

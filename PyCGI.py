@@ -1,6 +1,5 @@
 import sys
 
-
 if __name__ == '__main__':
     import src.gui.mainWindow as mainWindow
     from PyQt4.QtGui import QApplication

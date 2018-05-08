@@ -1,12 +1,8 @@
 id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
-1;archivo;abrir;2;1;python ./scripts/abrir.py;1
-2;edicion;copiar;2;1;python ./scripts/copiar.py;5
-3;ver;ping;1;2;ping (ingrese una IP);2
-4;archivo;guardar como;1;1;python ./scripts/guardar.py;1
-5;edicion;pegar;1;1;python ./scripts/pegar.py;2
-6;ver;ping;2;1;ping (ingrese un sitio)(modificador);1
-7;Dibujo;Paint;1;1;mspaint;2
-8;prueba;numeros;1;2;python ./scripts/uno.py;1
-9;prueba;numeros;2;3;python ./scripts/dos.py;1
-10;prueba;numeros;3;4;python ./scripts/tres.py;1
-11;prueba;numeros;4;1;ping (ip);1
+3;Sistema;pings;1;2;ping (ingrese una IP);2
+5;Python;Script loop;1;1;python ./scripts/pegar.py;2
+6;Sistema;pings;2;1;ping (ingrese un sitio)(parametro opcional);1
+7;Dibujo;gimp;1;1;gimp;1
+8;Prueba Secuencia;3 scripts;1;2;python ./scripts/uno.py;1
+9;Prueba Secuencia;3 scripts;2;3;python ./scripts/dos.py;1
+10;Prueba Secuencia;3 scripts;3;4;python ./scripts/tres.py;1

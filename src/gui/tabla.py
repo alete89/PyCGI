@@ -25,6 +25,10 @@ class Tabla(QtGui.QTableWidget):
     def addRow(self):
         self.insertRow(self.rowCount())
 
+    def delRow(self):
+        self.removeRow(self.currentRow())
+        self.setCurrentItem(None)
+
     def getDataSet(self):
         self.updateDataSet()
         return self.dataset

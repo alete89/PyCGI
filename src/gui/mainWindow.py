@@ -14,13 +14,13 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
 
-        self.setWindowTitle(
-            'PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
 
         self.treeWidget()
+        self.crearIndicadorSecuencia()
         self.crearTerminal()
         self.crearEditorDeTexto()
-        self.VentanaPrincipal()
+        self.ventanaPrincipal()
         self.crearMenu()
         self.statusBar()
         self.show()
@@ -37,17 +37,23 @@ class PyCGI(QtGui.QMainWindow):
         self.tree.setColumnWidth(0, 300)
         self.tree.doubleClicked.connect(self.openFileFromTree)
 
-    def crearTerminal(self):
+    def crearIndicadorSecuencia(self):
         self.font = QtGui.QFont()
         self.font.setFamily("Consolas, 'Courier New', monospace")
-        self.font.setPointSize(11)  # size in points
-        self.terminalDeTexto = QtGui.QTextEdit(self)
-        self.terminalDeTexto.setReadOnly(True)
-        self.terminalDeTexto.setFont(self.font)
-        self.terminalDeTexto.setStyleSheet(
-            "background-color: #585858; color: #fff")
+        self.font.setPointSize(11)  # font size in points
+        self.indicadorSecuencia = QtGui.QTextEdit(self)
+        self.indicadorSecuencia.setReadOnly(True)
+        self.indicadorSecuencia.setFont(self.font)
+        self.indicadorSecuencia.setMaximumHeight(50)
+        self.indicadorSecuencia.setFontWeight(75)  # BOLD sólo para la instrucción actual!
 
-        self.cursor = self.terminalDeTexto.textCursor()
+    def crearTerminal(self):
+        self.terminalOutput = QtGui.QTextEdit(self)
+        self.terminalOutput.setReadOnly(True)
+        self.terminalOutput.setFont(self.font)
+        self.terminalOutput.setStyleSheet("background-color: #585858; color: #fff")
+
+        self.cursor = self.terminalOutput.textCursor()
 
     def crearEditorDeTexto(self):
         self.EditorDeTexto = CodeEditor.CodeEditor()
@@ -55,8 +61,8 @@ class PyCGI(QtGui.QMainWindow):
         self.EditorDeTexto.setFont(self.font)
         self.EditorDeTexto.setStyleSheet("background-color: #f1f1f1;")
         self.EditorDeTexto.setMinimumHeight(100)
-        self.pythonHighlighter = Highlighter.Highlighter(
-            self.EditorDeTexto.document())
+
+        self.pythonHighlighter = Highlighter.Highlighter(self.EditorDeTexto.document())
 
     def crearToolbar(self):
         toolbar = self.addToolBar("Editor de texto Toolbar")
@@ -87,7 +93,7 @@ class PyCGI(QtGui.QMainWindow):
         toolbar.addAction(CloseIcon)
         return toolbar
 
-    def VentanaPrincipal(self):
+    def ventanaPrincipal(self):
 
         self.setMinimumWidth(650)
         self.setMinimumHeight(600)
@@ -98,18 +104,17 @@ class PyCGI(QtGui.QMainWindow):
         self.cleanTerminalButton = QtGui.QPushButton("Clean terminal")
         self.cleanTerminalButton.clicked.connect(self.cleanTerminal)
 
-        self.killGo = QtGui.QPushButton("Quit")
+        self.killGo = QtGui.QPushButton("Exit app")
         self.killGo.clicked.connect(self.quitApp)
 
-        self.terminalDeTexto.setMinimumHeight(100)
-        self.cursor = QtGui.QTextCursor(self.terminalDeTexto.document())
+        self.terminalOutput.setMinimumHeight(100)
+        self.cursor = QtGui.QTextCursor(self.terminalOutput.document())
 
         widget_central = QtGui.QWidget(self)
         self.setCentralWidget(widget_central)
 
         layout = QtGui.QVBoxLayout(widget_central)
 
-        # No tendríamos que cargar las tabs dinamicamente también?
         self.tabs = QtGui.QTabWidget()
         self.tab1 = QtGui.QWidget()
         self.tab2 = QtGui.QWidget()
@@ -123,18 +128,24 @@ class PyCGI(QtGui.QMainWindow):
         self.configTab3 = QtGui.QWidget()
         
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
-        BotoneraInferior.addWidget(self.killButton)
-        BotoneraInferior.addWidget(self.cleanTerminalButton)
         BotoneraInferior.addWidget(self.killGo)
         
         self.tabs.addTab(self.tab1, "Proceso")
         self.tabs.addTab(self.tab2, "Editor")
+        
+        layoutTab1 = QtGui.QVBoxLayout(self.tabs)
+        layoutTab1.addWidget(self.indicadorSecuencia)
+        layoutTab1.addWidget(self.terminalOutput)
+        layoutTab1.addWidget(self.killButton)
+        layoutTab1.addWidget(self.cleanTerminalButton)
+        self.tab1.setLayout(layoutTab1)
+
+        layoutTab2 = QtGui.QVBoxLayout(self.tabs)
+        layoutTab2.addWidget(self.crearToolbar())
+
+        self.tab2.setLayout(layoutTab2)
         self.tabs.addTab(self.tab3, "Configuracion")
-        
-        layoutTabs1 = QtGui.QVBoxLayout(self.tabs)
-        layoutTabs1.addWidget(self.terminalDeTexto)
-        self.tab1.setLayout(layoutTabs1)
-        
+                
         layoutTabsConfig = QtGui.QVBoxLayout(self.tab3)
         layoutTabsConfig.addWidget(self.tabsConfiguracion)
         
@@ -143,24 +154,24 @@ class PyCGI(QtGui.QMainWindow):
         self.tabsConfiguracion.addTab(self.configTab2, "Variables Globales")
         self.tabsConfiguracion.addTab(self.configTab3, "Configuracion automatica")        
         
-        layoutTabs2 = QtGui.QVBoxLayout(self.tab2)
-        layoutTabs2.addWidget(self.crearToolbar()) 
-        layoutTabs2.addWidget(self.tabsInternas)
-        self.tab2.setLayout(layoutTabs2)
+        layoutTab2.addWidget(self.tabsInternas)
 
-        layoutTabs3 = QtGui.QVBoxLayout(self.tabs)
+        layoutTab3 = QtGui.QVBoxLayout(self.tabs)
 
         self.tabla = tabla.Tabla()
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
         self.addRowButton = QtGui.QPushButton("Agregar fila")
         self.addRowButton.clicked.connect(self.tabla.addRow)
+        self.delRowButton = QtGui.QPushButton("Borrar fila")
+        self.delRowButton.clicked.connect(self.tabla.delRow)
         self.saveTableButton = QtGui.QPushButton("Guardar cambios")
         self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
 
-        layoutTabs3.addWidget(self.tabla)
-        layoutTabs3.addWidget(self.addRowButton)
-        layoutTabs3.addWidget(self.saveTableButton)
-        self.configTab1.setLayout(layoutTabs3)
+        layoutTab3.addWidget(self.tabla)
+        layoutTab3.addWidget(self.addRowButton)
+        layoutTab3.addWidget(self.delRowButton)
+        layoutTab3.addWidget(self.saveTableButton)
+        self.configTab1.setLayout(layoutTab3)
 
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitterHoriz.addWidget(self.tree)
@@ -181,34 +192,32 @@ class PyCGI(QtGui.QMainWindow):
             for subMenu, idFila in zip(core.subMenuList(menu, core.fullDataSet()), core.idList(menu, core.fullDataSet())):
                 action = QtGui.QAction('&' + str(subMenu), self)
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
-                action.triggered.connect(
-                    lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
+                action.triggered.connect(lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
                 thisMenu.addAction(action)
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)
 
     def showOutputInTerminal(self, text):
-        self.terminalDeTexto.append(text)
+        self.terminalOutput.append(text)
 
     def KillingProcess(self):
-        self.terminalDeTexto.append("Matando proceso:")
+        self.terminalOutput.append("Matando proceso:")
         core.matarProceso(self)
 
     def cleanTerminal(self):
-        self.terminalDeTexto.setText("")
+        self.terminalOutput.clear()
+        self.indicadorSecuencia.clear()
 
     def guardarCambiosClicked(self):
         core.saveTable(self.tabla)
         self.crearMenu()
 
     def quitApp(self):
-        reply = QtGui.QMessageBox.question(self, 'Message',
-                                           "Are you sure you want to quit?", QtGui.QMessageBox.Yes |
-                                           QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+        reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure you want to quit?",
+                                           QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:
-            # core.matarProceso(self)
             sys.exit()
         else:
             pass
@@ -265,8 +274,7 @@ class PyCGI(QtGui.QMainWindow):
         self.NewFileTab(fname)
 
     def saveAsDialog(self):
-        name = QtGui.QFileDialog.getSaveFileName(
-            self, 'Save File', str(self.file_name))
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File', str(self.file_name))
         if name:
             textoParaGuardar = self.EditorDeTexto.toPlainText()
             with open(name, "w") as nFile:
@@ -287,16 +295,13 @@ class PyCGI(QtGui.QMainWindow):
         self.tabsInternas.removeTab(self.tabsInternas.currentIndex())
         
     def CloseDialog(self):
-        
-        # TO DO preguntar si desea guardar antes de borrar.
         if self.is_new:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
-            msg.setText(
-                u"Se modificó el documento desde la última vez que se guardó")
+            msg.setText(u"Se modificó el documento desde la última vez que se guardó")
             msg.setInformativeText("desea guardar los cambios?")
-            msg.setStandardButtons(
-                QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
+            msg.setStandardButtons(QtGui.QMessageBox.Save |
+                                   QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
             resultado = msg.exec_()
             print resultado
             if resultado == QtGui.QMessageBox.Save:
@@ -310,11 +315,3 @@ class PyCGI(QtGui.QMainWindow):
 
         self.is_new = True
         self.file_name = "NewFile"
-
-
-if __name__ == '__main__':
-    from PyQt4.QtGui import QApplication
-    app = QApplication(sys.argv)
-    vp = PyCGI()
-    vp.show()
-    sys.exit(app.exec_())

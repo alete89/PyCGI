@@ -91,3 +91,5 @@ ENV/
 /.vs
 /.vs/ProjectSettings.json
 /.vs/slnx.sqlite
+.vscode/settings.json
+.vscode/launch.json

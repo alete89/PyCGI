@@ -6,12 +6,19 @@ from . import paramFinder
 from . import process
 from ..gui import paramForm
 
-
-default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
+STARTING_PATH = os.getcwd()
+CFG_PATH = STARTING_PATH + '\\cfg'
+TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
 
 
-def fullDataSet(path=default_path):
+def getTreeViewInitialPath():
+    with open(CFG_PATH, 'r') as f:
+        text = f.read()
+    return text.split('=', 1)[1].replace("'", "")
+
+
+def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getDataFromCsv(path)
 
 
@@ -52,10 +59,10 @@ def matarProceso(mw):
     process.killCurrentProcess(mw)
 
 
-def getHeaders(path=default_path):
+def getHeaders(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getHeader(path)
 
 
-def saveTable(table, path=default_path, header=getHeaders()):
+def saveTable(table, path=TABLA_DE_SECUENCIAS_PATH, header=getHeaders()):
     dataset = table.getDataSet()
     csvdb.SaveCSV(path, dataset, header)

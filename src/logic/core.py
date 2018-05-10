@@ -13,11 +13,19 @@ process = process.Process()
 
 
 def getTreeViewInitialPath():
-    return getValueFromCfg('treeViewInitialPath=')
+    initial = getValueFromCfg('treeViewInitialPath=')
+    if initial == '':
+        from PyQt4 import QtCore
+        initial = QtCore.QDir.rootPath()
+    return initial
 
 
 def getTreeViewRootPath():
-    return getValueFromCfg('treeViewRootPath=')
+    root = getValueFromCfg('treeViewRootPath=')
+    if root == '':
+        from PyQt4 import QtCore
+        root = QtCore.QDir.rootPath()
+    return root
 
 
 def getValueFromCfg(clave):

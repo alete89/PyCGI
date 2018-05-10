@@ -24,10 +24,15 @@ class PyCGI(QtGui.QMainWindow):
         self.show()
 
     def treeWidget(self):
-        self.model = QtGui.QFileSystemModel()
-        self.model.setRootPath(QtCore.QDir.currentPath())
         self.tree = QtGui.QTreeView()
-        self.tree.setModel(self.model)
+        self.fsmodel = QtGui.QFileSystemModel(self.tree)
+        self.fsmodel.setRootPath(core.getTreeViewRootPath())
+        initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
+        self.tree.setModel(self.fsmodel)
+        self.tree.expand(initialPath)
+        while initialPath.parent().isValid():
+            self.tree.expand(initialPath.parent())
+            initialPath = initialPath.parent()
         self.tree.setAnimated(True)
         self.tree.setIndentation(15)
         self.tree.setSortingEnabled(True)
@@ -39,7 +44,7 @@ class PyCGI(QtGui.QMainWindow):
     def openRightClickMenu(self, position):
         indexes = self.tree.selectedIndexes()
         menu = QtGui.QMenu()
-        filePath = str(self.model.filePath(indexes[0]))
+        filePath = str(self.fsmodel.filePath(indexes[0]))
 
         # Actions
         copyPath = menu.addAction(self.tr("Copy Full Path..."))
@@ -60,7 +65,7 @@ class PyCGI(QtGui.QMainWindow):
         self.indicadorSecuencia.setReadOnly(True)
         self.indicadorSecuencia.setFont(self.font)
         self.indicadorSecuencia.setMaximumHeight(50)
-        self.indicadorSecuencia.setFontWeight(75)  # BOLD sólo para la instrucción actual!
+        self.indicadorSecuencia.setFontWeight(75)  # 50 normal, 75 BOLD
 
     def crearTerminal(self):
         self.terminalOutput = QtGui.QTextEdit(self)
@@ -231,8 +236,8 @@ class PyCGI(QtGui.QMainWindow):
             self.highlighter.setDocument(self.EditorDeTexto.document())
 
     def openFileFromTree(self, index):
-        indexItem = self.model.index(index.row(), 0, index.parent())
-        filePath = self.model.filePath(indexItem)
+        indexItem = self.fsmodel.index(index.row(), 0, index.parent())
+        filePath = self.fsmodel.filePath(indexItem)
         fname = str(filePath)
         self.openFile(fname)
 

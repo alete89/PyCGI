@@ -13,9 +13,17 @@ process = process.Process()
 
 
 def getTreeViewInitialPath():
+    return getValueFromCfg('treeViewInitialPath=')
+
+
+def getTreeViewRootPath():
+    return getValueFromCfg('treeViewRootPath=')
+
+
+def getValueFromCfg(clave):
     with open(CFG_PATH, 'r') as f:
         text = f.read()
-    return text.split('=', 1)[1].replace("'", "")
+    return text.split(clave)[1].split("\n")[0].replace("'", "").replace('"', '')
 
 
 def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):

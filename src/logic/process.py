@@ -85,4 +85,9 @@ class Process():
         for instruccion in secuencia:
             printable_instruccion = str(instruccion["comando"]) + " " + str(
                 instruccion["parametro"]) + " (" + str(instruccion["iteraciones"]) + ")"
-            window_instance.indicadorSecuencia.append(printable_instruccion)
+            bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
+            prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace(
+                "<html><b>", "")
+            window_instance.indicadorSecuencia.setFontWeight(50)
+            window_instance.indicadorSecuencia.append(prev_content)
+            window_instance.indicadorSecuencia.append(bold_instruccion)

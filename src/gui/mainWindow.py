@@ -191,13 +191,13 @@ class PyCGI(QtGui.QMainWindow):
             if os.path.isfile(fname):
                 newTabName = str(fname)
 
-        self.newTab = QtGui.QWidget()
-        indexTab = self.tabsInternas.addTab(self.newTab, str(newTabName))
-        newTabLayout = QtGui.QVBoxLayout(self.newTab)
+        newTab = QtGui.QWidget()
+        self.tabsInternas.addTab(newTab, str(newTabName))
+        newTabLayout = QtGui.QVBoxLayout(newTab)
         self.crearEditorDeTexto()
         newTabLayout.addWidget(self.EditorDeTexto)
-        self.newTab.setLayout(newTabLayout)
-        self.tabsInternas.setCurrentWidget(self.newTab)
+        newTab.setLayout(newTabLayout)
+        self.tabsInternas.setCurrentWidget(newTab)
 
     def openFile(self, fname):
         if not fname:

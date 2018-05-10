@@ -33,6 +33,24 @@ class PyCGI(QtGui.QMainWindow):
         self.tree.setSortingEnabled(True)
         self.tree.setColumnWidth(0, 300)
         self.tree.doubleClicked.connect(self.openFileFromTree)
+        self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tree.customContextMenuRequested.connect(self.openRightClickMenu)
+
+    def openRightClickMenu(self, position):
+        indexes = self.tree.selectedIndexes()
+        menu = QtGui.QMenu()
+        filePath = str(self.model.filePath(indexes[0]))
+
+        # Actions
+        copyPath = menu.addAction(self.tr("Copy Full Path..."))
+        # Resultado
+        eleccion = menu.exec_(self.tree.viewport().mapToGlobal(position))
+        if eleccion == copyPath:
+            self.setClipboard(filePath)
+
+    def setClipboard(self, text):
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(text)
 
     def crearIndicadorSecuencia(self):
         self.font = QtGui.QFont()

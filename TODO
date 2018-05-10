@@ -1,3 +1,5 @@
 - y si el proceso lanzado en terminal necesita interactuar con el usuario?
 
 - mostrar el proceso actual en negrita
+
+- Permitir poner la ruta de la tablaDeSecuencias.csv en el archivo cfg

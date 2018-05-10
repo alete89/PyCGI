@@ -1,1 +1,3 @@
-treeViewInitialPath='PRUEBA'
+treeViewInitialPath='InitialPath'
+treeViewRootPath="pathRoot"
+tablaDeSecuenciasPath="pathTDS"

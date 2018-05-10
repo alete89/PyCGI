@@ -2,7 +2,7 @@ import unittest
 import src.logic.csvdb as csvdb
 
 
-class TestCore(unittest.TestCase):
+class TestCsvdb(unittest.TestCase):
     def setUp(self):
         self.path = "./test/tabla_test.csv"
         self.temp_csv = "./test/temp.csv"

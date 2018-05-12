@@ -6,6 +6,7 @@ from ..logic import core
 from . import Highlighter
 from . import CodeEditor
 from . import tabla
+from . import treeView
 
 
 class PyCGI(QtGui.QMainWindow):
@@ -14,7 +15,7 @@ class PyCGI(QtGui.QMainWindow):
         self.is_new = True  # Flag para el archivo del editor
         self.file_name = ''  # Nombre del archivo del editor
         self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
-        self.treeWidget()
+        self.treeWidget = treeView.TreeView(self)
         self.crearIndicadorSecuencia()
         self.crearTerminal()
         self.crearEditorDeTexto()
@@ -22,40 +23,6 @@ class PyCGI(QtGui.QMainWindow):
         self.crearMenu()
         self.statusBar()
         self.show()
-
-    def treeWidget(self):
-        self.tree = QtGui.QTreeView()
-        self.fsmodel = QtGui.QFileSystemModel(self.tree)
-        self.fsmodel.setRootPath(core.getTreeViewRootPath())
-        initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
-        self.tree.setModel(self.fsmodel)
-        self.tree.expand(initialPath)
-        while initialPath.parent().isValid():
-            self.tree.expand(initialPath.parent())
-            initialPath = initialPath.parent()
-        self.tree.setAnimated(True)
-        self.tree.setIndentation(15)
-        self.tree.setSortingEnabled(True)
-        self.tree.setColumnWidth(0, 300)
-        self.tree.doubleClicked.connect(self.openFileFromTree)
-        self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.tree.customContextMenuRequested.connect(self.openRightClickMenu)
-
-    def openRightClickMenu(self, position):
-        indexes = self.tree.selectedIndexes()
-        menu = QtGui.QMenu()
-        filePath = str(self.fsmodel.filePath(indexes[0]))
-
-        # Actions
-        copyPath = menu.addAction(self.tr("Copy Full Path..."))
-        # Resultado
-        eleccion = menu.exec_(self.tree.viewport().mapToGlobal(position))
-        if eleccion == copyPath:
-            self.setClipboard(filePath)
-
-    def setClipboard(self, text):
-        clipboard = QtGui.QApplication.clipboard()
-        clipboard.setText(text)
 
     def crearIndicadorSecuencia(self):
         self.font = QtGui.QFont()
@@ -165,12 +132,13 @@ class PyCGI(QtGui.QMainWindow):
         layoutTab3.addWidget(self.saveTableButton)
         self.configTab1.setLayout(layoutTab3)
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
-        splitterHoriz.addWidget(self.tree)
+        splitterHoriz.addWidget(self.treeWidget)
         splitterHoriz.addWidget(self.tabs)
-        splitterHoriz.setSizes([100, 500])
         layout.addWidget(splitterHoriz)
         layout.addLayout(BotoneraInferior)
         self.show()
+        sizes = splitterHoriz.sizes()
+        splitterHoriz.setSizes([sizes[0] * 0.7, sizes[1]])
 
     def crearMenu(self):
         self.menuBar().clear()
@@ -234,12 +202,6 @@ class PyCGI(QtGui.QMainWindow):
                 self.file_name = fname
         if fname[-3:] == ".py":
             self.highlighter.setDocument(self.EditorDeTexto.document())
-
-    def openFileFromTree(self, index):
-        indexItem = self.fsmodel.index(index.row(), 0, index.parent())
-        filePath = self.fsmodel.filePath(indexItem)
-        fname = str(filePath)
-        self.openFile(fname)
 
     def saveAsDialog(self):
         name = QtGui.QFileDialog.getSaveFileName(self, 'Save File', str(self.file_name))

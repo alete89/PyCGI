@@ -1,5 +1,7 @@
 - y si el proceso lanzado en terminal necesita interactuar con el usuario?
 
-- mostrar el proceso actual en negrita
+- mostrar el proceso actual en negrita (retocar)
+
+- raíz del treeView además del directorio que comienza abierto.
 
 - Permitir poner la ruta de la tablaDeSecuencias.csv en el archivo cfg

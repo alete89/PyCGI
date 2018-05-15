@@ -7,7 +7,7 @@ from . import process
 from ..gui import paramForm
 
 STARTING_PATH = os.getcwd()
-CFG_PATH = STARTING_PATH + '\\cfg'
+CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
 

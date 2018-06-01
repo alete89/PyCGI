@@ -17,7 +17,7 @@ def findParameters(dataset):
             cmd_solo = comando_completo
         lista_de_comandos.append(cmd_solo)
 
-        indicacionParametros = re.findall('\(.*?\)', comando_completo)
+        indicacionParametros = re.findall(r"\(.*?\)", comando_completo)
         for parametro in indicacionParametros:
             parametro = parametro.replace("(", "")
             parametro = parametro.replace(")", "")

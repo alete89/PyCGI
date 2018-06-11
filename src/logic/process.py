@@ -3,6 +3,7 @@
 # Default
 import sys
 from PyQt4 import QtCore
+import os
 
 if sys.platform == "win32":
     # Windows only
@@ -45,14 +46,21 @@ class Process():
             instruccion['iteraciones'] = str(
                 int(instruccion['iteraciones']) - 1)  # Iteraciones -1
             self.current_process = instruccion['comando']
+            if self.current_process[:6] == "python":
+                ruta = self.current_process.split(
+                    "python")[1][:self.current_process.split("python")[1].rfind("/") + 1]
+                fullPath = os.getcwd() + ruta[2:]
+                print ruta
+                print fullPath
+                os.chdir(fullPath)
             self.MainWindowInstance.showOutputInTerminal(
                 "iniciando proceso: " + self.current_process)
             if not instruccion['parametro']:  # Si no hay parámetros
-                self.proc.start(instruccion['comando'])  # lanzo sin parámetros
+                self.proc.start(instruccion['comando'].split("/")[-1])  # lanzo sin parámetros
             else:
                 # lanzo con parámetros
                 self.proc.start(
-                    instruccion['comando'], instruccion['parametro'])
+                    instruccion['comando'].split("/")[-1], instruccion['parametro'])
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()

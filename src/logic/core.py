@@ -48,7 +48,7 @@ def subMenuList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
     subMenuDistinct = csvdb.distinct(subMenuFilter, 2)
     subMenuColumn = csvdb.getColumn(subMenuDistinct, 2)
-    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
+    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 0)
     return subMenuSorted
 
 

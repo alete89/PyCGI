@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 '''
 el parámetro delimiter=';' está seteado así porque la configuración internacional de windows
@@ -67,6 +67,5 @@ def getHeader(path):
 
 
 def sortDataSet(dataset, column, invertido=False):
-    sortedDataSet = sorted(
-        dataset, key=lambda col: col[column], reverse=invertido)
+    sortedDataSet = sorted(dataset, key=lambda col: col[column], reverse=invertido)
     return sortedDataSet

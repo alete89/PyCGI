@@ -48,11 +48,10 @@ class Process():
             self.current_process = instruccion['comando']
             if self.current_process[:6] == "python":
                 ruta = self.current_process.split(
-                    "python")[1][:self.current_process.split("python")[1].rfind("/") + 1]
-                fullPath = os.getcwd() + ruta[2:]
+                    "python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
                 print ruta
-                print fullPath
-                os.chdir(fullPath)
+                self.proc.setWorkingDirectory(ruta)
+
             self.MainWindowInstance.showOutputInTerminal(
                 "iniciando proceso: " + self.current_process)
             if not instruccion['parametro']:  # Si no hay parámetros

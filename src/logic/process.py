@@ -43,23 +43,20 @@ class Process():
             del self.secuencia[0]
             self.runNow()
         else:  # Quedan iteraciones
-            instruccion['iteraciones'] = str(
-                int(instruccion['iteraciones']) - 1)  # Iteraciones -1
+            instruccion['iteraciones'] = str(int(instruccion['iteraciones']) - 1)  # Iteraciones -1
             self.current_process = instruccion['comando']
             if self.current_process[:6] == "python":
-                ruta = self.current_process.split(
-                    "python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
-                print ruta
-                self.proc.setWorkingDirectory(ruta)
-
-            self.MainWindowInstance.showOutputInTerminal(
-                "iniciando proceso: " + self.current_process)
+                soloRuta = self.current_process.split("python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
+                rutaAbsoluta = os.path.abspath(soloRuta) + "/"
+                self.proc.setWorkingDirectory(rutaAbsoluta)
+                self.current_process = self.current_process.replace(soloRuta, rutaAbsoluta)
+            self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
             if not instruccion['parametro']:  # Si no hay parámetros
-                self.proc.start(instruccion['comando'].split("/")[-1])  # lanzo sin parámetros
+                self.proc.start(self.current_process)  # lanzo sin parámetros
             else:
                 # lanzo con parámetros
-                self.proc.start(
-                    instruccion['comando'].split("/")[-1], instruccion['parametro'])
+                parametros = " ".join(instruccion['parametro'])
+                self.proc.start(self.current_process + " " + parametros)
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()

@@ -35,6 +35,7 @@ class Process():
         self.runNow()
 
     def runNow(self):
+        filePathExists = True
         if not self.secuencia:
             return
         instruccion = self.secuencia[0]
@@ -46,17 +47,23 @@ class Process():
             instruccion['iteraciones'] = str(int(instruccion['iteraciones']) - 1)  # Iteraciones -1
             self.current_process = instruccion['comando']
             if self.current_process[:6] == "python":
-                soloRuta = self.current_process.split("python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
+                soloRuta = self.current_process.split(
+                    "python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
                 rutaAbsoluta = os.path.abspath(soloRuta) + "/"
                 self.proc.setWorkingDirectory(rutaAbsoluta)
                 self.current_process = self.current_process.replace(soloRuta, rutaAbsoluta)
-            self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
-            if not instruccion['parametro']:  # Si no hay parámetros
-                self.proc.start(self.current_process)  # lanzo sin parámetros
+                filePath = self.current_process.replace("python ", "")
+                filePathExists = os.path.isfile(filePath)
+            if filePathExists:
+                self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
+                if not instruccion['parametro']:  # Si no hay parámetros
+                    self.proc.start(self.current_process)  # lanzo sin parámetros
+                else:
+                    # lanzo con parámetros
+                    parametros = " ".join(instruccion['parametro'])
+                    self.proc.start(self.current_process + " " + parametros)
             else:
-                # lanzo con parámetros
-                parametros = " ".join(instruccion['parametro'])
-                self.proc.start(self.current_process + " " + parametros)
+                print "no se encontro el archivo"
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()

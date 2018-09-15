@@ -74,7 +74,7 @@ class PyCGI(QtGui.QMainWindow):
         return toolbar
 
     def ventanaPrincipal(self):
-        self.setMinimumWidth(650)
+        self.setMinimumWidth(800)
         self.setMinimumHeight(600)
         self.killButton = QtGui.QPushButton("Kill process")
         self.killButton.clicked.connect(self.KillingProcess)

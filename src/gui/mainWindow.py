@@ -50,25 +50,35 @@ class PyCGI(QtGui.QMainWindow):
         self.highlighter.setDocument(None)
 
     def crearToolbar(self):
-        toolbar = self.addToolBar("Editor de texto Toolbar")
+        toolbar = self.addToolBar("Text editor - Toolbar")
+        
         NewOne = QtGui.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
         NewOne.setShortcut('Ctrl+n')
+        NewOne.setStatusTip("New file")
         NewOne.triggered.connect(self.newEditorTab)
         toolbar.addAction(NewOne)
+        
         OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         OpenIcon.setShortcut('Ctrl+o')
+        OpenIcon.setStatusTip("Open file")
         OpenIcon.triggered.connect(self.openFile)
         toolbar.addAction(OpenIcon)
+        
         SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
         SaveIcon.setShortcut('Ctrl+s')
+        SaveIcon.setStatusTip("Save file")
         SaveIcon.triggered.connect(self.saveDialog)
         toolbar.addAction(SaveIcon)
+        
         SaveAsIcon = QtGui.QAction(QtGui.QIcon('icons/saveAs.png'), 'Save as', self)
         SaveAsIcon.setShortcut('Ctrl+g')
+        SaveAsIcon.setStatusTip("Save as")
         SaveAsIcon.triggered.connect(self.saveAsDialog)
         toolbar.addAction(SaveAsIcon)
+        
         CloseIcon = QtGui.QAction(QtGui.QIcon('icons/closeFile.png'), 'Close', self)
         CloseIcon.setShortcut('Ctrl+x')
+        CloseIcon.setStatusTip("Close file")
         CloseIcon.triggered.connect(self.CloseDialog)
         toolbar.addAction(CloseIcon)
         return toolbar
@@ -98,8 +108,8 @@ class PyCGI(QtGui.QMainWindow):
         self.configTab3 = QtGui.QWidget()
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killGo)
-        self.tabs.addTab(self.tab1, "Proceso")
-        self.tabs.addTab(self.tab2, "Editor")
+        self.tabs.addTab(self.tab1, "Process")
+        self.tabs.addTab(self.tab2, "Text Editor")
         layoutTab1 = QtGui.QVBoxLayout(self.tabs)
         layoutTab1.addWidget(self.indicadorSecuencia)
         layoutTab1.addWidget(self.terminalOutput)
@@ -109,22 +119,22 @@ class PyCGI(QtGui.QMainWindow):
         layoutTab2 = QtGui.QVBoxLayout(self.tabs)
         layoutTab2.addWidget(self.crearToolbar())
         self.tab2.setLayout(layoutTab2)
-        self.tabs.addTab(self.tab3, "Configuracion")
+        self.tabs.addTab(self.tab3, "Configuration")
         layoutTabsConfig = QtGui.QVBoxLayout(self.tab3)
         layoutTabsConfig.addWidget(self.tabsConfiguracion)
         self.tab3.setLayout(layoutTabsConfig)
-        self.tabsConfiguracion.addTab(self.configTab1, "Tabla de Secuencias")
-        self.tabsConfiguracion.addTab(self.configTab2, "Variables Globales")
-        self.tabsConfiguracion.addTab(self.configTab3, "Configuracion automatica")
+        self.tabsConfiguracion.addTab(self.configTab1, "Sequence Table")
+        self.tabsConfiguracion.addTab(self.configTab2, "Global Variables")
+        self.tabsConfiguracion.addTab(self.configTab3, "Import")
         layoutTab2.addWidget(self.tabsInternas)
         layoutTab3 = QtGui.QVBoxLayout(self.tabs)
         self.tabla = tabla.Tabla()
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())
-        self.addRowButton = QtGui.QPushButton("Agregar fila")
+        self.addRowButton = QtGui.QPushButton("Add row")
         self.addRowButton.clicked.connect(self.tabla.addRow)
-        self.delRowButton = QtGui.QPushButton("Borrar fila")
+        self.delRowButton = QtGui.QPushButton("Delete current row")
         self.delRowButton.clicked.connect(self.tabla.delRow)
-        self.saveTableButton = QtGui.QPushButton("Guardar cambios")
+        self.saveTableButton = QtGui.QPushButton("Save changes")
         self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
         layoutTab3.addWidget(self.tabla)
         layoutTab3.addWidget(self.addRowButton)
@@ -158,7 +168,7 @@ class PyCGI(QtGui.QMainWindow):
         self.terminalOutput.append(text)
 
     def KillingProcess(self):
-        self.terminalOutput.append("Matando proceso:")
+        self.terminalOutput.append("Killing process:")
         core.matarProceso(self)
 
     def cleanTerminal(self):
@@ -227,8 +237,8 @@ class PyCGI(QtGui.QMainWindow):
         if self.is_new:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
-            msg.setText(u"Se modificó el documento desde la última vez que se guardó")
-            msg.setInformativeText("desea guardar los cambios?")
+            msg.setText(u"The file has been modified.")
+            msg.setInformativeText("Save the changes?")
             msg.setStandardButtons(QtGui.QMessageBox.Save |
                                    QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
             resultado = msg.exec_()

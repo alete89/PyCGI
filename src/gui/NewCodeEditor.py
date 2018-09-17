@@ -454,7 +454,7 @@ class Main(QtGui.QMainWindow):
             elif cs == True and wwo == True:
                 flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindCaseSensitively and QtGui.QTextDocument.FindWholeWords
             
-            self.text.find(f,flag)
+            self.text.find(f,flag or 0)
 
         def handleReplace():
             f = find.te.toPlainText()

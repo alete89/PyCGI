@@ -2,6 +2,7 @@
 
 import sys
 from PyQt4 import QtGui, QtCore
+from . import findStringDialog
 
 
 class LineNumberArea(QtGui.QWidget):
@@ -33,6 +34,8 @@ class CodeEditor(QtGui.QPlainTextEdit):
         font.setPointSize(11)
         self.setFont(font)
         self.setMinimumHeight(100)
+        self.is_new = True
+        self.file_name = ''
 
     def lineNumberAreaWidth(self):
         digits = 1
@@ -90,6 +93,43 @@ class CodeEditor(QtGui.QPlainTextEdit):
             selection.cursor.clearSelection()
             extraSelections.append(selection)
         self.setExtraSelections(extraSelections)
+
+    def find_dialog(self):
+        find = findStringDialog.Find(self)
+        find.show()
+
+        def handleFind():
+
+            texto_buscado = find.buscar_textbox.toPlainText()
+            print(texto_buscado)
+
+            if find.is_case_sensitive == True and find.is_solo_palabras_completas == False:
+                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindCaseSensitively
+
+            elif find.is_case_sensitive == False and find.is_solo_palabras_completas == False:
+                flag = QtGui.QTextDocument.FindBackward
+
+            elif find.is_case_sensitive == False and find.is_solo_palabras_completas == True:
+                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindWholeWords
+
+            elif find.is_case_sensitive == True and find.is_solo_palabras_completas == True:
+                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindCaseSensitively and QtGui.QTextDocument.FindWholeWords
+
+            self.find(texto_buscado, flag)
+
+        def handleReplace():
+            texto_buscado = find.buscar_textbox.toPlainText()
+            texto_reemplaza = find.reemplazar_textbox.toPlainText()
+
+            text = self.toPlainText()
+
+            newText = text.replace(texto_buscado, texto_reemplaza)
+
+            self.clear()
+            self.setPlainText(newText)
+
+        find.find_button.clicked.connect(handleFind)
+        find.replace_button.clicked.connect(handleReplace)
 
 
 if __name__ == "__main__":

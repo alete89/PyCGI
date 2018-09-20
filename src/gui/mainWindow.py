@@ -54,10 +54,6 @@ class PyCGI(QtGui.QMainWindow):
         self.tab1 = QtGui.QWidget()
         self.tab2 = QtGui.QWidget()
         self.tab3 = QtGui.QWidget()
-        self.tabsInternas = QtGui.QTabWidget()
-
-        # self.tabsInternas.tabCloseRequested.connect(self._closeTab())
-        self.tabsInternas.setTabsClosable(True)
 
         self.tabsConfiguracion = QtGui.QTabWidget()
         self.configTab1 = QtGui.QWidget()
@@ -73,17 +69,13 @@ class PyCGI(QtGui.QMainWindow):
         layoutTab1.addWidget(self.killButton)
         layoutTab1.addWidget(self.cleanTerminalButton)
         self.tab1.setLayout(layoutTab1)
-        layoutTab2 = QtGui.QVBoxLayout(self.tabs)
-        layoutTab2.addWidget(Editor.Editor())
-        self.tab2.setLayout(layoutTab2)
+
         self.tabs.addTab(self.tab3, "Configuration")
         layoutTabsConfig = QtGui.QVBoxLayout(self.tab3)
         layoutTabsConfig.addWidget(self.tabsConfiguracion)
         self.tab3.setLayout(layoutTabsConfig)
         self.tabsConfiguracion.addTab(self.configTab1, "Sequence Table")
-        self.tabsConfiguracion.addTab(self.configTab2, "Global Variables")
-        self.tabsConfiguracion.addTab(self.configTab3, "Import")
-        layoutTab2.addWidget(self.tabsInternas)
+
         layoutTab3 = QtGui.QVBoxLayout(self.tabs)
         self.tabla = tabla.Tabla()
         self.tabla.ShowDataSet(core.fullDataSet(), core.getHeaders())

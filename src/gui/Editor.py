@@ -12,14 +12,17 @@ class Editor(QtGui.QWidget):
         super(Editor, self).__init__()
         self.layout = QtGui.QVBoxLayout(self)
         self.currentFontSize = 11
+
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(self.closeDialog)
+        self.crearToolbar()
         self.layout.addWidget(self.tabWidget)
+        
         self.newEditorTab()
         self.highlighter = Highlighter.Highlighter(self)
 
-        self.crearToolbar()
+        
     
     def crearToolbar(self):
         toolbar = QtGui.QToolBar(self)
@@ -128,7 +131,7 @@ class Editor(QtGui.QWidget):
     def _changeFontSize(self, selectedSize):
         self.currentFontSize = int(selectedSize)
         for index in range(self.tabWidget.count()):
-            self.tabWidget.widget(index)._changeFontSize(int(selectedSize))
+            self.tabWidget.widget(index).changeFontSize(int(selectedSize))
 
 
 
@@ -231,7 +234,7 @@ class Editor(QtGui.QWidget):
                 newTabName = str(fname)
 
         newTab = CodeBox.CodeBox()
-        newTab._changeFontSize(self.currentFontSize)
+        newTab.changeFontSize(self.currentFontSize)
         index = self.tabWidget.addTab(newTab, str(newTabName))
         self.tabWidget.setCurrentIndex(index)
         return index

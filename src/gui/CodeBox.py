@@ -39,7 +39,7 @@ class CodeBox(QtGui.QPlainTextEdit):
     def _huboCambios(self):
         self.is_dirty = True
 
-    def _changeFontSize(self, size):
+    def changeFontSize(self, size):
         self.font.setPointSize(size)
         self.setFont(self.font)
 

@@ -11,12 +11,15 @@ class Editor(QtGui.QWidget):
     def __init__(self):
         super(Editor, self).__init__()
         self.layout = QtGui.QVBoxLayout(self)
-        self.crearToolbar()
+        self.currentFontSize = 11
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(self.closeDialog)
         self.layout.addWidget(self.tabWidget)
+        self.newEditorTab()
         self.highlighter = Highlighter.Highlighter(self)
+
+        self.crearToolbar()
     
     def crearToolbar(self):
         toolbar = QtGui.QToolBar(self)
@@ -24,7 +27,7 @@ class Editor(QtGui.QWidget):
         newTab = QtGui.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
         newTab.setShortcut('Ctrl+n')
         newTab.setStatusTip("New file")
-        newTab.triggered.connect(self.newEditorTab) #no debería chillarme por la cantidad de parámetros?
+        newTab.triggered.connect(self.newEditorTab)
         toolbar.addAction(newTab)
                 
         OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
@@ -109,50 +112,54 @@ class Editor(QtGui.QWidget):
         dedentAction.triggered.connect(self.Dedent)
         toolbar.addAction(dedentAction)
         
-        self.fontFamily = QtGui.QFontComboBox(self)
-        self.fontFamily.currentFontChanged.connect(self.FontFamily)
-        toolbar.addWidget(self.fontFamily)
-        
-        fontSize = QtGui.QComboBox(self)
-        fontSize.setEditable(True)
-        fontSize.setMinimumContentsLength(3)
-        fontSize.activated.connect(self.FontSize)
+        fontSizeCombo = QtGui.QComboBox(self)
+        fontSizeCombo.setEditable(False)
+        fontSizeCombo.setMinimumContentsLength(3)
         flist = [6,7,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28]
         
         for i in flist:
-            fontSize.addItem(str(i))
-            
-        toolbar.addWidget(fontSize)    
+            fontSizeCombo.addItem(str(i))
+
+        fontSizeCombo.activated[str].connect(self._changeFontSize)
+        toolbar.addWidget(fontSizeCombo)    
         self.layout.addWidget(toolbar)
+
             
-            
+    def _changeFontSize(self, selectedSize):
+        self.currentFontSize = int(selectedSize)
+        for index in range(self.tabWidget.count()):
+            self.tabWidget.widget(index)._changeFontSize(int(selectedSize))
+
+
+
+
     def FontSize(self, fsize):
         size = (int(fsize))
         font = QtGui.QFont()
         font.setFamily("Consolas, 'Courier New', monospace")
         font.setPointSize(size)
-        self.EditorDeTexto.setFont(font)
+        self.tabWidget.currentWidget().setFont(font)
         
     def FontFamily(self,fontF):
         font = QtGui.QFont()
         font.setFamily("Consolas, '"+str(fontF)+"', monospace")
         self.setFont(font)
-        self.EditorDeTexto.setFont(font)        
+        self.tabWidget.currentWidget().setFont(font)        
         
     def Undo(self):
-        self.EditorDeTexto.undo()
+        self.tabWidget.currentWidget().undo()
 
     def Redo(self):
-        self.EditorDeTexto.redo()
+        self.tabWidget.currentWidget().redo()
 
     def Cut(self):
-        self.EditorDeTexto.cut()
+        self.tabWidget.currentWidget().cut()
 
     def Copy(self):
-        self.EditorDeTexto.copy()
+        self.tabWidget.currentWidget().copy()
 
     def Paste(self):
-        self.EditorDeTexto.paste()
+        self.tabWidget.currentWidget().paste()
 
     def Indent(self):
         print ("indent unimplemented")
@@ -161,8 +168,8 @@ class Editor(QtGui.QWidget):
         print ("indent unimplemented")
 
     def CursorPosition(self):
-        line = self.EditorDeTexto.textCursor().blockNumber()
-        col = self.EditorDeTexto.textCursor().columnNumber()
+        line = self.tabWidget.currentWidget().textCursor().blockNumber()
+        col = self.tabWidget.currentWidget().textCursor().columnNumber()
         linecol = ("Line: "+str(line)+" | "+"Column: "+str(col))
         self.status.showMessage(linecol)
         
@@ -172,12 +179,12 @@ class Editor(QtGui.QWidget):
         preview.exec_()
 
     def PaintPageView(self, printer):
-        self.EditorDeTexto.print_(printer)
+        self.tabWidget.currentWidget().print_(printer)
         
     def Print(self):
         dialog = QtGui.QPrintDialog()
         if dialog.exec_() == QtGui.QDialog.Accepted:
-            self.EditorDeTexto.document().print_(dialog.printer())
+            self.tabWidget.currentWidget().document().print_(dialog.printer())
 
     def find_dialog(self):
         find = findStringDialog.Find(self)
@@ -216,7 +223,7 @@ class Editor(QtGui.QWidget):
         find.find_button.clicked.connect(handleFind)
         find.replace_button.clicked.connect(handleReplace)
 
-    def newEditorTab(self, fname):
+    def newEditorTab(self, fname=None):
         if not fname:
             newTabName = 'Untitled'
         else:
@@ -224,6 +231,7 @@ class Editor(QtGui.QWidget):
                 newTabName = str(fname)
 
         newTab = CodeBox.CodeBox()
+        newTab._changeFontSize(self.currentFontSize)
         index = self.tabWidget.addTab(newTab, str(newTabName))
         self.tabWidget.setCurrentIndex(index)
         return index
@@ -238,7 +246,7 @@ class Editor(QtGui.QWidget):
                 tab = self.tabWidget.widget(tabIndex)
                 data = f.read()
                 tab.setPlainText(data)
-                tab.is_new = False
+                tab.is_dirty = False
                 tab.file_name = fname
                 self.tabWidget.setCurrentIndex(tabIndex)
         if fname[-3:] == ".py":
@@ -251,16 +259,17 @@ class Editor(QtGui.QWidget):
             textoParaGuardar = tab_to_save.toPlainText()
             with open(name, "w") as nFile:
                 nFile.write(textoParaGuardar)
-                tab_to_save.is_new = False
+                tab_to_save.is_dirty = False
                 tab_to_save.file_name = name
+                self.tabWidget.setTabText(tabIndex,name)
 
     def saveDialog(self, tabIndex):
         tab_to_save = self.tabWidget.widget(tabIndex)
-        if tab_to_save.is_new:
+        if tab_to_save.is_dirty:
             self.saveAsDialog(tabIndex)
         else:
             textoParaGuardar = tab_to_save.toPlainText()
-            with open(self.file_name, "w") as nFile:
+            with open(tab_to_save.file_name, "w") as nFile:
                 nFile.write(textoParaGuardar)
 
     def removeTabFile(self):
@@ -268,7 +277,7 @@ class Editor(QtGui.QWidget):
 
     def closeDialog(self, closeIndex):
         tab_to_close = self.tabWidget.widget(closeIndex)
-        if tab_to_close.is_new:
+        if tab_to_close.is_dirty:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
             msg.setText(u"The file has been modified.")

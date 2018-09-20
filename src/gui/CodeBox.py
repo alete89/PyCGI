@@ -27,13 +27,21 @@ class CodeBox(QtGui.QPlainTextEdit):
         self.updateLineNumberAreaWidth(0)
         self.setTabStopWidth(32)
 
-        font = QtGui.QFont()
-        font.setFamily("Consolas, 'Courier New', monospace")
-        font.setPointSize(11)
-        self.setFont(font)
+        self.font = QtGui.QFont()
+        self.font.setFamily("Consolas, 'Courier New', monospace")
+        self.font.setPointSize(11)
+        self.setFont(self.font)
         self.setMinimumHeight(100)
-        self.is_new = True
+        self.is_dirty = False
         self.file_name = ""
+        self.textChanged.connect(self._huboCambios)
+
+    def _huboCambios(self):
+        self.is_dirty = True
+
+    def _changeFontSize(self, size):
+        self.font.setPointSize(size)
+        self.setFont(self.font)
 
     def FontSize(self, fsize):
         size = (int(fsize))

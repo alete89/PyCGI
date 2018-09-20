@@ -1,19 +1,31 @@
-from PyQt4 import QtGui, QtCore
+# -*- coding: utf-8 -*-
+
+from PyQt4 import QtGui
 import CodeBox
 import sys
 import os
 import findStringDialog
+import Highlighter
 
 class Editor(QtGui.QWidget):
     def __init__(self):
         super(Editor, self).__init__()
-        self.EditorDeTexto = CodeBox.CodeBox()
         self.layout = QtGui.QVBoxLayout(self)
         self.crearToolbar()
-        self.layout.addWidget(CodeBox.CodeBox())
+        self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget.setTabsClosable(True)
+        self.tabWidget.tabCloseRequested.connect(self.closeDialog)
+        self.layout.addWidget(self.tabWidget)
+        self.highlighter = Highlighter.Highlighter(self)
     
     def crearToolbar(self):
         toolbar = QtGui.QToolBar(self)
+
+        newTab = QtGui.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
+        newTab.setShortcut('Ctrl+n')
+        newTab.setStatusTip("New file")
+        newTab.triggered.connect(self.newEditorTab) #no debería chillarme por la cantidad de parámetros?
+        toolbar.addAction(newTab)
                 
         OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
         OpenIcon.setShortcut('Ctrl+o')
@@ -36,7 +48,7 @@ class Editor(QtGui.QWidget):
         CloseIcon = QtGui.QAction(QtGui.QIcon('icons/closeFile.png'), 'Close', self)
         CloseIcon.setShortcut('Ctrl+f4')
         CloseIcon.setStatusTip("Close file")
-        CloseIcon.triggered.connect(self.CloseDialog)
+        CloseIcon.triggered.connect(self.closeDialog)
         toolbar.addAction(CloseIcon)
         
         printAction = QtGui.QAction(QtGui.QIcon("icons/print.png"),"Print document",self)
@@ -143,75 +155,16 @@ class Editor(QtGui.QWidget):
         self.EditorDeTexto.paste()
 
     def Indent(self):
-        tab = "\t"
-        cursor = self.EditorDeTexto.textCursor()
-
-        start = cursor.selectionStart()
-        end = cursor.selectionEnd()
-
-        cursor.setPosition(end)
-        cursor.movePosition(cursor.EndOfLine)
-        end = cursor.position()
-
-        cursor.setPosition(start)
-        cursor.movePosition(cursor.StartOfLine)
-        start = cursor.position()
-
-
-        while cursor.position() < end:
-            global var
-
-            print(cursor.position(),end)
-            
-            cursor.movePosition(cursor.StartOfLine)
-            cursor.insertText(tab)
-            cursor.movePosition(cursor.Down)
-            end += len(tab)
-
-            '''if cursor.position() == end:
-                var +=1
-
-            if var == 2:
-                break'''
+        print ("indent unimplemented")
 
     def Dedent(self):
-        tab = "\t"
-        cursor = self.EditorDeTexto.textCursor()
-
-        start = cursor.selectionStart()
-        end = cursor.selectionEnd()
-
-        cursor.setPosition(end)
-        cursor.movePosition(cursor.EndOfLine)
-        end = cursor.position()
-
-        cursor.setPosition(start)
-        cursor.movePosition(cursor.StartOfLine)
-        start = cursor.position()
-
-
-        while cursor.position() < end:
-            global var
-            
-            cursor.movePosition(cursor.StartOfLine)
-            cursor.deleteChar()
-            cursor.movePosition(cursor.EndOfLine)
-            cursor.movePosition(cursor.Down)
-            end -= len(tab)
-
-            '''if cursor.position() == end:
-                var +=1
-
-            if var == 2:
-                break'''
+        print ("indent unimplemented")
 
     def CursorPosition(self):
         line = self.EditorDeTexto.textCursor().blockNumber()
         col = self.EditorDeTexto.textCursor().columnNumber()
         linecol = ("Line: "+str(line)+" | "+"Column: "+str(col))
         self.status.showMessage(linecol)
-
-    
         
     def PageView(self):
         preview = QtGui.QPrintPreviewDialog()
@@ -225,7 +178,6 @@ class Editor(QtGui.QWidget):
         dialog = QtGui.QPrintDialog()
         if dialog.exec_() == QtGui.QDialog.Accepted:
             self.EditorDeTexto.document().print_(dialog.printer())
-
 
     def find_dialog(self):
         find = findStringDialog.Find(self)
@@ -266,54 +218,57 @@ class Editor(QtGui.QWidget):
 
     def newEditorTab(self, fname):
         if not fname:
-            newTabName = 'New'
+            newTabName = 'Untitled'
         else:
             if os.path.isfile(fname):
                 newTabName = str(fname)
 
-        newTab = QtGui.QWidget()
-        self.tabsInternas.addTab(newTab, str(newTabName))
+        newTab = CodeBox.CodeBox()
+        index = self.tabWidget.addTab(newTab, str(newTabName))
+        self.tabWidget.setCurrentIndex(index)
+        return index
 
-        newTabLayout = QtGui.QVBoxLayout(newTab)
-        newTabLayout.addWidget(CodeBox.CodeBox())
-        newTab.setLayout(newTabLayout)
-        self.tabsInternas.setCurrentWidget(newTab)
 
     def openFile(self, fname):
         if not fname:
             fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
         if fname:
             with open(fname, 'r') as f:
-                self.newEditorTab(fname)
+                tabIndex = self.newEditorTab(fname)
+                tab = self.tabWidget.widget(tabIndex)
                 data = f.read()
-                self.EditorDeTexto.setPlainText(data)
-                self.is_new = False
-                self.file_name = fname
+                tab.setPlainText(data)
+                tab.is_new = False
+                tab.file_name = fname
+                self.tabWidget.setCurrentIndex(tabIndex)
         if fname[-3:] == ".py":
-            self.highlighter.setDocument(self.EditorDeTexto.document())
+            self.highlighter.setDocument(tab.document())
 
-    def saveAsDialog(self):
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File', str(self.file_name))
+    def saveAsDialog(self, tabIndex):
+        tab_to_save = self.tabWidget.widget(tabIndex)
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
         if name:
-            textoParaGuardar = self.EditorDeTexto.toPlainText()
+            textoParaGuardar = tab_to_save.toPlainText()
             with open(name, "w") as nFile:
                 nFile.write(textoParaGuardar)
-                self.is_new = False
-                self.file_name = name
+                tab_to_save.is_new = False
+                tab_to_save.file_name = name
 
-    def saveDialog(self):
-        if self.is_new:
-            self.saveAsDialog()
+    def saveDialog(self, tabIndex):
+        tab_to_save = self.tabWidget.widget(tabIndex)
+        if tab_to_save.is_new:
+            self.saveAsDialog(tabIndex)
         else:
-            textoParaGuardar = self.EditorDeTexto.toPlainText()
+            textoParaGuardar = tab_to_save.toPlainText()
             with open(self.file_name, "w") as nFile:
                 nFile.write(textoParaGuardar)
 
     def removeTabFile(self):
         self.tabsInternas.removeTab(self.tabsInternas.currentIndex())
 
-    def CloseDialog(self):
-        if self.is_new:
+    def closeDialog(self, closeIndex):
+        tab_to_close = self.tabWidget.widget(closeIndex)
+        if tab_to_close.is_new:
             msg = QtGui.QMessageBox()
             msg.setIcon(QtGui.QMessageBox.Warning)
             msg.setText(u"The file has been modified.")
@@ -322,17 +277,16 @@ class Editor(QtGui.QWidget):
                                    QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
             resultado = msg.exec_()
             if resultado == QtGui.QMessageBox.Save:
-                self.saveDialog()
+                self.saveDialog(closeIndex)
             elif resultado == QtGui.QMessageBox.Discard:
-                self.removeTabFile()
+                tab_to_close.deleteLater()
+                self.tabWidget.removeTab(closeIndex)
             elif resultado == QtGui.QMessageBox.Cancel:
                 return
         else:
-            self.removeTabFile()
-
-    def _closeTab(self):
-        # self.tabsInternas.setCurrentIndex(index)
-        self.CloseDialog()
+            tab_to_close.deleteLater()
+            self.tabWidget.removeTab(closeIndex)
+        
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

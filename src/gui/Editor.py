@@ -42,7 +42,7 @@ class Editor(QtGui.QWidget):
         SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
         SaveIcon.setShortcut('Ctrl+s')
         SaveIcon.setStatusTip("Save file")
-        SaveIcon.triggered.connect(self.saveDialog)
+        SaveIcon.triggered.connect(self.save)
         toolbar.addAction(SaveIcon)
         
         SaveAsIcon = QtGui.QAction(QtGui.QIcon('icons/saveAs.png'), 'Save as', self)
@@ -250,6 +250,7 @@ class Editor(QtGui.QWidget):
                 data = f.read()
                 tab.setPlainText(data)
                 tab.is_dirty = False
+                tab.is_new = False
                 tab.file_name = fname
                 self.tabWidget.setCurrentIndex(tabIndex)
         if fname[-3:] == ".py":
@@ -263,22 +264,29 @@ class Editor(QtGui.QWidget):
             with open(name, "w") as nFile:
                 nFile.write(textoParaGuardar)
                 tab_to_save.is_dirty = False
+                tab_to_save.is_new = False
                 tab_to_save.file_name = name
                 self.tabWidget.setTabText(tabIndex,name)
 
-    def saveDialog(self, tabIndex):
+    def save(self, tabIndex=None):
+        if not tabIndex:
+            tabIndex=self.tabWidget.currentIndex()
         tab_to_save = self.tabWidget.widget(tabIndex)
-        if tab_to_save.is_dirty:
+        if tab_to_save.is_new and tab_to_save.is_dirty:
             self.saveAsDialog(tabIndex)
-        else:
+        elif tab_to_save.is_dirty:
             textoParaGuardar = tab_to_save.toPlainText()
             with open(tab_to_save.file_name, "w") as nFile:
                 nFile.write(textoParaGuardar)
+                tab_to_save.is_new = False
+                tab_to_save.is_dirty = False
 
     def removeTabFile(self):
         self.tabsInternas.removeTab(self.tabsInternas.currentIndex())
 
-    def closeDialog(self, closeIndex):
+    def closeDialog(self, closeIndex=None):
+        if not closeIndex:
+            closeIndex = self.tabWidget.currentIndex() 
         tab_to_close = self.tabWidget.widget(closeIndex)
         if tab_to_close.is_dirty:
             msg = QtGui.QMessageBox()
@@ -289,15 +297,14 @@ class Editor(QtGui.QWidget):
                                    QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
             resultado = msg.exec_()
             if resultado == QtGui.QMessageBox.Save:
-                self.saveDialog(closeIndex)
+                self.save(closeIndex)
             elif resultado == QtGui.QMessageBox.Discard:
                 tab_to_close.deleteLater()
                 self.tabWidget.removeTab(closeIndex)
             elif resultado == QtGui.QMessageBox.Cancel:
                 return
-        else:
-            tab_to_close.deleteLater()
-            self.tabWidget.removeTab(closeIndex)
+        tab_to_close.deleteLater()
+        self.tabWidget.removeTab(closeIndex)
         
 
 if __name__ == "__main__":

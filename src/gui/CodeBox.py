@@ -32,7 +32,8 @@ class CodeBox(QtGui.QPlainTextEdit):
         self.font.setPointSize(11)
         self.setFont(self.font)
         self.setMinimumHeight(100)
-        self.is_dirty = False
+        self.is_dirty = False  # there was changes since last save
+        self.is_new = True  # Whether SaveAs or Save
         self.file_name = ""
         self.textChanged.connect(self._huboCambios)
 

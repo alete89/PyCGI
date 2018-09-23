@@ -18,6 +18,7 @@ class TreeView(QtGui.QTreeView):
         self.setAnimated(True)
         self.setIndentation(15)
         self.setSortingEnabled(True)
+        self.sortByColumn(0, 0)
         self.setColumnWidth(0, 300)
         self.doubleClicked.connect(self.openFileFromTree)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)

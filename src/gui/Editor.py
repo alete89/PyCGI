@@ -6,6 +6,7 @@ import sys
 import os
 import findStringDialog
 import Highlighter
+import QTabBar
 
 class Editor(QtGui.QWidget):
     def __init__(self):
@@ -14,6 +15,7 @@ class Editor(QtGui.QWidget):
         self.currentFontSize = 11
 
         self.tabWidget = QtGui.QTabWidget()
+        self.tabWidget.setTabBar(QTabBar.MyTabBar())
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(self.closeDialog)
         self.crearToolbar()
@@ -285,7 +287,7 @@ class Editor(QtGui.QWidget):
         self.tabsInternas.removeTab(self.tabsInternas.currentIndex())
 
     def closeDialog(self, closeIndex=None):
-        if not closeIndex:
+        if closeIndex is None:
             closeIndex = self.tabWidget.currentIndex() 
         tab_to_close = self.tabWidget.widget(closeIndex)
         if tab_to_close.is_dirty:

@@ -54,11 +54,13 @@ class PyCGI(QtGui.QMainWindow):
         self.tabOutputs = QtGui.QWidget()
         self.tabEditor = Editor.Editor()
         self.tabApplication = QtGui.QWidget()
-
         self.tabConfiguracion = QtGui.QTabWidget()
+
         self.configTab1 = QtGui.QWidget()
         self.configTab2 = QtGui.QWidget()
         self.configTab3 = QtGui.QWidget()
+        self.configTab4 = QtGui.QWidget()
+
         BotoneraInferior = QtGui.QHBoxLayout(widget_central)
         BotoneraInferior.addWidget(self.killGo)
         self.tabWidget.addTab(self.tabOutputs, "Process")
@@ -79,7 +81,32 @@ class PyCGI(QtGui.QMainWindow):
         layoutTabsConfig.addWidget(self.tabConfiguracion)
         self.tabApplication.setLayout(layoutTabsConfig)
         self.tabConfiguracion.addTab(self.configTab1, "Sequence Table")
-        self.tabConfiguracion.addTab(self.configTab2, "Environment")
+        self.tabConfiguracion.addTab(self.configTab4, "Environment")
+
+        dirRoot = QtGui.QLabel('Root path')
+        dirInitial = QtGui.QLabel('Initial path')
+        dirButtonRoot = QtGui.QPushButton("Update directory")
+        dirButtonRoot.clicked.connect(core.getTreeViewRootPath)
+        dirButtonInitial = QtGui.QPushButton("Update directory")
+        dirButtonInitial.clicked.connect(core.getTreeViewInitialPath)
+
+        viewInitialPath=core.getTreeViewInitialPath()
+        viewRootPath=core.getTreeViewRootPath()
+
+        dirRootEdit = QtGui.QLineEdit(str(viewRootPath))
+        dirInitialEdit = QtGui.QLineEdit(str(viewInitialPath))
+        
+
+        grid = QtGui.QGridLayout()
+        grid.setSpacing(10)
+        grid.addWidget(dirRoot, 1, 0)
+        grid.addWidget(dirRootEdit, 1, 1)
+        grid.addWidget(dirButtonRoot, 1, 2)
+        grid.addWidget(dirInitial, 2, 0)
+        grid.addWidget(dirInitialEdit, 2, 1)
+        grid.addWidget(dirButtonInitial, 2, 2)
+
+        self.configTab4.setLayout(grid)
 
         layoutTab3 = QtGui.QVBoxLayout(self.tabWidget)
         self.tabla = tabla.Tabla()

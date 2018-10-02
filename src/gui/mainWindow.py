@@ -10,7 +10,7 @@ from . import treeView
 class PyCGI(QtGui.QMainWindow):
     def __init__(self):
         super(PyCGI, self).__init__()
-        self.setWindowTitle('PyCGI - Instituto de Tecnologia Nuclear Dan Beninson')
+        self.setWindowTitle('Nuclear Py - Instituto de Tecnologia Nuclear Dan Beninson')
         self.treeWidget = treeView.TreeView(self)
         self.crearIndicadorSecuencia()
         self.crearTerminal()
@@ -83,30 +83,35 @@ class PyCGI(QtGui.QMainWindow):
         self.tabConfiguracion.addTab(self.configTab1, "Sequence Table")
         self.tabConfiguracion.addTab(self.configTab4, "Environment")
 
-        dirRoot = QtGui.QLabel('Root path')
-        dirInitial = QtGui.QLabel('Initial path')
-        dirButtonRoot = QtGui.QPushButton("Update directory")
-        dirButtonRoot.clicked.connect(core.getTreeViewRootPath)
-        dirButtonInitial = QtGui.QPushButton("Update directory")
-        dirButtonInitial.clicked.connect(core.getTreeViewInitialPath)
-
+        self.dirRoot = QtGui.QLabel('Root path')
+        self.dirInitial = QtGui.QLabel('Initial path')
+        self.dirButtonRoot = QtGui.QPushButton("Update directory")
+        self.dirButtonInitial = QtGui.QPushButton("Update directory")
         viewInitialPath=core.getTreeViewInitialPath()
         viewRootPath=core.getTreeViewRootPath()
 
-        dirRootEdit = QtGui.QLineEdit(str(viewRootPath))
-        dirInitialEdit = QtGui.QLineEdit(str(viewInitialPath))
+        self.dirRootEdit = QtGui.QLineEdit(str(viewRootPath))
+        self.dirInitialEdit = QtGui.QLineEdit(str(viewInitialPath))
         
+        self.grid = QtGui.QGridLayout()
+        self.grid.setSpacing(10)
+        self.grid.addWidget(self.dirRoot, 1, 0)
+        self.grid.addWidget(self.dirRootEdit, 1, 1)
+        self.grid.addWidget(self.dirButtonRoot, 1, 2)
+        self.grid.addWidget(self.dirInitial, 2, 0)
+        self.grid.addWidget(self.dirInitialEdit, 2, 1)
+        self.grid.addWidget(self.dirButtonInitial, 2, 2)
 
-        grid = QtGui.QGridLayout()
-        grid.setSpacing(10)
-        grid.addWidget(dirRoot, 1, 0)
-        grid.addWidget(dirRootEdit, 1, 1)
-        grid.addWidget(dirButtonRoot, 1, 2)
-        grid.addWidget(dirInitial, 2, 0)
-        grid.addWidget(dirInitialEdit, 2, 1)
-        grid.addWidget(dirButtonInitial, 2, 2)
+        dirInitialText=self.dirInitialEdit.text()
+        dirRootText=self.dirRootEdit.text()
 
-        self.configTab4.setLayout(grid)
+        # estas dos lineas no funcionan bien
+        # pretendo llevar a la funcion updateCfgPath el texto del campo QlineEdit
+        # pero devuelve '<built-in function dir>' en el archivo cfg
+        self.dirButtonInitial.clicked.connect(lambda: core.updateCfgPath("%s" %(dirInitialText),0))
+        self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath("%s" %(dirRootText),1))
+
+        self.configTab4.setLayout(self.grid)
 
         layoutTab3 = QtGui.QVBoxLayout(self.tabWidget)
         self.tabla = tabla.Tabla()

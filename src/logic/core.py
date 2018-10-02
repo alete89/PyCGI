@@ -11,14 +11,12 @@ CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
 
-
 def getTreeViewInitialPath():
     initial = getValueFromCfg('treeViewInitialPath=')
     if initial == '':
         from PyQt4 import QtCore
         initial = QtCore.QDir.rootPath()
     return initial
-
 
 def getTreeViewRootPath():
     root = getValueFromCfg('treeViewRootPath=')
@@ -27,12 +25,31 @@ def getTreeViewRootPath():
         root = QtCore.QDir.rootPath()
     return root
 
+def updateCfgPath(dirName, numLine):
+    if dirName == '':
+        from PyQt4 import QtCore
+        initial = QtCore.QDir.rootPath()
+    else:
+        if numLine == 0:
+            dirName='treeViewInitialPath=' + "'" + str(dir) + "'"
+        elif numLine ==1:
+            dirName='treeViewRootPath=' + "'" + str(dir) + "'"
+    updateValueFromCfg(dirName,numLine)
+    return dirName
+    pass
 
 def getValueFromCfg(clave):
     with open(CFG_PATH, 'r') as f:
         text = f.read()
     return text.split(clave)[1].split("\n")[0].replace("'", "").replace('"', '')
 
+def updateValueFromCfg(clave,nline):
+    f = open(CFG_PATH, 'rw+')
+    f.seek(nline)
+    f.writelines([clave])
+    f.close()
+    return 
+    pass
 
 def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getDataFromCsv(path)

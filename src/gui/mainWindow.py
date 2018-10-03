@@ -90,6 +90,8 @@ class PyCGI(QtGui.QMainWindow):
         viewInitialPath=core.getTreeViewInitialPath()
         viewRootPath=core.getTreeViewRootPath()
 
+        print "Path 1 vale: " + str(viewInitialPath)
+
         self.dirRootEdit = QtGui.QLineEdit(str(viewRootPath))
         self.dirInitialEdit = QtGui.QLineEdit(str(viewInitialPath))
         
@@ -101,15 +103,17 @@ class PyCGI(QtGui.QMainWindow):
         self.grid.addWidget(self.dirInitial, 2, 0)
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
         self.grid.addWidget(self.dirButtonInitial, 2, 2)
-
+        
         dirInitialText=self.dirInitialEdit.text()
         dirRootText=self.dirRootEdit.text()
-
+        
+        print "Path 2 vale: " + str(dirInitialText)
         # estas dos lineas no funcionan bien
         # pretendo llevar a la funcion updateCfgPath el texto del campo QlineEdit
         # pero devuelve '<built-in function dir>' en el archivo cfg
-        self.dirButtonInitial.clicked.connect(lambda: core.updateCfgPath("%s" %(dirInitialText),0))
-        self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath("%s" %(dirRootText),1))
+
+        self.dirButtonInitial.clicked.connect(lambda: core.updateCfgPath(self.dirInitialEdit.text(),0))
+        self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath(self.dirRootEdit.text(),1))
 
         self.configTab4.setLayout(self.grid)
 

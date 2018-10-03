@@ -31,25 +31,24 @@ def updateCfgPath(dirName, numLine):
         initial = QtCore.QDir.rootPath()
     else:
         if numLine == 0:
-            dirName='treeViewInitialPath=' + "'" + str(dir) + "'"
+            dirName='treeViewInitialPath=' + "'" + str(dirName) + "'"
         elif numLine ==1:
-            dirName='treeViewRootPath=' + "'" + str(dir) + "'"
-    updateValueFromCfg(dirName,numLine)
+            dirName='treeViewRootPath=' + "'" + str(dirName) + "'"
+    updateValueFromCfg(dirName, numLine)
     return dirName
-    pass
+
 
 def getValueFromCfg(clave):
     with open(CFG_PATH, 'r') as f:
         text = f.read()
     return text.split(clave)[1].split("\n")[0].replace("'", "").replace('"', '')
 
-def updateValueFromCfg(clave,nline):
-    f = open(CFG_PATH, 'rw+')
-    f.seek(nline)
-    f.writelines([clave])
-    f.close()
+def updateValueFromCfg(clave, nLine):
+    lines = open(CFG_PATH, 'rw+').read().splitlines()
+    lines[nLine] = clave
+    open(CFG_PATH, 'rw+').write('\n'.join(lines))
     return 
-    pass
+    
 
 def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getDataFromCsv(path)

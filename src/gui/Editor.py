@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from PyQt4 import QtGui
-import CodeBox
+from src.gui import CodeBox
 import sys
 import os
-import findStringDialog
-import Highlighter
-import QTabBar
+from src.gui import findStringDialog
+from src.gui import Highlighter
+from src.gui import QTabBar
 
 class Editor(QtGui.QWidget):
     def __init__(self):

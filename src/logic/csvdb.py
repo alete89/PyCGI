@@ -32,14 +32,12 @@ def getDataFromCsv(path):
         reader = csv.reader(stream, delimiter=COLUMN_DELIMITER)
         reader.next()
         for rowdata in reader:
-            if any(x.strip() for x in rowdata):  # if any(x for x in rowdata):
+            if any(x.strip() for x in rowdata):
                 dataSet.append(rowdata)
     return dataSet
 
 
 def dataFilter(dataset, columna, valor):
-    # ejemplo de query para tener en cuenta qué/cómo necesito poder filtrar
-    # SELECT DISTINCT SubMenu,Coordenada FROM TablaDeSecuencias where Menu="unmenu" and SubMenu is not null order by Coordenada
     filteredDataSet = []
     for rowdata in dataset:
         if rowdata[columna] == valor:

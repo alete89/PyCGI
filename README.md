@@ -1,4 +1,4 @@
-[![Generic badge](https://img.shields.io/badge/Slack-open-<green>.svg)](https://mtrpc.slack.com/)
+[![Generic badge](https://img.shields.io/badge/Slack-join-<green>.svg)](https://mtrpc.slack.com/)
 
 
 # PyCGI

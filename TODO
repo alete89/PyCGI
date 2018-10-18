@@ -1,3 +1,12 @@
 - y si el proceso lanzado en terminal necesita interactuar con el usuario?
 
-- mostrar el proceso actual en negrita
+- mostrar el proceso actual en negrita (retocar)
+
+- raíz del treeView además del directorio que comienza abierto.
+
+- Permitir poner la ruta de la tablaDeSecuencias.csv en el archivo cfg
+
+- probar hacer un os.chdir() a la ruta del archivo antes de lanzar el script, de manera que
+cada script tenga como WD su propia ubicación.
+
+- mejorar editor de texto (buscar, reemplazar, agrandar la letra, que luego de un tab, acumule el tabulado)

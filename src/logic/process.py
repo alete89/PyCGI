@@ -3,6 +3,7 @@
 # Default
 import sys
 from PyQt4 import QtCore
+import os
 
 if sys.platform == "win32":
     # Windows only
@@ -34,6 +35,7 @@ class Process():
         self.runNow()
 
     def runNow(self):
+        filePathExists = True
         if not self.secuencia:
             return
         instruccion = self.secuencia[0]
@@ -42,17 +44,26 @@ class Process():
             del self.secuencia[0]
             self.runNow()
         else:  # Quedan iteraciones
-            instruccion['iteraciones'] = str(
-                int(instruccion['iteraciones']) - 1)  # Iteraciones -1
+            instruccion['iteraciones'] = str(int(instruccion['iteraciones']) - 1)  # Iteraciones -1
             self.current_process = instruccion['comando']
-            self.MainWindowInstance.showOutputInTerminal(
-                "iniciando proceso: " + self.current_process)
-            if not instruccion['parametro']:  # Si no hay parámetros
-                self.proc.start(instruccion['comando'])  # lanzo sin parámetros
+            if self.current_process[:6] == "python":
+                soloRuta = self.current_process.split(
+                    "python ")[1][:self.current_process.split("python ")[1].rfind("/") + 1]
+                rutaAbsoluta = os.path.abspath(soloRuta) + "/"
+                self.proc.setWorkingDirectory(rutaAbsoluta)
+                self.current_process = self.current_process.replace(soloRuta, rutaAbsoluta)
+                filePath = self.current_process.replace("python ", "")
+                filePathExists = os.path.isfile(filePath)
+            if filePathExists:
+                self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
+                if not instruccion['parametro']:  # Si no hay parámetros
+                    self.proc.start(self.current_process)  # lanzo sin parámetros
+                else:
+                    # lanzo con parámetros
+                    parametros = " ".join(instruccion['parametro'])
+                    self.proc.start(self.current_process + " " + parametros)
             else:
-                # lanzo con parámetros
-                self.proc.start(
-                    instruccion['comando'], instruccion['parametro'])
+                print "no se encontro el archivo"
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()
@@ -85,4 +96,9 @@ class Process():
         for instruccion in secuencia:
             printable_instruccion = str(instruccion["comando"]) + " " + str(
                 instruccion["parametro"]) + " (" + str(instruccion["iteraciones"]) + ")"
-            window_instance.indicadorSecuencia.append(printable_instruccion)
+            bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
+            prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace(
+                "<html><b>", "")
+            window_instance.indicadorSecuencia.setFontWeight(50)
+            window_instance.indicadorSecuencia.append(prev_content)
+            window_instance.indicadorSecuencia.append(bold_instruccion)

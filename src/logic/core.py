@@ -6,12 +6,51 @@ from . import paramFinder
 from . import process
 from ..gui import paramForm
 
-
-default_path = os.getcwd() + r"/tablaDeSecuencias.csv"
+STARTING_PATH = os.getcwd()
+CFG_PATH = STARTING_PATH + '/cfg'
+TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
 
+def getTreeViewInitialPath():
+    initial = getValueFromCfg('treeViewInitialPath=')
+    if initial == '':
+        from PyQt4 import QtCore
+        initial = QtCore.QDir.rootPath()
+    return initial
 
-def fullDataSet(path=default_path):
+def getTreeViewRootPath():
+    root = getValueFromCfg('treeViewRootPath=')
+    if root == '':
+        from PyQt4 import QtCore
+        root = QtCore.QDir.rootPath()
+    return root
+
+def updateCfgPath(dirName, numLine):
+    if dirName == '':
+        from PyQt4 import QtCore
+        initial = QtCore.QDir.rootPath()
+    else:
+        if numLine == 0:
+            dirName='treeViewInitialPath=' + "'" + str(dirName) + "'"
+        elif numLine ==1:
+            dirName='treeViewRootPath=' + "'" + str(dirName) + "'"
+    updateValueFromCfg(dirName, numLine)
+    return dirName
+
+
+def getValueFromCfg(clave):
+    with open(CFG_PATH, 'r') as f:
+        text = f.read()
+    return text.split(clave)[1].split("\n")[0].replace("'", "").replace('"', '')
+
+def updateValueFromCfg(clave, nLine):
+    lines = open(CFG_PATH, 'rw+').read().splitlines()
+    lines[nLine] = clave
+    open(CFG_PATH, 'rw+').write('\n'.join(lines))
+    return 
+    
+
+def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getDataFromCsv(path)
 
 
@@ -25,7 +64,7 @@ def subMenuList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
     subMenuDistinct = csvdb.distinct(subMenuFilter, 2)
     subMenuColumn = csvdb.getColumn(subMenuDistinct, 2)
-    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 3, True)
+    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 0)
     return subMenuSorted
 
 
@@ -35,7 +74,7 @@ def idList(menu, dataSet):
 
 
 def PreEjecutarComandos(subMenu, mw):
-    mw.tabs.setCurrentWidget(mw.tab1)
+    mw.tabWidget.setCurrentWidget(mw.tabOutputs)
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 
@@ -52,10 +91,10 @@ def matarProceso(mw):
     process.killCurrentProcess(mw)
 
 
-def getHeaders(path=default_path):
+def getHeaders(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getHeader(path)
 
 
-def saveTable(table, path=default_path, header=getHeaders()):
+def saveTable(table, path=TABLA_DE_SECUENCIAS_PATH, header=getHeaders()):
     dataset = table.getDataSet()
     csvdb.SaveCSV(path, dataset, header)

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
 from PyQt4 import QtGui, QtCore
 
 
@@ -16,9 +15,9 @@ class LineNumberArea(QtGui.QWidget):
         self.myeditor.lineNumberAreaPaintEvent(event)
 
 
-class CodeEditor(QtGui.QPlainTextEdit):
+class CodeBox(QtGui.QPlainTextEdit):
     def __init__(self):
-        super(CodeEditor, self).__init__()
+        super(CodeBox, self).__init__()
         self.lineNumberArea = LineNumberArea(self)
 
         self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
@@ -28,11 +27,41 @@ class CodeEditor(QtGui.QPlainTextEdit):
         self.updateLineNumberAreaWidth(0)
         self.setTabStopWidth(32)
 
+        self.font = QtGui.QFont()
+        self.font.setFamily("Consolas, 'Courier New', monospace")
+        self.font.setPointSize(11)
+        self.setFont(self.font)
+        self.setMinimumHeight(100)
+        self.is_dirty = False  # there was changes since last save
+        self.is_new = True  # Whether SaveAs or Save
+        self.file_name = ""
+        self.textChanged.connect(self._huboCambios)
+
+    def _huboCambios(self):
+        self.is_dirty = True
+
+    def changeFontSize(self, size):
+        self.font.setPointSize(size)
+        self.setFont(self.font)
+
+    def FontSize(self, fsize):
+        size = (int(fsize))
         font = QtGui.QFont()
         font.setFamily("Consolas, 'Courier New', monospace")
-        font.setPointSize(11)
+        font.setPointSize(size)
+        self.EditorDeTexto.setFont(font)
+
+    def FontFamily(self, fontF):
+        font = QtGui.QFont()
+        font.setFamily("Consolas, '"+str(fontF)+"', monospace")
         self.setFont(font)
-        self.setMinimumHeight(100)
+        self.EditorDeTexto.setFont(font)
+
+    def CursorPosition(self):
+        line = self.EditorDeTexto.textCursor().blockNumber()
+        col = self.EditorDeTexto.textCursor().columnNumber()
+        linecol = ("Line: "+str(line)+" | "+"Column: "+str(col))
+        self.status.showMessage(linecol)
 
     def lineNumberAreaWidth(self):
         digits = 1
@@ -93,7 +122,8 @@ class CodeEditor(QtGui.QPlainTextEdit):
 
 
 if __name__ == "__main__":
+    import sys
     app = QtGui.QApplication(sys.argv)
-    txt = CodeEditor()
+    txt = CodeBox()
     txt.show()
     sys.exit(app.exec_())

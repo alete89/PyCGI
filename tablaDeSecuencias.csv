@@ -1,8 +1,10 @@
 id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
-3;Sistema;pings;1;2;ping (ingrese una IP);2
-5;Python;Script loop;1;1;python ./scripts/pegar.py;2
-6;Sistema;pings;2;1;ping (ingrese un sitio)(parametro opcional);1
+3;Sistema;pings;1;2;ping <ingrese una IP>;2
+5;Python;print loop;1;1;python ./scripts/print_loop.py;1
+6;Sistema;pings;2;1;ping <ingrese un sitio><parametro opcional>;1
 7;Dibujo;gimp;1;1;gimp;1
-8;Prueba Secuencia;3 scripts;1;2;python ./scripts/uno.py;1
-9;Prueba Secuencia;3 scripts;2;3;python ./scripts/dos.py;1
-10;Prueba Secuencia;3 scripts;3;4;python ./scripts/tres.py;1
+8;Python;secuencia;1;2;python /home/alete/git/PyCGI/scripts/simple_print.py;1
+9;Python;secuencia;2;3;python ./scripts/print_loop.py;1
+10;Python;secuencia;3;4;python ./scripts/donde.py;1
+11;Python;parametros;2;1;python ./scripts/parameters.py <un param><otro param>;1
+12;Python;donde;4;1;python ../../Desktop/donde.py;1

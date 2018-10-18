@@ -1,3 +1,6 @@
+[![Generic badge](https://img.shields.io/badge/Slack-open-<green>.svg)](https://mtrpc.slack.com/)
+
+
 # PyCGI
 A Configurable Graphic user Interface written in Python 2.7 and PyQt4
 

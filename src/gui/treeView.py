@@ -11,6 +11,7 @@ class TreeView(QtGui.QTreeView):
         self.fsmodel.setRootPath(core.getTreeViewRootPath())
         initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
         self.setModel(self.fsmodel)
+        self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
         self.expand(initialPath)
         while initialPath.parent().isValid():
             self.expand(initialPath.parent())

@@ -55,7 +55,8 @@ class Process():
                 filePath = self.current_process.replace("python ", "")
                 filePathExists = os.path.isfile(filePath)
             if filePathExists:
-                self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
+                self.MainWindowInstance.showOutputInTerminal(
+                    "iniciando proceso: " + instruccion["comando"])
                 if not instruccion['parametro']:  # Si no hay parámetros
                     self.proc.start(self.current_process)  # lanzo sin parámetros
                 else:

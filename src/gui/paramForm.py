@@ -3,6 +3,7 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtGui import QDialog
 import collections
+import copy
 import sys
 
 
@@ -38,7 +39,7 @@ class paramForm(QtGui.QDialog):
     def getNewParams(old_param_list):
         if not any(old_param_list):
             return (old_param_list, 1)  # 1 = Accept
-        new_list = old_param_list
+        new_list = copy.deepcopy(old_param_list)
         dialog = paramForm(old_param_list)
         result = dialog.exec_()
 

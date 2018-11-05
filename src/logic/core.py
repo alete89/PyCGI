@@ -5,6 +5,7 @@ from . import csvdb
 from . import paramFinder
 from . import process
 from ..gui import paramForm
+import collections
 
 STARTING_PATH = os.getcwd()
 CFG_PATH = STARTING_PATH + '/cfg'
@@ -89,9 +90,13 @@ def PreEjecutarComandos(subMenu, mw):
     comandos = csvdb.getColumn(rows_with_params, 5)
 
     newParams, ok = paramForm.paramForm.getNewParams(params)
-    for row in comandos:
-        for param in row:
-            row.replace(params, newParams)
+    for row in comandos:  # zipear juntos los for para que no repita (posible bug)
+        for old, new in zip(params, newParams):
+            if isinstance(old, collections.Iterable):
+                for subold, subnew in zip(old, new):
+                    row = row.replace(subold, subnew)
+            else:
+                row = row.replace(old, new)
 
     loops = csvdb.getColumn(ordenada, 6)
     if ok:

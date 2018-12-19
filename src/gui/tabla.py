@@ -1,7 +1,7 @@
-from PyQt4 import QtGui
+from PyQt4.QtGui import QTableWidget, QTableWidgetItem, QHeaderView
 
 
-class Tabla(QtGui.QTableWidget):
+class Tabla(QTableWidget):
     def __init__(self):
         super(Tabla, self).__init__()
         self.dataset = []
@@ -18,9 +18,11 @@ class Tabla(QtGui.QTableWidget):
             self.insertRow(row)
             self.setColumnCount(len(rowdata))
             for column, data in enumerate(rowdata):
-                item = QtGui.QTableWidgetItem(data.decode('utf8'))
+                item = QTableWidgetItem(data.decode('utf8'))
                 self.setItem(row, column, item)
         self.setHorizontalHeaderLabels(header)
+        self.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
+        self.horizontalHeader().setResizeMode(5, QHeaderView.Stretch)
 
     def addRow(self):
         self.insertRow(self.rowCount())

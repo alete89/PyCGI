@@ -90,18 +90,28 @@ def PreEjecutarComandos(subMenu, mw):
     comandos = csvdb.getColumn(rows_with_params, 5)
 
     newParams, ok = paramForm.paramForm.getNewParams(params)
+    newComandos = []
     for row in comandos:  # zipear juntos los for para que no repita (posible bug)
         for old, new in zip(params, newParams):
             if isinstance(old, collections.Iterable):
                 for subold, subnew in zip(old, new):
+                    # evaluar reemplazar por índice de parámetro (old vs new) en lugar de por el texto
                     row = row.replace(subold, subnew)
+                    row = row.replace("<", "")
+                    row = row.replace(">", "")
             else:
+                # evaluar reemplazar por índice de parámetro (old vs new) en lugar de por el texto
                 row = row.replace(old, new)
+                row = row.replace("<", "")
+                row = row.replace(">", "")
+        newComandos.append(row)
+
+    print newComandos
 
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
         mw.terminalOutput.append("iniciando secuencia: " + subMenu)
-        process.ejecutarSecuencia(completo, loops, mw)
+        process.ejecutarSecuencia(newComandos, loops, mw)
 
 
 def matarProceso(mw):

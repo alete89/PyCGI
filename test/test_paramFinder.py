@@ -12,7 +12,7 @@ class TestCore(unittest.TestCase):
         pass
 
     def test_paramFinder(self):
-        comando_completo = pf.getParameters(self.test_dataset)
+        comando_completo = pf.getParameters(self.test_dataset)[0]
         print comando_completo
         self.assertEqual(comando_completo,
                          ['3', 'ver', 'ping', '1', '2', 'comando <un parametro> -p <otro parametro>', '2', ["un parametro", "otro parametro"]])

@@ -5,11 +5,13 @@ from . import csvdb
 from . import paramFinder
 from . import process
 from ..gui import paramForm
+import collections
 
 STARTING_PATH = os.getcwd()
 CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
+
 
 def getTreeViewInitialPath():
     initial = getValueFromCfg('treeViewInitialPath=')
@@ -18,6 +20,7 @@ def getTreeViewInitialPath():
         initial = QtCore.QDir.rootPath()
     return initial
 
+
 def getTreeViewRootPath():
     root = getValueFromCfg('treeViewRootPath=')
     if root == '':
@@ -25,15 +28,16 @@ def getTreeViewRootPath():
         root = QtCore.QDir.rootPath()
     return root
 
+
 def updateCfgPath(dirName, numLine):
     if dirName == '':
         from PyQt4 import QtCore
         initial = QtCore.QDir.rootPath()
     else:
         if numLine == 0:
-            dirName='treeViewInitialPath=' + "'" + str(dirName) + "'"
-        elif numLine ==1:
-            dirName='treeViewRootPath=' + "'" + str(dirName) + "'"
+            dirName = 'treeViewInitialPath=' + "'" + str(dirName) + "'"
+        elif numLine == 1:
+            dirName = 'treeViewRootPath=' + "'" + str(dirName) + "'"
     updateValueFromCfg(dirName, numLine)
     return dirName
 
@@ -43,12 +47,13 @@ def getValueFromCfg(clave):
         text = f.read()
     return text.split(clave)[1].split("\n")[0].replace("'", "").replace('"', '')
 
+
 def updateValueFromCfg(clave, nLine):
     lines = open(CFG_PATH, 'rw+').read().splitlines()
     lines[nLine] = clave
     open(CFG_PATH, 'rw+').write('\n'.join(lines))
-    return 
-    
+    return
+
 
 def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):
     return csvdb.getDataFromCsv(path)
@@ -78,13 +83,35 @@ def PreEjecutarComandos(subMenu, mw):
     secuencia = csvdb.dataFilter(fullDataSet(), 2, subMenu)
     ordenada = csvdb.sortDataSet(secuencia, 4)
 
-    cmd, params = paramFinder.findParameters(ordenada)
+    rows_with_params = paramFinder.getParameters(ordenada)
+    params = csvdb.getColumn(rows_with_params, 7)
+    print params
+
+    comandos = csvdb.getColumn(rows_with_params, 5)
 
     newParams, ok = paramForm.paramForm.getNewParams(params)
+    newComandos = []
+    for row in comandos:  # zipear juntos los for para que no repita (posible bug)
+        for old, new in zip(params, newParams):
+            if isinstance(old, collections.Iterable):
+                for subold, subnew in zip(old, new):
+                    # evaluar reemplazar por índice de parámetro (old vs new) en lugar de por el texto
+                    row = row.replace(subold, subnew)
+                    row = row.replace("<", "")
+                    row = row.replace(">", "")
+            else:
+                # evaluar reemplazar por índice de parámetro (old vs new) en lugar de por el texto
+                row = row.replace(old, new)
+                row = row.replace("<", "")
+                row = row.replace(">", "")
+        newComandos.append(row)
+
+    print newComandos
+
     loops = csvdb.getColumn(ordenada, 6)
     if ok:
         mw.terminalOutput.append("iniciando secuencia: " + subMenu)
-        process.ejecutarSecuencia(cmd, newParams, loops, mw)
+        process.ejecutarSecuencia(newComandos, loops, mw)
 
 
 def matarProceso(mw):

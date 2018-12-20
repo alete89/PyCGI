@@ -1,10 +1,15 @@
 id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
-3;Sistema;pings;1;2;ping <ingrese una IP>;2
-5;Python;print loop;1;1;python ./scripts/print_loop.py;1
-6;Sistema;pings;2;1;ping <ingrese un sitio><parametro opcional>;1
 7;Dibujo;gimp;1;1;gimp;1
-8;Python;secuencia;1;2;python /home/alete/git/PyCGI/scripts/simple_print.py;1
-9;Python;secuencia;2;3;python ./scripts/print_loop.py;1
-10;Python;secuencia;3;4;python ./scripts/donde.py;1
-11;Python;parametros;2;1;python ./scripts/parameters.py <un param><otro param>;1
 12;Python;donde;4;1;python ../../Desktop/donde.py;1
+11;Python;parametros;2;1;python ./scripts/parameters.py <un param> <otro param> <tres param>;1
+5;Python;print loop;1;1;python ./scripts/print_loop.py;1
+10;Python;secuencia;1;4;python ./scripts/donde.py;1
+22;Python;secuencia larga;5;1;python ./scripts/parameters.py <un param> <otro param> <tres param>;1
+8;Python;secuencia;1;2;python /home/alete/git/PyCGI/scripts/simple_print.py;1
+9;Python;secuencia;1;3;python ./scripts/print_loop.py;1
+3;Sistema;pings;1;2;ping <ingrese una IP>;2
+6;Sistema;pings;2;1;ping <ingrese un sitio> <parametro opcional>;1
+33;Python;secuencia larga;5;2;python ./scripts/parameters2.py <un param> <otro param> <tres param>;1
+23;Neutro;Wims completos;1;1;wine /mtrpc/Neutro/wims5b.exe <input> <library> <biblioteca>;1
+55;Sistema;pwd;1;1;pwd;1
+24;Neutro;Wims claves afuera;2;1;wine /mtrpc/Neutro/wims5b.exe <input> -DIR:<library> -B:<biblioteca>;1

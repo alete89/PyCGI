@@ -23,13 +23,12 @@ class Process():
         self.MainWindowInstance = None
         self.current_process = ""
 
-    def ejecutarSecuencia(self, comandos, parametros, iteraciones, mw):
+    def ejecutarSecuencia(self, comandos, iteraciones, mw):
         self.MainWindowInstance = mw
         for i, _ in enumerate(comandos):
-            instruccion = dict(comando=comandos[i],
-                               parametro=parametros[i], iteraciones=iteraciones[i])
-            instruccion["parametro"] = [x for x in instruccion["parametro"]
-                                        if x.strip()]  # Elimino parámetros vacíos
+            instruccion = dict(comando=comandos[i], iteraciones=iteraciones[i])
+            # instruccion["parametro"] = [x for x in instruccion["parametro"]
+            #                             if x.strip()]  # Elimino parámetros vacíos
             self.secuencia.append(instruccion)
         self.secuenciaList(mw)
         self.runNow()
@@ -55,13 +54,14 @@ class Process():
                 filePath = self.current_process.replace("python ", "")
                 filePathExists = os.path.isfile(filePath)
             if filePathExists:
-                self.MainWindowInstance.showOutputInTerminal("iniciando proceso: ")
-                if not instruccion['parametro']:  # Si no hay parámetros
-                    self.proc.start(self.current_process)  # lanzo sin parámetros
-                else:
-                    # lanzo con parámetros
-                    parametros = " ".join(instruccion['parametro'])
-                    self.proc.start(self.current_process + " " + parametros)
+                self.MainWindowInstance.showOutputInTerminal(
+                    "iniciando proceso: " + instruccion["comando"])
+                # if not instruccion['parametro']:  # Si no hay parámetros
+                self.proc.start(self.current_process)  # lanzo sin parámetros
+                # else:  # ya no hay parámetros
+                # lanzo con parámetros
+                #   parametros = " ".join(instruccion['parametro'])
+                #  self.proc.start(self.current_process + " " + parametros)
             else:
                 print "no se encontro el archivo"
 
@@ -94,8 +94,9 @@ class Process():
         window_instance.indicadorSecuencia.clear()
         secuencia = self.secuencia
         for instruccion in secuencia:
-            printable_instruccion = str(instruccion["comando"]) + " " + str(
-                instruccion["parametro"]) + " (" + str(instruccion["iteraciones"]) + ")"
+            printable_instruccion = str(
+                instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"
+
             bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
             prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace(
                 "<html><b>", "")

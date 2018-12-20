@@ -1,0 +1,2 @@
+wine /mtrpc/Neutro/wims5b.exe ./EC_Typical_cal.wii -DIR:/mtrpc/Neutro.Lib/ -B:wimsd4.bib
+wine /mtrpc/Neutro/wims5b.exe <input> <library> <biblioteca>

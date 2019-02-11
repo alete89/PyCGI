@@ -13,15 +13,23 @@ class paramForm(QtGui.QDialog):
 
         self.labels = {}
         self.texts = {}
+        self.buttons = {}
 
         layout = QtGui.QGridLayout(self)
         counter = 0
         for row in param_list:
             for parametro in row:
                 self.labels[counter] = QtGui.QLabel(parametro, self)
-                self.texts[counter] = QtGui.QLineEdit(self)
+                print "el parametro es: " + parametro[:1]
+                if parametro[:1] == "#":
+                    self.texts[counter] = QtGui.QLineEdit(self)
+                    self.buttons[counter] = QtGui.QPushButton("examinar")
+                    self.buttons[counter].clicked.connect(lambda ignore, co=counter: self.getFileName(co))
+                else:
+                    self.texts[counter] = QtGui.QLineEdit(self)
                 layout.addWidget(self.labels[counter], counter, 0)
                 layout.addWidget(self.texts[counter], counter, 1)
+                layout.addWidget(self.buttons[counter], counter, 2)
                 counter += 1
 
         buttons = QtGui.QDialogButtonBox(
@@ -54,6 +62,11 @@ class paramForm(QtGui.QDialog):
                 newCount += 1
 
         return (new_list, result == QDialog.Accepted)
+
+    def getFileName(self, counter):
+        filename = QtGui.QFileDialog.getOpenFileName()
+        self.texts[counter].setText(filename)
+
 
 
 if __name__ == '__main__':

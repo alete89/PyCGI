@@ -145,10 +145,22 @@ class PyCGI(QtGui.QMainWindow):
         self.saveTableButton = QtGui.QPushButton("Save changes")
         self.saveTableButton.clicked.connect(self.guardarCambiosClicked)
         layoutTab3.addWidget(self.tabla)
-        layoutTab3.addWidget(self.addRowButton)
-        layoutTab3.addWidget(self.delRowButton)
-        layoutTab3.addWidget(self.saveTableButton)
+
+        # layoutTab3.addWidget(self.addRowButton)
+        # layoutTab3.addWidget(self.delRowButton)
+        # layoutTab3.addWidget(self.saveTableButton)
+
+        layoutButtonsTab = QtGui.QHBoxLayout()
+        layoutButtonsTab.addWidget(self.addRowButton)
+        layoutButtonsTab.addWidget(self.delRowButton)
+        layoutButtonsTab.addWidget(self.saveTableButton)
+        buttonsTabWidget = QtGui.QWidget()
+        buttonsTabWidget.setLayout(layoutButtonsTab)
+
+
+        layoutTab3.addWidget(buttonsTabWidget)
         self.configTab1.setLayout(layoutTab3)
+        
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitterHoriz.addWidget(self.treeWidget)
         splitterHoriz.addWidget(self.tabWidget)

@@ -83,8 +83,15 @@ class PyCGI(QtGui.QMainWindow):
         otroWidget.setLayout(layoutTerminal)
         splitter.addWidget(otroWidget)
         layoutTab1.addWidget(splitter)
-        layoutTab1.addWidget(self.killButton)
-        layoutTab1.addWidget(self.cleanTerminalButton)
+
+        layoutButtons = QtGui.QHBoxLayout()
+        buttonsWidget = QtGui.QWidget()
+        layoutButtons.addWidget(self.killButton)
+        layoutButtons.addWidget(self.cleanTerminalButton)
+        buttonsWidget.setLayout(layoutButtons)
+        
+        layoutTab1.addWidget(buttonsWidget)
+
         self.tabOutputs.setLayout(layoutTab1)
 
         self.tabWidget.addTab(self.tabApplication, "Application")

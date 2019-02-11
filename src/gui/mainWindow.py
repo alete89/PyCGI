@@ -26,7 +26,7 @@ class PyCGI(QtGui.QMainWindow):
         self.indicadorSecuencia = QtGui.QTextEdit(self)
         self.indicadorSecuencia.setReadOnly(True)
         self.indicadorSecuencia.setFont(self.font)
-        self.indicadorSecuencia.setMaximumHeight(50)
+        self.indicadorSecuencia.setMaximumHeight(800)
         self.indicadorSecuencia.setFontWeight(75)  # 50 normal, 75 BOLD
 
     def crearTerminal(self):
@@ -34,6 +34,7 @@ class PyCGI(QtGui.QMainWindow):
         self.terminalOutput.setReadOnly(True)
         self.terminalOutput.setFont(self.font)
         self.terminalOutput.setStyleSheet("background-color: #585858; color: #fff")
+        self.terminalOutput.setMaximumHeight(1000)
         self.cursor = self.terminalOutput.textCursor()
 
     def ventanaPrincipal(self):
@@ -66,12 +67,22 @@ class PyCGI(QtGui.QMainWindow):
         self.tabWidget.addTab(self.tabOutputs, "Process")
         self.tabWidget.addTab(self.tabEditor, "Text Editor")
         layoutTab1 = QtGui.QVBoxLayout(self.tabWidget)
+        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
         self.indicadorSecuenciaNombre = QtGui.QLabel('Current process')
         self.terminalOutputNombre = QtGui.QLabel('Standard output')
-        layoutTab1.addWidget(self.indicadorSecuenciaNombre)
-        layoutTab1.addWidget(self.indicadorSecuencia)
-        layoutTab1.addWidget(self.terminalOutputNombre)
-        layoutTab1.addWidget(self.terminalOutput)
+        layoutSecuencia = QtGui.QVBoxLayout()
+        layoutSecuencia.addWidget(self.indicadorSecuenciaNombre)
+        layoutSecuencia.addWidget(self.indicadorSecuencia)
+        unWidget = QtGui.QWidget()
+        unWidget.setLayout(layoutSecuencia)
+        splitter.addWidget(unWidget)
+        otroWidget = QtGui.QWidget()
+        layoutTerminal = QtGui.QVBoxLayout()
+        layoutTerminal.addWidget(self.terminalOutputNombre)
+        layoutTerminal.addWidget(self.terminalOutput)
+        otroWidget.setLayout(layoutTerminal)
+        splitter.addWidget(otroWidget)
+        layoutTab1.addWidget(splitter)
         layoutTab1.addWidget(self.killButton)
         layoutTab1.addWidget(self.cleanTerminalButton)
         self.tabOutputs.setLayout(layoutTab1)

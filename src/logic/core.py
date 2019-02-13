@@ -30,14 +30,10 @@ def getTreeViewRootPath():
 
 
 def updateCfgPath(dirName, numLine):
-    if dirName == '':
-        from PyQt4 import QtCore
-        initial = QtCore.QDir.rootPath()
-    else:
-        if numLine == 0:
-            dirName = 'treeViewInitialPath=' + "'" + str(dirName) + "'"
-        elif numLine == 1:
-            dirName = 'treeViewRootPath=' + "'" + str(dirName) + "'"
+    if numLine == 0:
+        dirName = 'treeViewInitialPath=' + "'" + str(dirName) + "'"
+    elif numLine == 1:
+        dirName = 'treeViewRootPath=' + "'" + str(dirName) + "'"
     updateValueFromCfg(dirName, numLine)
     return dirName
 
@@ -49,9 +45,9 @@ def getValueFromCfg(clave):
 
 
 def updateValueFromCfg(clave, nLine):
-    lines = open(CFG_PATH, 'rw+').read().splitlines()
+    lines = open(CFG_PATH, 'r+').read().splitlines()
     lines[nLine] = clave
-    open(CFG_PATH, 'rw+').write('\n'.join(lines))
+    open(CFG_PATH, 'r+').write('\n'.join(lines))
     return
 
 

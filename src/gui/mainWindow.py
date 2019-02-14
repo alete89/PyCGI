@@ -5,6 +5,7 @@ from ..logic import core
 from . import Editor
 from . import tabla
 from . import treeView
+from src.gui.qterm import TabbedTerminal
 
 
 class PyCGI(QtGui.QMainWindow):
@@ -56,6 +57,7 @@ class PyCGI(QtGui.QMainWindow):
         self.tabEditor = Editor.Editor()
         self.tabApplication = QtGui.QWidget()
         self.tabConfiguracion = QtGui.QTabWidget()
+        self.tabTerminal = TabbedTerminal()
 
         self.configTab1 = QtGui.QWidget()
         self.configTab2 = QtGui.QWidget()
@@ -88,6 +90,7 @@ class PyCGI(QtGui.QMainWindow):
         self.tabOutputs.setLayout(layoutTab1)
 
         self.tabWidget.addTab(self.tabApplication, "Application")
+        self.tabWidget.addTab(self.tabTerminal, "Terminal")
         layoutTabsConfig = QtGui.QVBoxLayout(self.tabApplication)
         layoutTabsConfig.addWidget(self.tabConfiguracion)
         self.tabApplication.setLayout(layoutTabsConfig)

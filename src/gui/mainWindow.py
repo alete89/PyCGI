@@ -7,9 +7,9 @@ from . import tabla
 from . import treeView
 
 
-class PyCGI(QtGui.QMainWindow):
+class nPy(QtGui.QMainWindow):
     def __init__(self):
-        super(PyCGI, self).__init__()
+        super(nPy, self).__init__()
         self.setWindowTitle('Nuclear Py - Instituto de Tecnologia Nuclear Dan Beninson')
         self.treeWidget = treeView.TreeView(self)
         self.crearIndicadorSecuencia()

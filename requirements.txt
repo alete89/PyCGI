@@ -14,5 +14,8 @@ singledispatch==3.4.0.3
 six==1.12.0
 wrapt==1.10.11
 
-#ln -s /usr/lib/python2.7/dist-packages/sip.x86_64-linux-gnu.so /home/alete/git/PyCGI/venv/lib/python2.7/
-#ln -s /usr/lib/python2.7/dist-packages/PyQt4 /home/alete/git/PyCGI/venv/lib/python2.7/
+# virtualenv env
+# source ./env/bin/activate
+# sudo apt install python-qt4
+# ln -s /usr/lib/python2.7/dist-packages/sip.x86_64-linux-gnu.so ./env/lib/python2.7/
+# ln -s /usr/lib/python2.7/dist-packages/PyQt4 ./env/lib/python2.7/

@@ -23,6 +23,7 @@ nPy is a configurable graphical interface (GUI) written in Python 2.7 and PyQt4.
 \newpage
 
 \section{Introduction}
+
 nPy is a configurable graphic interface written in Python 2.7 and PyQt4 that enables the addition of any program or command into its menu and launch it subsequently, capturing and showing the standard output produced in the main screen.
 
 The aim of the project is to build a graphical environment to design any complex sequence of processes, and launch it as a list, enabling the change of any parameter for each system command or program.
@@ -201,49 +202,89 @@ As simple as it looks, is possible to fill every gap in the command column. You 
  \includegraphics[width=\textwidth]{img/sequenceTable.png}
 \end{center}
 
-Is possible to create a context menu to set any different parameters on the fly for any command. To set a correct row in the ST is needed to know a simple syntax rule to define the string in the command column to create properly an a useful context menu. A typical running command presents a very simple structure in a terminal. Usually we write commands as follows:
+Is possible to create a context menu to set any different parameters on the fly for any command. To set a correct row in the ST is needed to know a simple syntax rule to define the string in the command column to create properly an a useful context menu. A typical running command presents a very simple structure in a system terminal. Usually we write commands in it as follows:
 
 \begin{verbatim}
- user@I7-system ~ $ program [param 1] [param 2] ... [param n]
+user@I7-system ~ $ program [parameter 1] [parameter 2] ... [parameter n]
 \end{verbatim}
 
-In the command field the syntax is very similar with a small difference: replace [] for $< >$, and describe the parameter between them. Finally the command must be written as follows:
+In the command field (in our ST) the syntax is very similar with a small difference: write $< >$ instead $[]$, and describe the parameter between them. Finally the command must be written as follows:
 
 \begin{verbatim}
-program <explanation for parameter 1> <explanation for parameter 2> ... 
+program <explanation for parameter 1> <explanation for parameter 2> 
+... 
 <explanation for parameter n>
  \end{verbatim}
 
-The string between the $< >$ will be shown in the graphic context menu as a short message, in a built dynamic form. After those settings, nPy will be ready to launch lists of programs, commands, scripts, and so on. Anything you can launch from a terminal.
+The string between the $< >$ will be shown in the graphic context menu as a short message, in a built dynamic form: 
+\begin{center}
+ \includegraphics[width=\textwidth]{img/contextMenuExampleString.png}
+\end{center}
 
+\bigskip 
+
+After those settings, nPy will be ready to launch lists of programs, commands, scripts, and so on. Anything you can launch from a terminal.
+
+\bigskip 
+
+\noindent As an example you can write on the ST:
+\begin{verbatim}
+ dosemu <Ubicacion de wims5b.exe> <Entrada EC_Typical_cal.wii> 
+ -DIR: <Directorio Neutro.Lib> -B:<Biblioteca wimsd4.bib>
+ \end{verbatim}
+ 
+ \noindent and nPy will show the next context menu:
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuString.png}
 \end{center}
 
-Often is needed to select a file (ussually the path of a file) to select as a parameter. This is possible to set in nPy. Simply write the parameter as follows: 
+\bigskip 
+
+Often is needed to pick a file (ussually the path of a file) to select as a parameter. This is possible to set in nPy to get a graphic menu for a selection file. Simply write $\#$ as the first character after $<$, as follows: 
 
 \begin{verbatim}
 program <# Select file 1> <# Select file 2> ... <# Select file n>
  \end{verbatim}
 
-On this way nPy will create a dynamic menu to select a file into the system for each $<\# ...>$ in the 
-ST.
+On this way nPy will create a dynamic menu to select a file into the system for each $<\# ...>$ found on the 
+string.
+
+\begin{center}
+ \includegraphics[width=\textwidth]{img/contextMenuExampleFile.png}
+\end{center}
+
+\noindent An example:
+
+\begin{verbatim}
+ dosemu <# Ubicacion de wims5b.exe> <# Entrada EC_Typical_cal.wii> 
+ -DIR: <# Directorio Neutro.Lib> -B:<# Biblioteca wimsd4.bib>
+ \end{verbatim}
 
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuFile.png}
 \end{center}
 
-\noindent Obviously is possible to combine both as is needed:
+\noindent Is possible to combine both techniques as is needed:
 
 \begin{verbatim}
-program <# Select file 1> <explanation for parameter 1> 
-<# Select file 2> <explanation for parameter 2> ... 
-<# Select file n> <explanation for parameter n>
+program <# Select file 1> <explanation for parameter 1>
  \end{verbatim}
 
  \begin{center}
+ \includegraphics[width=\textwidth]{img/contextMenuExampleCombined.png}
+\end{center}
+
+\noindent An example:
+
+\begin{verbatim}
+ dosemu <Ubicacion de wims5b.exe> <# Entrada EC_Typical_cal.wii> 
+ -DIR: <# Directorio Neutro.Lib> -B:<Biblioteca wimsd4.bib>
+ \end{verbatim}
+
+\begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuCombined.png}
 \end{center}
+
 
 \subsection{Setting and ordering the main menu}
 

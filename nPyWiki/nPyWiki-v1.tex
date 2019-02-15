@@ -8,7 +8,7 @@
 \renewcommand{\sfdefault}{phv} % Arial
 \author{Dini, A. \\García Blesa, M.}%AUTOR DEL DOCUMENTO
 \date{\today}%FECHA DE EDICION DEL DOCUMENTO
-\title{\includegraphics[scale=0.5]{img/nPyLogo.png}\\\textbf{Nuclear Py}}%TITULO DEL DOCUMENTO
+\title{\includegraphics[scale=0.5]{img/nPyLogo.pdf}\\\textbf{Nuclear Py}}%TITULO DEL DOCUMENTO
 
 \begin{document}
 \selectlanguage{english}
@@ -183,13 +183,13 @@ The aim of it is to configure different processes needed, including any paramete
 This table has been designed with 7 columns:
 
 \begin{itemize}
-    \item id: simple auto numeric id
-    \item menu: is the first level name menu, is a string value
-    \item submenu: is the second level name menu (sub menu), is a string value
-    \item submenu position: indicates the sub menu position, is a integer value
-    \item sequence order: indicates the order of this process in the list, is a integer value
-    \item command: the system command will run, is a string value
-    \item loop: to set how many times to run a process before to the next in the list, is an integer value
+    \item \textbf{id}: simple auto numeric id
+    \item \textbf{Menu}: is the first level name menu, is a string value
+    \item \textbf{Submenu}: is the second level name menu (sub menu), is a string value
+    \item \textbf{MenuPosition}: indicates the sub menu position, is a integer value
+    \item \textbf{Order}: indicates the order of this process in the list, is a integer value
+    \item \textbf{Command}: the system command will run, is a string value
+    \item \textbf{Loop:} to set how many times to run a process before to the next in the list, is an integer value
 \end{itemize}
 
 In the ST application, one process must be defined in one row. So, we define a list of process in ST. We number it, and execute in that ascending order.
@@ -205,10 +205,11 @@ As simple as it looks, is possible to fill every gap in the command column. You 
 Is possible to create a context menu to set any different parameters on the fly for any command. To set a correct row in the ST is needed to know a simple syntax rule to define the string in the command column to create properly an a useful context menu. A typical running command presents a very simple structure in a system terminal. Usually we write commands in it as follows:
 
 \begin{verbatim}
-user@I7-system ~ $ program [parameter 1] [parameter 2] ... [parameter n]
+user@I7-system ~ $ program [parameter 1] [parameter 2] 
+... [parameter n]
 \end{verbatim}
 
-In the command field (in our ST) the syntax is very similar with a small difference: write $< >$ instead $[]$, and describe the parameter between them. Finally the command must be written as follows:
+In the \textbf{Command} field --in our ST-- the syntax is very similar with a small difference: write $< >$ instead $[]$, and describe the parameter between them. Finally the command must be written as follows:
 
 \begin{verbatim}
 program <explanation for parameter 1> <explanation for parameter 2> 
@@ -283,6 +284,28 @@ program <# Select file 1> <explanation for parameter 1>
 
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuCombined.png}
+\end{center}
+
+\subsection{Create a Sequence of Processes}
+
+Knowing how to write a single process, will create a sequence putting those in order. An example will be any good to start an explanation. 
+
+\begin{center}
+ \includegraphics[width=\textwidth]{img/orderingSequence.png}
+\end{center}
+
+In the following configuration has been defined three processes: two single processes (\textbf{CANDU Fuel} and \textbf{Steel Wall}) and one sequence of processes (\textbf{Reactor Calc}).
+
+Is simple as define the ``Order'' as follows in the same place in the menu:
+
+\begin{center}
+ \includegraphics[width=\textwidth]{img/orderingSequenceMark.png}
+\end{center}
+
+nPy will create a context menu with all options setted at ST.
+
+\begin{center}
+ \includegraphics[width=\textwidth]{img/orderingSequenceContextMenu.png}
 \end{center}
 
 

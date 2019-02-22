@@ -27,92 +27,97 @@ class Editor(QtGui.QWidget):
         
     
     def crearToolbar(self):
+        if len(sys.argv)==2:
+            STARTING_PATH = sys.argv[1]+"/"
+        else:
+            STARTING_PATH = os.getcwd()+"/"
+
         toolbar = QtGui.QToolBar(self)
 
-        newTab = QtGui.QAction(QtGui.QIcon('icons/new.png'), 'New', self)
+        newTab = QtGui.QAction(QtGui.QIcon(STARTING_PATH + 'icons/new.png'), 'New', self)
         newTab.setShortcut('Ctrl+n')
         newTab.setStatusTip("New file")
         newTab.triggered.connect(self.newEditorTab)
         toolbar.addAction(newTab)
                 
-        OpenIcon = QtGui.QAction(QtGui.QIcon('icons/open.png'), 'Open', self)
+        OpenIcon = QtGui.QAction(QtGui.QIcon(STARTING_PATH + 'icons/open.png'), 'Open', self)
         OpenIcon.setShortcut('Ctrl+o')
         OpenIcon.setStatusTip("Open file")
         OpenIcon.triggered.connect(self.openFile)
         toolbar.addAction(OpenIcon)
         
-        SaveIcon = QtGui.QAction(QtGui.QIcon('icons/save.png'), 'Save', self)
+        SaveIcon = QtGui.QAction(QtGui.QIcon(STARTING_PATH + 'icons/save.png'), 'Save', self)
         SaveIcon.setShortcut('Ctrl+s')
         SaveIcon.setStatusTip("Save file")
         SaveIcon.triggered.connect(self.save)
         toolbar.addAction(SaveIcon)
         
-        SaveAsIcon = QtGui.QAction(QtGui.QIcon('icons/saveAs.png'), 'Save as', self)
+        SaveAsIcon = QtGui.QAction(QtGui.QIcon(STARTING_PATH + 'icons/saveAs.png'), 'Save as', self)
         SaveAsIcon.setShortcut('Ctrl+g')
         SaveAsIcon.setStatusTip("Save as")
         SaveAsIcon.triggered.connect(self.saveAsDialog)
         toolbar.addAction(SaveAsIcon)
         
-        CloseIcon = QtGui.QAction(QtGui.QIcon('icons/closeFile.png'), 'Close', self)
+        CloseIcon = QtGui.QAction(QtGui.QIcon(STARTING_PATH + 'icons/closeFile.png'), 'Close', self)
         CloseIcon.setShortcut('Ctrl+f4')
         CloseIcon.setStatusTip("Close file")
         CloseIcon.triggered.connect(self.closeDialog)
         toolbar.addAction(CloseIcon)
         
-        printAction = QtGui.QAction(QtGui.QIcon("icons/print.png"),"Print document",self)
+        printAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/print.png"),"Print document",self)
         printAction.setStatusTip("Print document")
         printAction.setShortcut("Ctrl+P")
         printAction.triggered.connect(self.Print)        
         toolbar.addAction(printAction)
         
-        previewAction = QtGui.QAction(QtGui.QIcon("icons/preview.png"),"Page view",self)
+        previewAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/preview.png"),"Page view",self)
         previewAction.setStatusTip("Preview page before printing")
         previewAction.setShortcut("Ctrl+Shift+P")
         previewAction.triggered.connect(self.PageView)    
         toolbar.addAction(previewAction)
 
-        findAction = QtGui.QAction(QtGui.QIcon("icons/find.png"),"Find",self)
+        findAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/find.png"),"Find",self)
         findAction.setStatusTip("Find words in your document")
         findAction.setShortcut("Ctrl+F")
         findAction.triggered.connect(self.find_dialog)
         toolbar.addAction(findAction)
         
-        cutAction = QtGui.QAction(QtGui.QIcon("icons/cut.png"),"Cut to clipboard",self)
+        cutAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/cut.png"),"Cut to clipboard",self)
         cutAction.setStatusTip("Delete and copy text to clipboard")
         cutAction.setShortcut("Ctrl+X")
         cutAction.triggered.connect(self.Cut)
         toolbar.addAction(cutAction)
 
-        copyAction = QtGui.QAction(QtGui.QIcon("icons/copy.png"),"Copy to clipboard",self)
+        copyAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/copy.png"),"Copy to clipboard",self)
         copyAction.setStatusTip("Copy text to clipboard")
         copyAction.setShortcut("Ctrl+C")
         copyAction.triggered.connect(self.Copy)        
         toolbar.addAction(copyAction)
         
-        pasteAction = QtGui.QAction(QtGui.QIcon("icons/paste.png"),"Paste from clipboard",self)
+        pasteAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/paste.png"),"Paste from clipboard",self)
         pasteAction.setStatusTip("Paste text from clipboard")
         pasteAction.setShortcut("Ctrl+V")
         pasteAction.triggered.connect(self.Paste)
         toolbar.addAction(pasteAction)
 
-        undoAction = QtGui.QAction(QtGui.QIcon("icons/undo.png"),"Undo last action",self)
+        undoAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/undo.png"),"Undo last action",self)
         undoAction.setStatusTip("Undo last action")
         undoAction.setShortcut("Ctrl+Z")
         undoAction.triggered.connect(self.Undo)
         toolbar.addAction(undoAction)
 
-        redoAction = QtGui.QAction(QtGui.QIcon("icons/redo.png"),"Redo last undone thing",self)
+        redoAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/redo.png"),"Redo last undone thing",self)
         redoAction.setStatusTip("Redo last undone thing")
         redoAction.setShortcut("Ctrl+Y")
         redoAction.triggered.connect(self.Redo)
         toolbar.addAction(redoAction)
         
-        indentAction = QtGui.QAction(QtGui.QIcon("icons/indent.png"),"Indent Area",self)
+        indentAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/indent.png"),"Indent Area",self)
         indentAction.setShortcut("Ctrl+Tab")
         indentAction.triggered.connect(self.Indent)
         toolbar.addAction(indentAction)
         
-        dedentAction = QtGui.QAction(QtGui.QIcon("icons/dedent.png"),"Dedent Area",self)
+        dedentAction = QtGui.QAction(QtGui.QIcon(STARTING_PATH + "icons/dedent.png"),"Dedent Area",self)
         dedentAction.setShortcut("Shift+Tab")
         dedentAction.triggered.connect(self.Dedent)
         toolbar.addAction(dedentAction)

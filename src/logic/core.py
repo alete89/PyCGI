@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import os
+import os, sys
 from . import csvdb
 from . import paramFinder
 from . import process
 from ..gui import paramForm
 import collections
 
-STARTING_PATH = os.getcwd()
+if len(sys.argv)==2:
+    STARTING_PATH = sys.argv[1]
+else:
+    STARTING_PATH = os.getcwd()
+
+print "STARTING_PATH: " + str(STARTING_PATH)
 CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
-
 
 def getTreeViewInitialPath():
     initial = getValueFromCfg('treeViewInitialPath=')

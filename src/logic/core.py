@@ -24,6 +24,15 @@ def getTreeViewInitialPath():
         initial = QtCore.QDir.rootPath()
     return initial
 
+def getSeqTablePath():
+    # el primer paso para modificar el archivo de tablaDesecuencias
+    # La idea es poder seleccinar el archivo tablaDeSecuencias
+    # desde la tab Environment.
+    seqTablePath = getValueFromCfg('tablaDeSecuenciasPath=')
+    if seqTablePath == '':
+        from PyQt4 import QtCore
+        seqTablePath = QtCore.QDir.rootPath()
+    return seqTablePath
 
 def getTreeViewRootPath():
     root = getValueFromCfg('treeViewRootPath=')

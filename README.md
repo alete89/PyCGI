@@ -1,7 +1,7 @@
 [![Generic badge](https://img.shields.io/badge/Slack-join-<green>.svg)](https://mtrpc.slack.com/)
 
 
-# PyCGI
+# nPy
 A Configurable Graphic user Interface written in Python 2.7 and PyQt4
 
 ## Description
@@ -16,7 +16,7 @@ Menus are loaded from a CSV (example is included), you can add, remove or edit t
 
 ## Usage
 Windows: download latest zip release, which includes binaries and an example CSV with some menus pre-loaded.
-Linux: download latest source from releases, launch by `python PyCGI.py` in main directory
+Linux: download latest source from releases, launch by `python nPy.py` in main directory
 
 ## Screenshots:
 ![lanzando un script](https://user-images.githubusercontent.com/4999277/36319436-b029f710-1321-11e8-8099-fe7406b83f3f.png)

@@ -68,9 +68,12 @@ class nPy(QtGui.QMainWindow):
         self.tabWidget.addTab(self.tabEditor, "Text Editor")
         layoutTab1 = QtGui.QVBoxLayout(self.tabWidget)
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        self.indicadorCWD = QtGui.QLabel(
+            "Current Working Directory: " + core.getTreeViewInitialPath())
         self.indicadorSecuenciaNombre = QtGui.QLabel('Current process')
         self.terminalOutputNombre = QtGui.QLabel('Standard output')
         layoutSecuencia = QtGui.QVBoxLayout()
+        layoutSecuencia.addWidget(self.indicadorCWD)
         layoutSecuencia.addWidget(self.indicadorSecuenciaNombre)
         layoutSecuencia.addWidget(self.indicadorSecuencia)
         unWidget = QtGui.QWidget()
@@ -120,8 +123,7 @@ class nPy(QtGui.QMainWindow):
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
         self.grid.addWidget(self.dirButtonInitial, 2, 2)
 
-        self.dirButtonInitial.clicked.connect(
-            lambda: core.updateCfgPath(self.dirInitialEdit.text(), 0))
+        self.dirButtonInitial.clicked.connect(self.actualizarCWD)
         self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath(self.dirRootEdit.text(), 1))
 
         self.configTab4.setLayout(self.grid)
@@ -170,6 +172,10 @@ class nPy(QtGui.QMainWindow):
                 action.setStatusTip(str(idFila) + " - " + str(subMenu))
                 action.triggered.connect(lambda ignore, idt=subMenu: self.subMenuOptionClicked(idt))
                 thisMenu.addAction(action)
+
+    def actualizarCWD(self):
+        core.updateCfgPath(self.dirInitialEdit.text(), 0)
+        self.indicadorCWD.setText("Current Working Directory: " + core.getTreeViewInitialPath())
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)

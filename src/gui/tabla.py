@@ -21,8 +21,7 @@ class Tabla(QTableWidget):
                 item = QTableWidgetItem(data.decode('utf8'))
                 self.setItem(row, column, item)
         self.setHorizontalHeaderLabels(header)
-        self.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
-        self.horizontalHeader().setResizeMode(5, QHeaderView.Stretch)
+        self.horizontalHeader().setResizeMode(QHeaderView.Interactive)
 
     def addRow(self):
         self.insertRow(self.rowCount())

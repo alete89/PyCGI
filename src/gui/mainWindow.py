@@ -89,7 +89,7 @@ class nPy(QtGui.QMainWindow):
         layoutButtons.addWidget(self.killButton)
         layoutButtons.addWidget(self.cleanTerminalButton)
         buttonsWidget.setLayout(layoutButtons)
-        
+
         layoutTab1.addWidget(buttonsWidget)
 
         self.tabOutputs.setLayout(layoutTab1)
@@ -102,7 +102,7 @@ class nPy(QtGui.QMainWindow):
         self.tabConfiguracion.addTab(self.configTab4, "Environment")
 
         self.dirRoot = QtGui.QLabel('Root path')
-        self.dirInitial = QtGui.QLabel('Initial path')
+        self.dirInitial = QtGui.QLabel('Working directory')
         self.dirButtonRoot = QtGui.QPushButton("Update directory")
         self.dirButtonInitial = QtGui.QPushButton("Update directory")
         viewInitialPath = core.getTreeViewInitialPath()
@@ -120,7 +120,8 @@ class nPy(QtGui.QMainWindow):
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
         self.grid.addWidget(self.dirButtonInitial, 2, 2)
 
-        self.dirButtonInitial.clicked.connect(lambda: core.updateCfgPath(self.dirInitialEdit.text(), 0))
+        self.dirButtonInitial.clicked.connect(
+            lambda: core.updateCfgPath(self.dirInitialEdit.text(), 0))
         self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath(self.dirRootEdit.text(), 1))
 
         self.configTab4.setLayout(self.grid)
@@ -147,10 +148,9 @@ class nPy(QtGui.QMainWindow):
         buttonsTabWidget = QtGui.QWidget()
         buttonsTabWidget.setLayout(layoutButtonsTab)
 
-
         layoutTab3.addWidget(buttonsTabWidget)
         self.configTab1.setLayout(layoutTab3)
-        
+
         splitterHoriz = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitterHoriz.addWidget(self.treeWidget)
         splitterHoriz.addWidget(self.tabWidget)

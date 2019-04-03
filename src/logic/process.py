@@ -4,6 +4,7 @@
 import sys
 from PyQt4 import QtCore
 import os
+import helper
 
 if sys.platform == "win32":
     # Windows only
@@ -18,12 +19,12 @@ class Process():
         self.proc.setReadChannelMode(QtCore.QProcess.MergedChannels)
         self.proc.finished.connect(self.processJustFinished)
         self.proc.readyRead.connect(self.hayParaEscribir)
-
         self.secuencia = []
         self.MainWindowInstance = None
         self.current_process = ""
 
     def ejecutarSecuencia(self, comandos, iteraciones, mw):
+        self.proc.setWorkingDirectory(helper.getTreeViewInitialPath())
         self.MainWindowInstance = mw
         for i, _ in enumerate(comandos):
             instruccion = dict(comando=comandos[i], iteraciones=iteraciones[i])

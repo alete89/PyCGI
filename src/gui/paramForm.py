@@ -5,6 +5,7 @@ from PyQt4.QtGui import QDialog
 import collections
 import copy
 import sys
+import src.logic.helper
 
 
 class paramForm(QtGui.QDialog):
@@ -18,7 +19,7 @@ class paramForm(QtGui.QDialog):
         layout = QtGui.QGridLayout(self)
         counter = 0
         for row in param_list:
-            
+
             for parametro in row:
 
                 print "el parametro es: " + parametro[:1]
@@ -26,22 +27,21 @@ class paramForm(QtGui.QDialog):
                     self.labels[counter] = QtGui.QLabel(parametro[1:], self)
                     self.texts[counter] = QtGui.QLineEdit(self)
                     self.buttons[counter] = QtGui.QPushButton("file")
-                    self.buttons[counter].clicked.connect(lambda ignore, co=counter: self.getFileName(co))
-                    fileMod=1
+                    self.buttons[counter].clicked.connect(
+                        lambda ignore, co=counter: self.getFileName(co))
+                    fileMod = 1
                 else:
                     self.labels[counter] = QtGui.QLabel(parametro, self)
                     self.texts[counter] = QtGui.QLineEdit(self)
-                    fileMod=0
-                
+                    fileMod = 0
+
                 layout.addWidget(self.labels[counter], counter, 0)
                 layout.addWidget(self.texts[counter], counter, 1)
 
-                if fileMod==1:
+                if fileMod == 1:
                     layout.addWidget(self.buttons[counter], counter, 2)
-                
-                counter += 1
-            
 
+                counter += 1
 
         buttons = QtGui.QDialogButtonBox(
             QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel,
@@ -75,8 +75,10 @@ class paramForm(QtGui.QDialog):
         return (new_list, result == QDialog.Accepted)
 
     def getFileName(self, counter):
-        filename = QtGui.QFileDialog.getOpenFileName()
+        filename = QtGui.QFileDialog.getOpenFileName(
+            directory=src.logic.helper.getTreeViewInitialPath())
         self.texts[counter].setText(filename)
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

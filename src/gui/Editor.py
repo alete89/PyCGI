@@ -199,6 +199,7 @@ class Editor(QtGui.QWidget):
     def find_dialog(self):
         find = findStringDialog.Find(self)
         find.show()
+        currentTab = self.tabWidget.widget(self.tabWidget.currentIndex())
 
         def handleFind():
 
@@ -206,29 +207,32 @@ class Editor(QtGui.QWidget):
             print(texto_buscado)
 
             if find.is_case_sensitive == True and find.is_solo_palabras_completas == False:
-                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindCaseSensitively
+                flag = QtGui.QTextDocument.FindCaseSensitively
 
             elif find.is_case_sensitive == False and find.is_solo_palabras_completas == False:
-                flag = QtGui.QTextDocument.FindBackward
+                flag = None
 
             elif find.is_case_sensitive == False and find.is_solo_palabras_completas == True:
-                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindWholeWords
+                flag = QtGui.QTextDocument.FindWholeWords
 
             elif find.is_case_sensitive == True and find.is_solo_palabras_completas == True:
-                flag = QtGui.QTextDocument.FindBackward and QtGui.QTextDocument.FindCaseSensitively and QtGui.QTextDocument.FindWholeWords
+                flag = QtGui.QTextDocument.FindCaseSensitively and QtGui.QTextDocument.FindWholeWords
 
-            self.find(texto_buscado, flag)
+            if not flag:
+                currentTab.find(texto_buscado)
+            else:
+                currentTab.find(texto_buscado, flag)
 
         def handleReplace():
             texto_buscado = find.buscar_textbox.toPlainText()
             texto_reemplaza = find.reemplazar_textbox.toPlainText()
 
-            text = self.toPlainText()
+            text = currentTab.toPlainText()
 
             newText = text.replace(texto_buscado, texto_reemplaza)
 
-            self.clear()
-            self.setPlainText(newText)
+            currentTab.clear()
+            currentTab.setPlainText(newText)
 
         find.find_button.clicked.connect(handleFind)
         find.replace_button.clicked.connect(handleReplace)

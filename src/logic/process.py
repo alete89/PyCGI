@@ -92,15 +92,19 @@ class Process():
         self.runNow()
 
     def secuenciaList(self, window_instance):
-        window_instance.indicadorSecuencia.clear()
+        
+        window_instance.indicadorSecuencia.clear()        
         secuencia = self.secuencia
+        i=0
         for instruccion in secuencia:
-            printable_instruccion = str(
-                instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"
 
-            bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
-            prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace(
-                "<html><b>", "")
+            printable_instruccion = str(instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"
+            #bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
+            #prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace("<html><b>", "")
+            #window_instance.indicadorSecuencia.clear()
+            print "I vale:" + str(i) + ", Instruccion vale: " + str(printable_instruccion)
             window_instance.indicadorSecuencia.setFontWeight(50)
-            window_instance.indicadorSecuencia.append(prev_content)
-            window_instance.indicadorSecuencia.append(bold_instruccion)
+            window_instance.indicadorSecuencia.append(printable_instruccion)
+            #window_instance.indicadorSecuencia.append(prev_content)
+            #window_instance.indicadorSecuencia.append(bold_instruccion)
+            i=i+1

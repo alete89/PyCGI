@@ -26,9 +26,17 @@ class paramForm(QtGui.QDialog):
                 if parametro[:1] == "#":
                     self.labels[counter] = QtGui.QLabel(parametro[1:], self)
                     self.texts[counter] = QtGui.QLineEdit(self)
-                    self.buttons[counter] = QtGui.QPushButton("file")
+                    self.buttons[counter] = QtGui.QPushButton("File...")
                     self.buttons[counter].clicked.connect(
                         lambda ignore, co=counter: self.getFileName(co))
+                    fileMod = 1
+
+                elif parametro[:1] == "$":
+                    self.labels[counter] = QtGui.QLabel(parametro[1:], self)
+                    self.texts[counter] = QtGui.QLineEdit(self)
+                    self.buttons[counter] = QtGui.QPushButton("Dir...")
+                    self.buttons[counter].clicked.connect(
+                        lambda ignore, co=counter: self.getDirName(co))
                     fileMod = 1
                 else:
                     self.labels[counter] = QtGui.QLabel(parametro, self)
@@ -79,6 +87,10 @@ class paramForm(QtGui.QDialog):
             directory=src.logic.helper.getTreeViewInitialPath())
         self.texts[counter].setText(filename)
 
+    def getDirName(self, counter):
+        filename = QtGui.QFileDialog.getExistingDirectory(
+            directory=src.logic.helper.getTreeViewInitialPath())
+        self.texts[counter].setText(filename)
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

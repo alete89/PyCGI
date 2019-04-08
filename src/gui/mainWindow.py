@@ -5,7 +5,7 @@ from ..logic import core
 from . import Editor
 from . import tabla
 from . import treeView
-
+import src.logic.helper
 
 class nPy(QtGui.QMainWindow):
     def __init__(self):
@@ -69,7 +69,7 @@ class nPy(QtGui.QMainWindow):
         layoutTab1 = QtGui.QVBoxLayout(self.tabWidget)
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
         self.indicadorCWD = QtGui.QLabel(
-            "Current Working Directory: " + core.getTreeViewInitialPath())
+            "Current Working Directory: <html><b>" + core.getTreeViewInitialPath() + "</b></html>")
         self.indicadorSecuenciaNombre = QtGui.QLabel('Current process')
         self.terminalOutputNombre = QtGui.QLabel('Standard output')
         layoutSecuencia = QtGui.QVBoxLayout()
@@ -107,6 +107,9 @@ class nPy(QtGui.QMainWindow):
         self.dirRoot = QtGui.QLabel('Root path')
         self.dirInitial = QtGui.QLabel('Working directory')
         self.dirButtonRoot = QtGui.QPushButton("Update directory")
+        self.dirButtonFindDirCWD = QtGui.QPushButton("Dir ...")
+        self.dirButtonFindDirRoot = QtGui.QPushButton("Dir ...")
+
         self.dirButtonInitial = QtGui.QPushButton("Update directory")
         viewInitialPath = core.getTreeViewInitialPath()
         viewRootPath = core.getTreeViewRootPath()
@@ -115,17 +118,25 @@ class nPy(QtGui.QMainWindow):
         self.dirInitialEdit = QtGui.QLineEdit(str(viewInitialPath))
 
         self.grid = QtGui.QGridLayout()
-        self.grid.setSpacing(10)
-        self.grid.addWidget(self.dirRoot, 1, 0)
-        self.grid.addWidget(self.dirRootEdit, 1, 1)
-        self.grid.addWidget(self.dirButtonRoot, 1, 2)
+        self.grid.setSpacing(16)
+        
+        self.grid.addWidget(self.dirRoot, 1, 0)			# Titulo
+        self.grid.addWidget(self.dirRootEdit, 1, 1)		# Campo de texto
+	self.grid.addWidget(self.dirButtonFindDirRoot, 1, 2)	# Boton Dir
+        self.grid.addWidget(self.dirButtonRoot, 1, 3)		# Boton Update
+        
         self.grid.addWidget(self.dirInitial, 2, 0)
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
-        self.grid.addWidget(self.dirButtonInitial, 2, 2)
+        self.grid.addWidget(self.dirButtonFindDirCWD, 2, 2)
+        self.grid.addWidget(self.dirButtonInitial, 2, 3)
+
+	self.dirButtonFindDirCWD.clicked.connect(self.getDirNameInit)
+	self.dirButtonFindDirRoot.clicked.connect(self.getDirNameRoot)
 
         self.dirButtonInitial.clicked.connect(self.actualizarCWD)
         self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath(self.dirRootEdit.text(), 1))
 
+	
         self.configTab4.setLayout(self.grid)
 
         layoutTab3 = QtGui.QVBoxLayout(self.tabWidget)
@@ -175,7 +186,7 @@ class nPy(QtGui.QMainWindow):
 
     def actualizarCWD(self):
         core.updateCfgPath(self.dirInitialEdit.text(), 0)
-        self.indicadorCWD.setText("Current Working Directory: " + core.getTreeViewInitialPath())
+        self.indicadorCWD.setText("Current Working Directory: <html><b>" + core.getTreeViewInitialPath() + "</b></html>")
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)
@@ -200,3 +211,14 @@ class nPy(QtGui.QMainWindow):
                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             sys.exit()
+
+    def getDirNameRoot(self):
+        filename = QtGui.QFileDialog.getExistingDirectory(
+            directory=src.logic.helper.getTreeViewInitialPath())
+        self.dirRootEdit.setText(filename)
+        
+    def getDirNameInit(self):
+        filename = QtGui.QFileDialog.getExistingDirectory(
+            directory=src.logic.helper.getTreeViewInitialPath())
+        self.dirInitialEdit.setText(filename)
+

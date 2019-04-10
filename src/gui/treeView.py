@@ -1,7 +1,6 @@
 from PyQt4 import QtGui, QtCore
 from ..logic import core
 
-
 class TreeView(QtGui.QTreeView):
     def __init__(self, window_instance):
         super(TreeView, self).__init__()
@@ -12,9 +11,11 @@ class TreeView(QtGui.QTreeView):
         self.setModel(self.fsmodel)
         self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
         self.expand(initialPath)
+        
         while initialPath.parent().isValid():
             self.expand(initialPath.parent())
             initialPath = initialPath.parent()
+
         self.setAnimated(True)
         self.setIndentation(15)
         self.setSortingEnabled(True)
@@ -23,7 +24,6 @@ class TreeView(QtGui.QTreeView):
         self.doubleClicked.connect(self.openFileFromTree)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openRightClickMenu)
-
 
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())
@@ -39,6 +39,7 @@ class TreeView(QtGui.QTreeView):
 
         # Actions
         copyPath = menu.addAction(self.tr("Copy Full Path..."))
+
         # Resultado
         eleccion = menu.exec_(self.viewport().mapToGlobal(position))
         if eleccion == copyPath:

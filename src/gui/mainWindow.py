@@ -107,8 +107,8 @@ class nPy(QtGui.QMainWindow):
         self.dirRoot = QtGui.QLabel('Treeview path')
         self.dirInitial = QtGui.QLabel('Working directory')
         
-        self.dirButtonFindDirCWD = QtGui.QPushButton("Dir ...")
-        self.dirButtonFindDirRoot = QtGui.QPushButton("Dir ...")
+        self.dirButtonFindDirCWD = QtGui.QPushButton("Update")
+        self.dirButtonFindDirRoot = QtGui.QPushButton("Update")
 
         
         viewInitialPath = core.getTreeViewInitialPath()
@@ -123,9 +123,9 @@ class nPy(QtGui.QMainWindow):
         self.grid.addWidget(self.dirRoot, 1, 0)			        # Titulo
         self.grid.addWidget(self.dirRootEdit, 1, 1)		        # Campo de texto
         self.grid.addWidget(self.dirButtonFindDirRoot, 1, 2)	# Boton Dir
-
-        self.grid.addWidget(self.dirInitialEdit, 2, 1)
-        self.grid.addWidget(self.dirButtonFindDirCWD, 2, 2)
+        self.grid.addWidget(self.dirInitial, 2, 0)			    # Titulo
+        self.grid.addWidget(self.dirInitialEdit, 2, 1)          # Campo de texto
+        self.grid.addWidget(self.dirButtonFindDirCWD, 2, 2)     # Boton Dir
 
         self.dirButtonFindDirCWD.clicked.connect(self.getDirNameInit)
         self.dirButtonFindDirRoot.clicked.connect(self.getDirNameRoot)
@@ -184,9 +184,23 @@ class nPy(QtGui.QMainWindow):
     def actualizarRootPath(self):
         core.updateCfgPath(self.dirRootEdit.text(), 1)
         self.currentDirectories()
-        self.treeWidget.update()
-        self.treeWidget.repaint()
-        self.treeWidget.show()
+        self.treeWidget.setRootIndex(self.treeWidget.fsmodel.index(core.getTreeViewRootPath()))
+        initialPath = self.treeWidget.fsmodel.index(core.getTreeViewInitialPath())
+        self.treeWidget.expand(initialPath)
+        
+        while initialPath.parent().isValid():
+            self.treeWidget.expand(initialPath.parent())
+            initialPath = initialPath.parent()
+
+        self.treeWidget.setAnimated(True)
+        self.treeWidget.setIndentation(15)
+        self.treeWidget.setSortingEnabled(True)
+        self.treeWidget.sortByColumn(0, 0)
+        self.treeWidget.setColumnWidth(0, 300)
+        self.treeWidget.doubleClicked.connect(self.treeWidget.openFileFromTree)
+        self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.treeWidget.customContextMenuRequested.connect(self.treeWidget.openRightClickMenu)
+        self.treeWidget.treeWidget.update()
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)

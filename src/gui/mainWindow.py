@@ -106,11 +106,11 @@ class nPy(QtGui.QMainWindow):
 
         self.dirRoot = QtGui.QLabel('Treeview path')
         self.dirInitial = QtGui.QLabel('Working directory')
-        self.dirButtonRoot = QtGui.QPushButton("Update directory")
+        
         self.dirButtonFindDirCWD = QtGui.QPushButton("Dir ...")
         self.dirButtonFindDirRoot = QtGui.QPushButton("Dir ...")
 
-        self.dirButtonInitial = QtGui.QPushButton("Update directory")
+        
         viewInitialPath = core.getTreeViewInitialPath()
         viewRootPath = core.getTreeViewRootPath()
 
@@ -123,19 +123,12 @@ class nPy(QtGui.QMainWindow):
         self.grid.addWidget(self.dirRoot, 1, 0)			        # Titulo
         self.grid.addWidget(self.dirRootEdit, 1, 1)		        # Campo de texto
         self.grid.addWidget(self.dirButtonFindDirRoot, 1, 2)	# Boton Dir
-        self.grid.addWidget(self.dirButtonRoot, 1, 3)		    # Boton Update
-        
-        self.grid.addWidget(self.dirInitial, 2, 0)
+
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
         self.grid.addWidget(self.dirButtonFindDirCWD, 2, 2)
-        self.grid.addWidget(self.dirButtonInitial, 2, 3)
 
         self.dirButtonFindDirCWD.clicked.connect(self.getDirNameInit)
         self.dirButtonFindDirRoot.clicked.connect(self.getDirNameRoot)
-
-        self.dirButtonInitial.clicked.connect(self.actualizarCWD)
-        self.dirButtonRoot.clicked.connect(self.actualizarRootPath)
-
 	
         self.configTab4.setLayout(self.grid)
 
@@ -187,14 +180,13 @@ class nPy(QtGui.QMainWindow):
     def actualizarCWD(self):
         core.updateCfgPath(self.dirInitialEdit.text(), 0)
         self.currentDirectories()
-        #self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
-        #    "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
 
     def actualizarRootPath(self):
         core.updateCfgPath(self.dirRootEdit.text(), 1)
         self.currentDirectories()
-        #self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
-        #    "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
+        self.treeWidget.update()
+        self.treeWidget.repaint()
+        self.treeWidget.show()
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)
@@ -224,11 +216,13 @@ class nPy(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
         self.dirRootEdit.setText(filename)
+        self.actualizarRootPath()
         
     def getDirNameInit(self):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
         self.dirInitialEdit.setText(filename)
+        self.actualizarCWD()
 
     def currentDirectories(self):
         self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 

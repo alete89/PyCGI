@@ -180,27 +180,30 @@ class nPy(QtGui.QMainWindow):
     def actualizarCWD(self):
         core.updateCfgPath(self.dirInitialEdit.text(), 0)
         self.currentDirectories()
+        self.tabWidget.setCurrentIndex(0)
 
     def actualizarRootPath(self):
         core.updateCfgPath(self.dirRootEdit.text(), 1)
         self.currentDirectories()
-        self.treeWidget.setRootIndex(self.treeWidget.fsmodel.index(core.getTreeViewRootPath()))
-        initialPath = self.treeWidget.fsmodel.index(core.getTreeViewInitialPath())
-        self.treeWidget.expand(initialPath)
+        self.treeWidget.updateTreeView()
+        # self.treeWidget.setRootIndex(self.treeWidget.fsmodel.index(core.getTreeViewRootPath()))
+        # initialPath = self.treeWidget.fsmodel.index(core.getTreeViewInitialPath())
+        # self.treeWidget.expand(initialPath)
         
-        while initialPath.parent().isValid():
-            self.treeWidget.expand(initialPath.parent())
-            initialPath = initialPath.parent()
+        # while initialPath.parent().isValid():
+        #     self.treeWidget.expand(initialPath.parent())
+        #     initialPath = initialPath.parent()
 
-        self.treeWidget.setAnimated(True)
-        self.treeWidget.setIndentation(15)
-        self.treeWidget.setSortingEnabled(True)
-        self.treeWidget.sortByColumn(0, 0)
-        self.treeWidget.setColumnWidth(0, 300)
-        self.treeWidget.doubleClicked.connect(self.treeWidget.openFileFromTree)
-        self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.treeWidget.customContextMenuRequested.connect(self.treeWidget.openRightClickMenu)
-        self.treeWidget.treeWidget.update()
+        # self.treeWidget.setAnimated(True)
+        # self.treeWidget.setIndentation(15)
+        # self.treeWidget.setSortingEnabled(True)
+        # self.treeWidget.sortByColumn(0, 0)
+        # self.treeWidget.setColumnWidth(0, 300)
+        # self.treeWidget.doubleClicked.connect(self.treeWidget.openFileFromTree)
+        # self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        # self.treeWidget.customContextMenuRequested.connect(self.treeWidget.openRightClickMenu)
+        # self.treeWidget.update()
+        self.tabWidget.setCurrentIndex(0)
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)
@@ -239,5 +242,7 @@ class nPy(QtGui.QMainWindow):
         self.actualizarCWD()
 
     def currentDirectories(self):
-        self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
+        directoriesUpdated=str("<html>Working on <b>" + core.getTreeViewInitialPath() + 
             "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
+        self.indicadorCWD.setText(directoriesUpdated)
+        self.terminalOutput.setText(directoriesUpdated)

@@ -25,13 +25,31 @@ class TreeView(QtGui.QTreeView):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openRightClickMenu)
 
+    def updateTreeView(self):
+        initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
+        self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
+        self.expand(initialPath)
+        
+        while initialPath.parent().isValid():
+            self.expand(initialPath.parent())
+            initialPath = initialPath.parent()
+
+        self.setAnimated(True)
+        self.setIndentation(15)
+        self.setSortingEnabled(True)
+        self.sortByColumn(0, 0)
+        self.setColumnWidth(0, 300)
+        self.doubleClicked.connect(self.openFileFromTree)
+        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.openRightClickMenu)
+
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())
         filePath = self.fsmodel.filePath(indexItem)
         fname = str(filePath)
         self.window.tabWidget.setCurrentIndex(1)
         self.window.tabEditor.openFile(fname)
-
+ 
     def openRightClickMenu(self, position):
         indexes = self.selectedIndexes()
         menu = QtGui.QMenu()

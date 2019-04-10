@@ -25,7 +25,7 @@ class TreeView(QtGui.QTreeView):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openRightClickMenu)
 
-    def updateTreeView(self):
+    def updateTreeView(self):# aca falta algo.... no se que
         initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
         self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
         self.expand(initialPath)
@@ -42,6 +42,7 @@ class TreeView(QtGui.QTreeView):
         self.doubleClicked.connect(self.openFileFromTree)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openRightClickMenu)
+        self.update()
 
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())

@@ -186,23 +186,6 @@ class nPy(QtGui.QMainWindow):
         core.updateCfgPath(self.dirRootEdit.text(), 1)
         self.currentDirectories()
         self.treeWidget.updateTreeView()
-        # self.treeWidget.setRootIndex(self.treeWidget.fsmodel.index(core.getTreeViewRootPath()))
-        # initialPath = self.treeWidget.fsmodel.index(core.getTreeViewInitialPath())
-        # self.treeWidget.expand(initialPath)
-        
-        # while initialPath.parent().isValid():
-        #     self.treeWidget.expand(initialPath.parent())
-        #     initialPath = initialPath.parent()
-
-        # self.treeWidget.setAnimated(True)
-        # self.treeWidget.setIndentation(15)
-        # self.treeWidget.setSortingEnabled(True)
-        # self.treeWidget.sortByColumn(0, 0)
-        # self.treeWidget.setColumnWidth(0, 300)
-        # self.treeWidget.doubleClicked.connect(self.treeWidget.openFileFromTree)
-        # self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        # self.treeWidget.customContextMenuRequested.connect(self.treeWidget.openRightClickMenu)
-        # self.treeWidget.update()
         self.tabWidget.setCurrentIndex(0)
 
     def subMenuOptionClicked(self, subMenu):

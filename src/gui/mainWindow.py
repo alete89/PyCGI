@@ -68,8 +68,8 @@ class nPy(QtGui.QMainWindow):
         self.tabWidget.addTab(self.tabEditor, "Text Editor")
         layoutTab1 = QtGui.QVBoxLayout(self.tabWidget)
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-        self.indicadorCWD = QtGui.QLabel(
-            "Current Working Directory: <html><b>" + core.getTreeViewInitialPath() + "</b></html>")
+        self.indicadorCWD = QtGui.QLabel("<html>Working on <b>" + core.getTreeViewInitialPath() + 
+            "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
         self.indicadorSecuenciaNombre = QtGui.QLabel('Current process')
         self.terminalOutputNombre = QtGui.QLabel('Standard output')
         layoutSecuencia = QtGui.QVBoxLayout()
@@ -104,7 +104,7 @@ class nPy(QtGui.QMainWindow):
         self.tabConfiguracion.addTab(self.configTab1, "Sequence Table")
         self.tabConfiguracion.addTab(self.configTab4, "Environment")
 
-        self.dirRoot = QtGui.QLabel('Root path')
+        self.dirRoot = QtGui.QLabel('Treeview path')
         self.dirInitial = QtGui.QLabel('Working directory')
         self.dirButtonRoot = QtGui.QPushButton("Update directory")
         self.dirButtonFindDirCWD = QtGui.QPushButton("Dir ...")
@@ -120,21 +120,21 @@ class nPy(QtGui.QMainWindow):
         self.grid = QtGui.QGridLayout()
         self.grid.setSpacing(16)
         
-        self.grid.addWidget(self.dirRoot, 1, 0)			# Titulo
-        self.grid.addWidget(self.dirRootEdit, 1, 1)		# Campo de texto
-	self.grid.addWidget(self.dirButtonFindDirRoot, 1, 2)	# Boton Dir
-        self.grid.addWidget(self.dirButtonRoot, 1, 3)		# Boton Update
+        self.grid.addWidget(self.dirRoot, 1, 0)			        # Titulo
+        self.grid.addWidget(self.dirRootEdit, 1, 1)		        # Campo de texto
+        self.grid.addWidget(self.dirButtonFindDirRoot, 1, 2)	# Boton Dir
+        self.grid.addWidget(self.dirButtonRoot, 1, 3)		    # Boton Update
         
         self.grid.addWidget(self.dirInitial, 2, 0)
         self.grid.addWidget(self.dirInitialEdit, 2, 1)
         self.grid.addWidget(self.dirButtonFindDirCWD, 2, 2)
         self.grid.addWidget(self.dirButtonInitial, 2, 3)
 
-	self.dirButtonFindDirCWD.clicked.connect(self.getDirNameInit)
-	self.dirButtonFindDirRoot.clicked.connect(self.getDirNameRoot)
+        self.dirButtonFindDirCWD.clicked.connect(self.getDirNameInit)
+        self.dirButtonFindDirRoot.clicked.connect(self.getDirNameRoot)
 
         self.dirButtonInitial.clicked.connect(self.actualizarCWD)
-        self.dirButtonRoot.clicked.connect(lambda: core.updateCfgPath(self.dirRootEdit.text(), 1))
+        self.dirButtonRoot.clicked.connect(self.actualizarRootPath)
 
 	
         self.configTab4.setLayout(self.grid)
@@ -186,7 +186,15 @@ class nPy(QtGui.QMainWindow):
 
     def actualizarCWD(self):
         core.updateCfgPath(self.dirInitialEdit.text(), 0)
-        self.indicadorCWD.setText("Current Working Directory: <html><b>" + core.getTreeViewInitialPath() + "</b></html>")
+        self.currentDirectories()
+        #self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
+        #    "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
+
+    def actualizarRootPath(self):
+        core.updateCfgPath(self.dirRootEdit.text(), 1)
+        self.currentDirectories()
+        #self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
+        #    "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)
@@ -222,3 +230,6 @@ class nPy(QtGui.QMainWindow):
             directory=src.logic.helper.getTreeViewInitialPath())
         self.dirInitialEdit.setText(filename)
 
+    def currentDirectories(self):
+        self.indicadorCWD.setText("<html>Working on <b>" + core.getTreeViewInitialPath() + 
+            "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")

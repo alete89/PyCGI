@@ -11,11 +11,9 @@ class TreeView(QtGui.QTreeView):
         self.setModel(self.fsmodel)
         self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
         self.expand(initialPath)
-        
         while initialPath.parent().isValid():
             self.expand(initialPath.parent())
             initialPath = initialPath.parent()
-
         self.setAnimated(True)
         self.setIndentation(15)
         self.setSortingEnabled(True)
@@ -28,20 +26,13 @@ class TreeView(QtGui.QTreeView):
     def updateTreeView(self):
         initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
         self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
+        self.update()
         self.expand(initialPath)
-        
         while initialPath.parent().isValid():
             self.expand(initialPath.parent())
             initialPath = initialPath.parent()
 
-        self.setAnimated(True)
-        self.setIndentation(15)
-        self.setSortingEnabled(True)
-        self.sortByColumn(0, 0)
-        self.setColumnWidth(0, 300)
-        self.doubleClicked.connect(self.openFileFromTree)
-        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(self.openRightClickMenu)
+        
 
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())

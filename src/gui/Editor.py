@@ -4,6 +4,7 @@ from PyQt4 import QtGui
 from src.gui import CodeBox
 import sys
 import os
+from ..logic import core
 from src.gui import findStringDialog
 from src.gui import Highlighter
 from src.gui import QTabBar
@@ -23,8 +24,6 @@ class Editor(QtGui.QWidget):
         
         self.newEditorTab()
         self.highlighter = Highlighter.Highlighter(self)
-
-        
     
     def crearToolbar(self):
         if len(sys.argv)==2:
@@ -253,7 +252,7 @@ class Editor(QtGui.QWidget):
 
     def openFile(self, fname):
         if not fname:
-            fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+            fname = QtGui.QFileDialog.getOpenFileName(self, 'Open file', core.getTreeViewInitialPath())
         if fname:
             with open(fname, 'r') as f:
                 tabIndex = self.newEditorTab(fname)
@@ -269,7 +268,7 @@ class Editor(QtGui.QWidget):
 
     def saveAsDialog(self, tabIndex):
         tab_to_save = self.tabWidget.widget(tabIndex)
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File')
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Save File',  core.getTreeViewInitialPath())
         if name:
             textoParaGuardar = tab_to_save.toPlainText()
             with open(name, "w") as nFile:

@@ -207,6 +207,8 @@ class nPy(QtGui.QMainWindow):
     def guardarCambiosClicked(self):
         core.saveTable(self.tabla)
         self.crearMenu()
+        self.tabWidget.setCurrentIndex(0)
+        self.terminalOutput.setText("Se actualizo la tabla de secuencias")
 
     def quitApp(self):
         reply = QtGui.QMessageBox.question(self, 'Message', "Are you sure you want to quit?",

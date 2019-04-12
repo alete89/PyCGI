@@ -24,18 +24,24 @@ class Process():
         self.current_process = ""
 
     def ejecutarSecuencia(self, comandos, iteraciones, mw):
+        # self.secuencia = []
         self.proc.setWorkingDirectory(helper.getTreeViewInitialPath())
         self.MainWindowInstance = mw
+
         for i, _ in enumerate(comandos):
             instruccion = dict(comando=comandos[i], iteraciones=iteraciones[i])
             # instruccion["parametro"] = [x for x in instruccion["parametro"]
             #                             if x.strip()]  # Elimino parámetros vacíos
             self.secuencia.append(instruccion)
+
         self.secuenciaList(mw)
         self.runNow()
 
     def runNow(self):
         filePathExists = True
+
+
+        
         if not self.secuencia:
             return
         instruccion = self.secuencia[0]
@@ -66,6 +72,10 @@ class Process():
             else:
                 print "no se encontro el archivo"
 
+        # Limpio el listado de secuencias para que en una proxima corrida
+        # no se acumule la informacion
+        self.secuencia = []
+
     def hayParaEscribir(self):
         output = self.proc.readAll().data()
         self.MainWindowInstance.showOutputInTerminal(output)
@@ -93,18 +103,13 @@ class Process():
 
     def secuenciaList(self, window_instance):
         
-        window_instance.indicadorSecuencia.clear()        
+        window_instance.indicadorSecuencia.clear()
+        window_instance.indicadorSecuencia.setText("")        
         secuencia = self.secuencia
-        i=0
+        printable_instruccion=""
         for instruccion in secuencia:
-
-            printable_instruccion = str(instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"
-            #bold_instruccion = "<html><b>" + printable_instruccion + "</b></html>"
-            #prev_content = str(window_instance.indicadorSecuencia.document().toPlainText()).replace("<html><b>", "")
-            #window_instance.indicadorSecuencia.clear()
-            print "I vale:" + str(i) + ", Instruccion vale: " + str(printable_instruccion)
+            printable_instruccion = printable_instruccion + "<html>I vale:" + str(instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"+"<br></html>"
             window_instance.indicadorSecuencia.setFontWeight(50)
-            window_instance.indicadorSecuencia.append(printable_instruccion)
-            #window_instance.indicadorSecuencia.append(prev_content)
-            #window_instance.indicadorSecuencia.append(bold_instruccion)
-            i=i+1
+        window_instance.indicadorSecuencia.setText(printable_instruccion)
+        
+

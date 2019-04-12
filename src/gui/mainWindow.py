@@ -70,8 +70,8 @@ class nPy(QtGui.QMainWindow):
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
         self.indicadorCWD = QtGui.QLabel("<html>Working on <b>" + core.getTreeViewInitialPath() + 
             "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
-        self.indicadorSecuenciaNombre = QtGui.QLabel('Current process')
-        self.terminalOutputNombre = QtGui.QLabel('Standard output')
+        self.indicadorSecuenciaNombre = QtGui.QLabel('<html><b>Current process</b></html>')
+        self.terminalOutputNombre = QtGui.QLabel('<html><b>Standard output</b></html>')
         layoutSecuencia = QtGui.QVBoxLayout()
         layoutSecuencia.addWidget(self.indicadorCWD)
         layoutSecuencia.addWidget(self.indicadorSecuenciaNombre)
@@ -201,6 +201,8 @@ class nPy(QtGui.QMainWindow):
     def cleanTerminal(self):
         self.terminalOutput.clear()
         self.indicadorSecuencia.clear()
+        self.indicadorSecuencia.setText("")
+        
 
     def guardarCambiosClicked(self):
         core.saveTable(self.tabla)

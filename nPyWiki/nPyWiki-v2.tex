@@ -262,8 +262,14 @@ It is often needed to pick a file (ussually the file path) to select it as a par
 program <# Select file 1> <# Select file 2> ... <# Select file n>
  \end{verbatim}
 
+Same instructions to pick a directory (or folder, in a Windows System), but using $\$$ instead $\#$.
+
+ \begin{verbatim}
+    program <# Select directory 1> <# Select directory 2> ... <# Select directory n>
+\end{verbatim}
+
 Thus nPy will create a dynamic menu to select a file into the system for each $<\# ...>$ found on the 
-string.
+string, and select a directory into the system foe each $<\$ ...>$ found in the same string.
 
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuExampleFile.png}
@@ -273,7 +279,7 @@ string.
 
 \begin{verbatim}
  dosemu <# Ubicacion de wims5b.exe> <# Entrada EC_Typical_cal.wii> 
- -DIR: <# Directorio Neutro.Lib> -B:<# Biblioteca wimsd4.bib>
+ -DIR: <$ Directorio Neutro.Lib> -B:<# Biblioteca wimsd4.bib>
  \end{verbatim}
 
 \begin{center}
@@ -283,7 +289,7 @@ string.
 \noindent Is possible to combine both techniques as is needed:
 
 \begin{verbatim}
-program <# Select file 1> <explanation for parameter 1>
+program <# Select file 1> <Explanation for parameter 1> <$ Select a directory>
  \end{verbatim}
 
  \begin{center}
@@ -294,7 +300,7 @@ program <# Select file 1> <explanation for parameter 1>
 
 \begin{verbatim}
  dosemu <Ubicacion de wims5b.exe> <# Entrada EC_Typical_cal.wii> 
- -DIR: <# Directorio Neutro.Lib> -B:<Biblioteca wimsd4.bib>
+ -DIR: <$ Directorio Neutro.Lib> -B:<Biblioteca wimsd4.bib>
  \end{verbatim}
 
 \begin{center}

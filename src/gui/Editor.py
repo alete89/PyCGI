@@ -23,7 +23,6 @@ class Editor(QtGui.QWidget):
         self.layout.addWidget(self.tabWidget)
         
         self.newEditorTab()
-        self.highlighter = Highlighter.Highlighter(self)
     
     def crearToolbar(self):
         if len(sys.argv)==2:
@@ -241,7 +240,8 @@ class Editor(QtGui.QWidget):
             newTabName = 'Untitled'
         else:
             if os.path.isfile(fname):
-                newTabName = str(fname)
+                nombre = os.path.split(fname)[1]
+                newTabName = str(nombre)
 
         newTab = CodeBox.CodeBox()
         newTab.changeFontSize(self.currentFontSize)
@@ -264,7 +264,7 @@ class Editor(QtGui.QWidget):
                 tab.file_name = fname
                 self.tabWidget.setCurrentIndex(tabIndex)
         if fname[-3:] == ".py":
-            self.highlighter.setDocument(tab.document())
+            Highlighter.Highlighter(self).setDocument(tab.document())
 
     def saveAsDialog(self, tabIndex):
         tab_to_save = self.tabWidget.widget(tabIndex)

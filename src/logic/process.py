@@ -20,6 +20,7 @@ class Process():
         self.proc.finished.connect(self.processJustFinished)
         self.proc.readyRead.connect(self.hayParaEscribir)
         self.secuencia = []
+        self.secuenciaShow=[]
         self.MainWindowInstance = None
         self.current_process = ""
 
@@ -33,14 +34,13 @@ class Process():
             # instruccion["parametro"] = [x for x in instruccion["parametro"]
             #                             if x.strip()]  # Elimino parámetros vacíos
             self.secuencia.append(instruccion)
+            self.secuenciaShow.append(instruccion)
 
         self.secuenciaList(mw)
         self.runNow()
 
     def runNow(self):
         filePathExists = True
-
-
         
         if not self.secuencia:
             return
@@ -74,7 +74,7 @@ class Process():
 
         # Limpio el listado de secuencias para que en una proxima corrida
         # no se acumule la informacion
-        self.secuencia = []
+        self.secuenciaShow = []
 
     def hayParaEscribir(self):
         output = self.proc.readAll().data()
@@ -105,7 +105,7 @@ class Process():
         
         window_instance.indicadorSecuencia.clear()
         window_instance.indicadorSecuencia.setText("")        
-        secuencia = self.secuencia
+        secuencia = self.secuenciaShow
         printable_instruccion=""
         for instruccion in secuencia:
             printable_instruccion = printable_instruccion + "<html>I vale:" + str(instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"+"<br></html>"

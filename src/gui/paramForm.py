@@ -27,9 +27,14 @@ class paramForm(QtGui.QDialog):
                     self.labels[counter] = QtGui.QLabel(parametro[1:], self)
                     self.texts[counter] = QtGui.QLineEdit(self)
                     self.buttons[counter] = QtGui.QPushButton("File...")
-                    self.buttons[counter].clicked.connect(
-                        lambda ignore, co=counter: self.getFileName(co))
+                    mascara = "*.*"
+
                     fileMod = 1
+                    if parametro[1] == "*":
+                        # <#*.txt selecciona el archivo>
+                        mascara = parametro[1:6]
+                    self.buttons[counter].clicked.connect(
+                        lambda ignore, co=counter: self.getFileName(co, mascara=mascara))
 
                 elif parametro[:1] == "$":
                     self.labels[counter] = QtGui.QLabel(parametro[1:], self)
@@ -82,15 +87,19 @@ class paramForm(QtGui.QDialog):
 
         return (new_list, result == QDialog.Accepted)
 
-    def getFileName(self, counter):
+    def getFileName(self, counter, mascara="*.*"):
+        listaDeMascaras = mascara + ";;" + "*.*"
+        if mascara == "*.*":
+            listaDeMascaras = mascara
         filename = QtGui.QFileDialog.getOpenFileName(
-            directory=src.logic.helper.getTreeViewInitialPath())
+            directory=src.logic.helper.getTreeViewInitialPath(), filter=listaDeMascaras)
         self.texts[counter].setText(filename)
 
     def getDirName(self, counter):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
         self.texts[counter].setText(filename)
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

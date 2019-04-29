@@ -43,6 +43,8 @@ class nPy(QtGui.QMainWindow):
         self.setMinimumHeight(600)
         self.killButton = QtGui.QPushButton("Kill process")
         self.killButton.clicked.connect(self.KillingProcess)
+        self.copyOutputButton = QtGui.QPushButton("Copy to editor")
+        self.copyOutputButton.clicked.connect(self.copyOutputToEditor)
         self.cleanTerminalButton = QtGui.QPushButton("Clean terminal")
         self.cleanTerminalButton.clicked.connect(self.cleanTerminal)
         self.killGo = QtGui.QPushButton("Exit app")
@@ -91,6 +93,7 @@ class nPy(QtGui.QMainWindow):
         layoutButtons = QtGui.QHBoxLayout()
         buttonsWidget = QtGui.QWidget()
         layoutButtons.addWidget(self.killButton)
+        layoutButtons.addWidget(self.copyOutputButton)
         layoutButtons.addWidget(self.cleanTerminalButton)
         buttonsWidget.setLayout(layoutButtons)
 
@@ -232,3 +235,9 @@ class nPy(QtGui.QMainWindow):
                                  "</b> - Treeview on <b>" + core.getTreeViewRootPath() + "</b></html>")
         self.indicadorCWD.setText(directoriesUpdated)
         self.terminalOutput.setText(directoriesUpdated)
+
+    def copyOutputToEditor(self):
+        outputString = self.terminalOutput.toPlainText()
+        indiceNuevo = self.tabEditor.newEditorTab()
+        self.tabEditor.tabWidget.widget(indiceNuevo).setPlainText(outputString)
+        self.tabWidget.setCurrentIndex(1)

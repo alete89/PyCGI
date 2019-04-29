@@ -239,6 +239,7 @@ class Editor(QtGui.QWidget):
         if not fname:
             newTabName = 'Untitled'
         else:
+            fname = str(fname)
             if os.path.isfile(fname):
                 nombre = os.path.split(fname)[1]
                 newTabName = str(nombre)

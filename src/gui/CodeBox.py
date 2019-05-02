@@ -27,6 +27,8 @@ class CodeBox(QtGui.QPlainTextEdit):
         self.updateLineNumberAreaWidth(0)
         self.setTabStopWidth(32)
 
+        self.setLineWrapMode(self.NoWrap)
+
         self.font = QtGui.QFont()
         self.font.setFamily("Consolas, 'Courier New', monospace")
         self.font.setPointSize(11)

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os
+import sys
 from . import csvdb
 from . import paramFinder
 from . import process
 from ..gui import paramForm
 import collections
 
-if len(sys.argv)==2:
+if len(sys.argv) == 2:
     STARTING_PATH = sys.argv[1]
 else:
     STARTING_PATH = os.getcwd()
 
-print "STARTING_PATH: " + str(STARTING_PATH)
+# print "STARTING_PATH: " + str(STARTING_PATH)
 CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 process = process.Process()
+
 
 def getTreeViewInitialPath():
     initial = getValueFromCfg('treeViewInitialPath=')
@@ -23,6 +25,7 @@ def getTreeViewInitialPath():
         from PyQt4 import QtCore
         initial = QtCore.QDir.rootPath()
     return initial
+
 
 def getSeqTablePath():
     # el primer paso para modificar el archivo de tablaDesecuencias
@@ -33,6 +36,7 @@ def getSeqTablePath():
         from PyQt4 import QtCore
         seqTablePath = QtCore.QDir.rootPath()
     return seqTablePath
+
 
 def getTreeViewRootPath():
     root = getValueFromCfg('treeViewRootPath=')

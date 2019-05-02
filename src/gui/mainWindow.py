@@ -183,13 +183,12 @@ class nPy(QtGui.QMainWindow):
     def actualizarCWD(self):
         core.updateCfgPath(self.dirInitialEdit.text(), 0)
         self.currentDirectories()
-        self.tabWidget.setCurrentIndex(0)
+        self.treeWidget.updateTreeView()
 
     def actualizarRootPath(self):
         core.updateCfgPath(self.dirRootEdit.text(), 1)
         self.currentDirectories()
         self.treeWidget.updateTreeView()
-        self.tabWidget.setCurrentIndex(0)
 
     def subMenuOptionClicked(self, subMenu):
         core.PreEjecutarComandos(subMenu, self)

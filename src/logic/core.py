@@ -52,7 +52,6 @@ def updateCfgPath(dirName, numLine):
     elif numLine == 1:
         dirName = 'treeViewRootPath=' + "'" + str(dirName) + "'"
     updateValueFromCfg(dirName, numLine)
-    return dirName
 
 
 def getValueFromCfg(clave):
@@ -65,7 +64,6 @@ def updateValueFromCfg(clave, nLine):
     lines = open(CFG_PATH, 'r+').read().splitlines()
     lines[nLine] = clave
     open(CFG_PATH, 'r+').write('\n'.join(lines))
-    return
 
 
 def fullDataSet(path=TABLA_DE_SECUENCIAS_PATH):

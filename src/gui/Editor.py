@@ -212,7 +212,7 @@ class Editor(QtGui.QWidget):
 
         def handleFind():
 
-            texto_buscado = find.buscar_textbox.toPlainText()
+            texto_buscado = find.buscar_textbox.text()
             print(texto_buscado)
 
             if find.is_case_sensitive == True and find.is_solo_palabras_completas == False:
@@ -233,8 +233,8 @@ class Editor(QtGui.QWidget):
                 currentTab.find(texto_buscado, flag)
 
         def handleReplace():
-            texto_buscado = find.buscar_textbox.toPlainText()
-            texto_reemplaza = find.reemplazar_textbox.toPlainText()
+            texto_buscado = find.buscar_textbox.text()
+            texto_reemplaza = find.reemplazar_textbox.text()
 
             text = currentTab.toPlainText()
 

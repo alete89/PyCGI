@@ -17,7 +17,7 @@ class Find(QtGui.QDialog):
         self.label_buscar.setStyleSheet("font-size: 15px; ")
         self.label_buscar.move(10, 10)
 
-        self.buscar_textbox = QtGui.QTextEdit(self)
+        self.buscar_textbox = QtGui.QLineEdit(self)
         self.buscar_textbox.move(10, 40)
         self.buscar_textbox.resize(250, 25)
 
@@ -28,11 +28,11 @@ class Find(QtGui.QDialog):
         self.label_reemplazar.setStyleSheet("font-size: 15px; ")
         self.label_reemplazar.move(10, 80)
 
-        self.reemplazar_textbox = QtGui.QTextEdit(self)
+        self.reemplazar_textbox = QtGui.QLineEdit(self)
         self.reemplazar_textbox.move(10, 110)
         self.reemplazar_textbox.resize(250, 25)
 
-        self.replace_button = QtGui.QPushButton("Replace", self)
+        self.replace_button = QtGui.QPushButton("Replace all", self)
         self.replace_button.move(270, 110)
 
         self.case_sensitive_check = QtGui.QCheckBox("Case sensitive", self)

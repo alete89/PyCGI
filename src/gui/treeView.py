@@ -40,9 +40,10 @@ class TreeView(QtGui.QTreeView):
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())
         filePath = self.fsmodel.filePath(indexItem)
-        fname = str(filePath)
-        self.window.tabWidget.setCurrentIndex(1)
-        self.window.tabEditor.openFile(fname)
+        if os.path.isfile(filePath):
+            fname = str(filePath)
+            self.window.tabWidget.setCurrentIndex(1)
+            self.window.tabEditor.openFile(fname)
  
     def openRightClickMenu(self, position):
         indexes = self.selectedIndexes()

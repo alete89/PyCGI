@@ -228,9 +228,13 @@ class Editor(QtGui.QWidget):
                 flag = QtGui.QTextDocument.FindCaseSensitively and QtGui.QTextDocument.FindWholeWords
 
             if not flag:
-                currentTab.find(texto_buscado)
+                found = currentTab.find(texto_buscado)
             else:
-                currentTab.find(texto_buscado, flag)
+                found = currentTab.find(texto_buscado, flag)
+
+            if not found:
+                currentTab.moveCursor(1)
+                handleFind()
 
         def handleReplace():
             texto_buscado = find.buscar_textbox.text()

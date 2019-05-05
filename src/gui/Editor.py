@@ -213,7 +213,6 @@ class Editor(QtGui.QWidget):
         def handleFind():
 
             texto_buscado = find.buscar_textbox.text()
-            print(texto_buscado)
 
             if find.is_case_sensitive == True and find.is_solo_palabras_completas == False:
                 flag = QtGui.QTextDocument.FindCaseSensitively

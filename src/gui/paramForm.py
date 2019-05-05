@@ -22,7 +22,7 @@ class paramForm(QtGui.QDialog):
 
             for parametro in row:
 
-                print "el parametro es: " + parametro[:1]
+                # print "el parametro es: " + parametro[:1]
                 if parametro[:1] == "#":
                     #self.labels[counter] = QtGui.QLabel(parametro[1:], self)
                     self.texts[counter] = QtGui.QLineEdit(self)

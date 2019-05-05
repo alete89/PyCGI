@@ -105,7 +105,7 @@ def PreEjecutarComandos(subMenu, mw):
 
     rows_with_params = paramFinder.getParameters(ordenada)
     params = csvdb.getColumn(rows_with_params, 7)
-    print params
+    # print params
 
     comandos = csvdb.getColumn(rows_with_params, 5)
 
@@ -126,7 +126,7 @@ def PreEjecutarComandos(subMenu, mw):
                 row = row.replace(">", "")
         newComandos.append(row)
 
-    print newComandos
+    # print newComandos
 
     loops = csvdb.getColumn(ordenada, 6)
     if ok:

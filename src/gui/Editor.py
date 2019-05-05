@@ -16,6 +16,8 @@ class Editor(QtGui.QWidget):
         self.layout = QtGui.QVBoxLayout(self)
         self.currentFontSize = 11
 
+        self.retry = False  # evita loop en la búsqueda
+
         self.tabWidget = QtGui.QTabWidget()
         self.tabWidget.setTabBar(QTabBar.MyTabBar())
         self.tabWidget.setTabsClosable(True)
@@ -231,9 +233,12 @@ class Editor(QtGui.QWidget):
             else:
                 found = currentTab.find(texto_buscado, flag)
 
-            if not found:
+            if not found and not self.retry:
                 currentTab.moveCursor(1)
+                self.retry = True
                 handleFind()
+            else:
+                self.retry = False
 
         def handleReplace():
             texto_buscado = find.buscar_textbox.text()

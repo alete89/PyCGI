@@ -20,9 +20,9 @@ TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
 if not os.path.isfile(TABLA_DE_SECUENCIAS_PATH):
     HEADER = "id;menu;submenu;posicion en menu;orden en secuencia;comando;loop\n"
     LINE = "1;Ejemplo;ping;1;1;ping 127.0.0.1;1"
-    with open(TABLA_DE_SECUENCIAS_PATH, 'w') as f:
-        f.write(HEADER)
-        f.write(LINE)
+    with open(TABLA_DE_SECUENCIAS_PATH, 'w') as nueva_tabla:
+        nueva_tabla.write(HEADER)
+        nueva_tabla.write(LINE)
 
 
 process = process.Process()

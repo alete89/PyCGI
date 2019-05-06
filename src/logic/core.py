@@ -17,6 +17,8 @@ else:
 
 CFG_PATH = STARTING_PATH + '/cfg'
 TABLA_DE_SECUENCIAS_PATH = STARTING_PATH + r"/tablaDeSecuencias.csv"
+
+# Si no hay tabla de secuencias, la creo con un ejemplo
 if not os.path.isfile(TABLA_DE_SECUENCIAS_PATH):
     HEADER = "id;menu;submenu;posicion en menu;orden en secuencia;comando;loop\n"
     LINE = "1;Ejemplo;ping;1;1;ping 127.0.0.1;1"
@@ -145,3 +147,16 @@ def getHeaders(path=TABLA_DE_SECUENCIAS_PATH):
 def saveTable(table, path=TABLA_DE_SECUENCIAS_PATH, header=getHeaders()):
     dataset = table.getDataSet()
     csvdb.SaveCSV(path, dataset, header)
+
+
+# Si no hay archivo de configuración, lo creo en el Root
+if not os.path.isfile(CFG_PATH):
+    # determino el root
+    root, path = os.path.splitdrive(STARTING_PATH)
+    if not root:  # Windows
+        root = '/'  # Unix
+
+    with open(CFG_PATH, 'w') as cfg:
+        cfg.write("treeViewInitialPath=\ntreeViewRootPath=\n")
+    updateCfgPath(STARTING_PATH, 0)  # working path
+    updateCfgPath(root, 1)  # Rootpath

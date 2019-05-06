@@ -33,16 +33,16 @@ class paramForm(QtGui.QDialog):
                     if parametro[1] == "*":
                         # <#*.txt selecciona el archivo>
                         for q in range(len(parametro)):
-							if parametro[q]==" ":
-								break
-								
+                            if parametro[q] == " ":
+                                break
+
                         mascara = parametro[1:q]
                         self.labels[counter] = QtGui.QLabel(parametro[q:], self)
                     else:
-						self.labels[counter] = QtGui.QLabel(parametro[1:], self)
-                        
+                        self.labels[counter] = QtGui.QLabel(parametro[1:], self)
+
                     self.buttons[counter].clicked.connect(
-                        lambda ignore, co=counter: self.getFileName(co, mascara=mascara))
+                        lambda ignore, co=counter, masc=mascara: self.getFileName(co, mascara=masc))
 
                 elif parametro[:1] == "$":
                     self.labels[counter] = QtGui.QLabel(parametro[1:], self)

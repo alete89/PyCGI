@@ -22,22 +22,19 @@ class paramForm(QtGui.QDialog):
 
             for parametro in row:
 
-                # print "el parametro es: " + parametro[:1]
-                if parametro[:1] == "#":
-                    #self.labels[counter] = QtGui.QLabel(parametro[1:], self)
+                if parametro[0] == "#":
                     self.texts[counter] = QtGui.QLineEdit(self)
                     self.buttons[counter] = QtGui.QPushButton("File...")
                     mascara = "*.*"
 
                     fileMod = 1
                     if parametro[1] == "*":
-                        # <#*.txt selecciona el archivo>
-                        for q in range(len(parametro)):
-                            if parametro[q] == " ":
+                        for pos, char in enumerate(parametro):
+                            if char == " ":
                                 break
 
-                        mascara = parametro[1:q]
-                        self.labels[counter] = QtGui.QLabel(parametro[q:], self)
+                        mascara = parametro[1:pos]
+                        self.labels[counter] = QtGui.QLabel(parametro[pos:], self)
                     else:
                         self.labels[counter] = QtGui.QLabel(parametro[1:], self)
 

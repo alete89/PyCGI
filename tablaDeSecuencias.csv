@@ -1,16 +1,3 @@
 id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
-1;Neutro;WIMS;1;1;c:\MTR\pw\wims5b.exe c:\MTR\auxx\EC_Typical_cal.wii -DIR:c:\MTR\auxx\Neutro.lib -B:wimsd4.bib -M:2000000;1
-11;Neutro sin parametros;HXS  S/PARAM;3;1;c:\MTR\pw\hxs.exe <#HXS - Input en formato .new>;1
-13;Neutro sin parametros;CITVAP S/PARAM;5;1;c:\MTR\pw\CITVAP.exe <#CITVAP - Input en formato .cii> -M:<Valor de memoria (min 500000)>;1
-15;Neutro Completa;Corrida completa WIMS-CITVAP;1;3;c:\MTR\pw\Pos_Wims.exe c:\MTR\auxx\EC_Typical_cal.wip;1
-17;Neutro Completa;Corrida completa WIMS-CITVAP;1;5;c:\MTR\pw\CITVAP.exe c:\MTR\auxx\prueba.cii -M:1000000;1
-2;Neutro;POS-WIMS;2;1;c:\MTR\pw\Pos_Wims.exe c:\MTR\auxx\EC_Typical_cal.wip;1
-3;Neutro;HXS;3;1;c:\MTR\pw\hxs.exe C:/MTR/auxx/EC_Typical_cal.new;1
-3;Neutro sin parametros;PRE-CIT S/PARAM;4;1;c:\MTR\pw\PRE_CIT.exe -L -DIR:<#PRE-CIT - Directorio de la libreria> -SCREEN <#PRE-CIT - Input en formato .cii>;1
-4;Neutro;PRE-CIT;4;1;c:\MTR\pw\PRE_CIT.exe -L -DIR:C:\MTR\auxx\Hxs-Pub.Lib -SCREEN c:\MTR\auxx\prueba.cii;1
-4;Neutro Completa;Corrida completa WIMS-CITVAP;1;1;c:\MTR\pw\wims5b.exe c:\MTR\auxx\EC_Typical_cal.wii -DIR:c:\MTR\auxx\Neutro.lib -B:wimsd4.bib -M:2000000;1
-5;Neutro;CITVAP;5;1;c:\MTR\pw\CITVAP.exe c:\MTR\auxx\prueba.cii -M:1000000;1
-5;Neutro Completa;Corrida completa WIMS-CITVAP;1;4;c:\MTR\pw\PRE_CIT.exe -L -DIR:C:\MTR\auxx\Hxs-Pub.Lib -SCREEN c:\MTR\auxx\prueba.cii;1
-6;Neutro sin parametros;POS-WIMS S/PARAM;2;1;c:\MTR\pw\Pos_Wims.exe <#POS-WIMS - Input en formato .wip>;1
-8;Neutro sin parametros;WIMS S/PARAM;1;1;c:\MTR\pw\wims5b.exe <# Input en formato .wii> -DIR:<# Directorio donde se encuentra la libreria> -B:<# Llibreria en formato .bib> -M:< Memoria (min 500000)>;1
-15;Termohidraulica;Water Properties;1;1;c:\MTR\pw\wp_pc.exe;1
+1;Ejemplos;ping;1;1;ping 127.0.0.1;1
+2;Ejemplos;editor con dos parametros;1;1;pluma <#*.py archivo python> <#*.txt archivo texto>;1

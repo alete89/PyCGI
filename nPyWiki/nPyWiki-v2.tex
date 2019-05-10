@@ -220,8 +220,7 @@ As simple as it looks, it is possible to fill every gap in the command column. Y
 It is possible to create a context menu to set any different parameters quickly for any command. To write a correct row in the ST a simple syntax rule is required to define the string in the command column in order to create a useful context menu properly. A typical running command presents a very simple structure in a system terminal. Usually we write commands in it as follows:
 
 \begin{verbatim}
-user@I7-system ~ $ program [parameter 1] [parameter 2] 
-... [parameter n]
+user@I7-system ~ $ program parameter_1 parameter_2 ... parameter_n]
 \end{verbatim}
 
 In the \textbf{Command} field (in our ST) the syntax is very similar with a small difference: write $< >$ instead $[]$, and describe the parameter between them. Finally the command must be written as follows:
@@ -236,6 +235,19 @@ The string between the $< >$ will be shown in the graphic context menu as a shor
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuExampleString.png}
 \end{center}
+
+It is possible to set a default value for this parameter, writing it between "[]". 
+Example: if we want to ping to an specific IP, we shall do this:
+
+\begin{verbatim}
+ ping <Write your IP to ping>
+\end{verbatim}
+ 
+But if we want to set an IP by default in this field, you could do this:
+
+\begin{verbatim}
+ ping <Write your IP to ping [127.0.0.1]>
+\end{verbatim}
 
 \bigskip 
 
@@ -265,15 +277,27 @@ program <# Select file 1> <# Select file 2> ... <# Select file n>
 It is possible to set a mask for an specific type of file. Next example is a set for .txt, .jpg and .doc showing files:
 
 \begin{verbatim}
-program <#*.txt Select a text file> <#*.jpg Select an image> ... <#*.doc Select a word document>
+program <#*.txt Select a text file> <#*.jpg Select an image> 
+
+... <#*.doc Select a word document>
  \end{verbatim}
 
-Is possible to set just one type of file in this way.
+Is possible to set one o many masks on this way using the Qt format: 
+
+\begin{verbatim}
+*.txt;;*.doc;;*.docx;; ... *.py;; etc 
+\end{verbatim}
+
+For example: 
+\begin{verbatim}
+program <#*.sql;;*.csv Select a text file>
+\end{verbatim}
 
 Same instructions to pick a directory (or folder, in a Windows System), but using $\$$ instead $\#$.
 
  \begin{verbatim}
-    program <# Select directory 1> <# Select directory 2> ... <# Select directory n>
+    program <$ Select directory 1> <$ Select directory 2> 
+    ... <$ Select directory n>
 \end{verbatim}
 
 Thus nPy will create a dynamic menu to select a file into the system for each $<\# ...>$ found on the 
@@ -314,6 +338,40 @@ program <# Select file 1> <Explanation for parameter 1> <$ Select a directory>
 \begin{center}
  \includegraphics[width=\textwidth]{img/contextMenuCombined.png}
 \end{center}
+
+\subsubsection{In Summary}
+
+\noindent Run a simple command: 
+\begin{verbatim} notepad.exe /home/user/textFile.txt\end{verbatim}
+
+\noindent Simple command with one parameter:
+
+\begin{verbatim} notepad.exe <Write your file to open>\end{verbatim}
+
+\noindent Simple command with two parameters and one default value setted:
+
+\begin{verbatim} notepad.exe <Option [-l]> <Write your file to open>\end{verbatim}
+
+\noindent Simple command with a file selector:
+
+\begin{verbatim} notepad.exe <# Select your file to open>\end{verbatim}
+
+\noindent Simple command with a file selector and default value setted:
+
+\begin{verbatim} notepad.exe <# Select your file [/home/user/textFile.txt]>\end{verbatim}
+
+\noindent Simple command with a mask files setted:
+
+\begin{verbatim} notepad.exe <#*.txt Select your file [/home/user/textFile.txt]>\end{verbatim}
+
+\noindent Command with files ($<\# ...>$) and a directories ($<\$ ...>$) setted:
+
+\begin{verbatim}
+dosemu <$ [/home/user/wims/] Ubicacion de wims5b.exe> 
+<#*.wii Entrada EC_Typical_cal.wii>  -DIR: <$ Directorio Neutro.Lib> 
+-B:<*.bib Biblioteca wimsd4.bib>
+\end{verbatim}
+
 
 \subsection{Create a Sequence of Processes}
 

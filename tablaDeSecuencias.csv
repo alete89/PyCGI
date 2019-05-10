@@ -1,3 +1,3 @@
 id;menu;submenu;posicion en menu;orden en secuencia;comando;loop
-1;Ejemplos;ping;1;1;ping 127.0.0.1;1
-2;Ejemplos;editor con dos parametros;1;1;pluma <#*.py archivo python> <#*.txt archivo texto>;1
+1;Ejemplos;ping;1;1;ping < Ingrese una IP [192.168.2.78]>;1
+2;Ejemplos;editor con dos parametros;1;1;pluma <#*.py  Seleccionar un archivo de Python [archivoDePrueba.py]> <$ Archivo texto>;1

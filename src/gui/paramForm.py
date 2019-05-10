@@ -18,9 +18,13 @@ class paramForm(QtGui.QDialog):
 
         layout = QtGui.QGridLayout(self)
         counter = 0
+        defaultValue=""
+
         for row in param_list:
 
             for parametro in row:
+
+                defaultValue, parametro=self.getDefaultValue(parametro)
 
                 if parametro[0] == "#":
                     self.texts[counter] = QtGui.QLineEdit(self)
@@ -52,7 +56,8 @@ class paramForm(QtGui.QDialog):
                     self.labels[counter] = QtGui.QLabel(parametro, self)
                     self.texts[counter] = QtGui.QLineEdit(self)
                     fileMod = 0
-
+                
+                self.texts[counter].setText(str(defaultValue))
                 layout.addWidget(self.labels[counter], counter, 0)
                 layout.addWidget(self.texts[counter], counter, 1)
 
@@ -104,6 +109,17 @@ class paramForm(QtGui.QDialog):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
         self.texts[counter].setText(filename)
+
+    def getDefaultValue(self, parametro):
+        for startPos, char in enumerate(parametro):
+            if char == "[":
+                break
+        for endPos, char in enumerate(parametro):
+            if char == "]":
+                break
+        defaultValueFunc=parametro[startPos+1:endPos]
+        parametro = parametro.replace(parametro[startPos:endPos+1],"")
+        return defaultValueFunc, parametro
 
 
 if __name__ == '__main__':

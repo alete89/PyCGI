@@ -220,14 +220,16 @@ class nPy(QtGui.QMainWindow):
     def getDirNameRoot(self):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
-        self.dirRootEdit.setText(filename)
-        self.actualizarRootPath()
+        if filename:
+            self.dirRootEdit.setText(filename)
+            self.actualizarRootPath()
 
     def getDirNameInit(self):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
-        self.dirInitialEdit.setText(filename)
-        self.actualizarCWD()
+        if filename:
+            self.dirInitialEdit.setText(filename)
+            self.actualizarCWD()
 
     def currentDirectories(self):
         directoriesUpdated = str("<html>Working on <b>" + core.getTreeViewInitialPath() +

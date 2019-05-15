@@ -26,9 +26,8 @@ class TreeView(QtGui.QTreeView):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.openRightClickMenu)
 
-
     def updateTreeView(self):
-        
+        self.collapseAll()
         self.setRootIndex(self.fsmodel.index(core.getTreeViewRootPath()))
         self.update()
         initialPath = self.fsmodel.index(core.getTreeViewInitialPath())
@@ -36,7 +35,7 @@ class TreeView(QtGui.QTreeView):
         while initialPath.parent().isValid():
             self.expand(initialPath.parent())
             initialPath = initialPath.parent()
- 
+
     def openFileFromTree(self, index):
         indexItem = self.fsmodel.index(index.row(), 0, index.parent())
         filePath = self.fsmodel.filePath(indexItem)
@@ -44,108 +43,108 @@ class TreeView(QtGui.QTreeView):
             fname = str(filePath)
             self.window.tabWidget.setCurrentIndex(1)
             self.window.tabEditor.openFile(fname)
- 
+
     def openRightClickMenu(self, position):
         indexes = self.selectedIndexes()
         menu = QtGui.QMenu()
         clipboard = QtGui.QApplication.clipboard()
         filePath = str(self.fsmodel.filePath(indexes[0]))
-        
+
         # Actions
-        createDirFunction=menu.addAction(self.tr("Create directory"))
-        renameFunction=menu.addAction(self.tr("Rename"))
-        separator=menu.addSeparator()
-        copyFileFunction=menu.addAction(self.tr("Copy"))
-        moveFileFunction=menu.addAction(self.tr("Move"))
-        pasteFileFunction=menu.addAction(self.tr("Paste"))
-        separator=menu.addSeparator()
-        removeFileFunction=menu.addAction(self.tr("Remove"))
-        separator=menu.addSeparator()
-        copyPath = menu.addAction(self.tr("Get Full Path..."))        
+        createDirFunction = menu.addAction(self.tr("Create directory"))
+        renameFunction = menu.addAction(self.tr("Rename"))
+        separator = menu.addSeparator()
+        copyFileFunction = menu.addAction(self.tr("Copy"))
+        moveFileFunction = menu.addAction(self.tr("Move"))
+        pasteFileFunction = menu.addAction(self.tr("Paste"))
+        separator = menu.addSeparator()
+        removeFileFunction = menu.addAction(self.tr("Remove"))
+        separator = menu.addSeparator()
+        copyPath = menu.addAction(self.tr("Get Full Path..."))
 
         # Resultado
         eleccion = menu.exec_(self.viewport().mapToGlobal(position))
-        
+
         if eleccion == copyPath:
-            self.setClipboard(filePath,copyOrMove="")
-            
+            self.setClipboard(filePath, copyOrMove="")
+
         elif eleccion == renameFunction:
             self.showDialogRename(filePath)
-            
+
         elif eleccion == createDirFunction:
             self.showDialogMkDir(filePath)
-            
+
         elif eleccion == copyFileFunction:
-            copyOrMove=1
-            self.setClipboard(filePath,copyOrMove)
-            
+            copyOrMove = 1
+            self.setClipboard(filePath, copyOrMove)
+
         elif eleccion == moveFileFunction:
-            copyOrMove=0
-            self.setClipboard(filePath,copyOrMove)
-            
+            copyOrMove = 0
+            self.setClipboard(filePath, copyOrMove)
+
         elif eleccion == removeFileFunction:
-            res = QtGui.QMessageBox.information(None, "Warning", "<b>Remove this</b>?\n"+str(filePath), QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Cancel)
-            
-            if res== QtGui.QMessageBox.Cancel:
+            res = QtGui.QMessageBox.information(None, "Warning", "<b>Remove this</b>?\n"+str(
+                filePath), QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Cancel)
+
+            if res == QtGui.QMessageBox.Cancel:
                 return
             else:
                 if os.path.isfile(filePath):
                     os.remove(filePath)
                 elif os.path.isdir(filePath):
-                    delDir=QtGui.QMessageBox.information(None, "Warning", "This is a directory. All files inside will be deleted.\n"+str(filePath), QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Cancel)
-                    if delDir==QtGui.QMessageBox.Cancel:
+                    delDir = QtGui.QMessageBox.information(None, "Warning", "This is a directory. All files inside will be deleted.\n"+str(
+                        filePath), QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel, QtGui.QMessageBox.Cancel)
+                    if delDir == QtGui.QMessageBox.Cancel:
                         return
                     else:
                         shu.rmtree(filePath)
-                else:    
+                else:
                     QtGui.QMessageBox.information(None, "Message", "Error on remove")
-            
-            
+
         elif eleccion == pasteFileFunction:
             filePath = str(self.fsmodel.filePath(indexes[0]))
-            oldFilePath=str(clipboard.text())
-            copyOrMove=oldFilePath[0] 
-            oldFilePath=oldFilePath[1:]
+            oldFilePath = str(clipboard.text())
+            copyOrMove = oldFilePath[0]
+            oldFilePath = oldFilePath[1:]
             newPath, newFile = os.path.split(oldFilePath)
-            fileToPaste=filePath+"/"+newFile
+            fileToPaste = filePath+"/"+newFile
             try:
-                if copyOrMove=="1":
+                if copyOrMove == "1":
                     shu.copyfile(oldFilePath, fileToPaste)
                 else:
                     shu.move(oldFilePath, fileToPaste)
             except:
                 QtGui.QMessageBox.information(None, "Message", "Error on paste")
 
-
     def setClipboard(self, text, copyOrMove):
-        # Necesito indicar en el clipboard si el usuario 
+        # Necesito indicar en el clipboard si el usuario
         # quiere copiar o cortar (mover) el archivo
         # para eso agrego un indicador al inicio del path
         # en el clipboard
         clipboard = QtGui.QApplication.clipboard()
         clipboard.setText(str(copyOrMove)+str(text))
-        
+
     def showDialogMkDir(self, filePath):
         newPath, newFile = os.path.split(filePath)
-        myDir, ok = QtGui.QInputDialog.getText(self, 'Input Dialog', 
-            'Create a directory in <b>'+str(newPath)+'</b>')
+        myDir, ok = QtGui.QInputDialog.getText(self, 'Input Dialog',
+                                               'Create a directory in <b>'+str(newPath)+'</b>')
         if ok:
             try:
                 if os.path.exists(newPath):
                     os.mkdir(newPath+"/"+myDir)
-            except: 
+            except:
                 QtGui.QMessageBox.information(None, "Message", "Error on create directory")
 
     def showDialogRename(self, filePath):
         newPath, oldFileName = os.path.split(filePath)
-        myNewName, ok = QtGui.QInputDialog.getText(self, 'Input Dialog', 
-            'Rename <b>'+str(oldFileName)+'</b>',text=oldFileName)
-        
-        fileToRename=newPath+"/"+myNewName
-        
+        myNewName, ok = QtGui.QInputDialog.getText(self, 'Input Dialog',
+                                                   'Rename <b>'+str(oldFileName)+'</b>', text=oldFileName)
+
+        fileToRename = newPath+"/"+myNewName
+
         if ok:
             try:
                 if os.path.exists(newPath):
                     shu.move(filePath, fileToRename)
-            except: 
+            except:
                 QtGui.QMessageBox.information(None, "Message", "Error on rename")

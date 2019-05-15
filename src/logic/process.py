@@ -20,7 +20,7 @@ class Process():
         self.proc.finished.connect(self.processJustFinished)
         self.proc.readyRead.connect(self.hayParaEscribir)
         self.secuencia = []
-        self.secuenciaShow=[]
+        self.secuenciaShow = []
         self.MainWindowInstance = None
         self.current_process = ""
 
@@ -41,7 +41,7 @@ class Process():
 
     def runNow(self):
         filePathExists = True
-        
+
         if not self.secuencia:
             return
         instruccion = self.secuencia[0]
@@ -102,14 +102,14 @@ class Process():
         self.runNow()
 
     def secuenciaList(self, window_instance):
-        
+
         window_instance.indicadorSecuencia.clear()
-        window_instance.indicadorSecuencia.setText("")        
+        window_instance.indicadorSecuencia.setText("")
         secuencia = self.secuenciaShow
-        printable_instruccion=""
+        printable_instruccion = ""
         for instruccion in secuencia:
-            printable_instruccion = printable_instruccion + "<html>I vale:" + str(instruccion["comando"]) + " (" + str(instruccion["iteraciones"]) + ")"+"<br></html>"
+            printable_instruccion = printable_instruccion + "<html>" + \
+                str(instruccion["comando"]) + \
+                " (" + str(instruccion["iteraciones"]) + ")"+"<br></html>"
             window_instance.indicadorSecuencia.setFontWeight(50)
         window_instance.indicadorSecuencia.setText(printable_instruccion)
-        
-

@@ -18,13 +18,12 @@ class paramForm(QtGui.QDialog):
 
         layout = QtGui.QGridLayout(self)
         counter = 0
-        defaultValue=""
 
         for row in param_list:
 
             for parametro in row:
 
-                defaultValue, parametro=self.getDefaultValue(parametro)
+                defaultValue, parametro = self.getDefaultValue(parametro)
 
                 if parametro[0] == "#":
                     self.texts[counter] = QtGui.QLineEdit(self)
@@ -33,10 +32,7 @@ class paramForm(QtGui.QDialog):
 
                     fileMod = 1
                     if parametro[1] == "*":
-                        for pos, char in enumerate(parametro):
-                            if char == " ":
-                                break
-
+                        pos = parametro.find(" ")
                         mascara = parametro[1:pos]
                         self.labels[counter] = QtGui.QLabel(parametro[pos:], self)
                     else:
@@ -56,7 +52,7 @@ class paramForm(QtGui.QDialog):
                     self.labels[counter] = QtGui.QLabel(parametro, self)
                     self.texts[counter] = QtGui.QLineEdit(self)
                     fileMod = 0
-                
+
                 self.texts[counter].setText(str(defaultValue))
                 layout.addWidget(self.labels[counter], counter, 0)
                 layout.addWidget(self.texts[counter], counter, 1)

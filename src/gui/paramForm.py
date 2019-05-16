@@ -99,12 +99,14 @@ class paramForm(QtGui.QDialog):
             listaDeMascaras = mascara
         filename = QtGui.QFileDialog.getOpenFileName(
             directory=src.logic.helper.getTreeViewInitialPath(), filter=listaDeMascaras)
-        self.texts[counter].setText(filename)
+        if filename:
+            self.texts[counter].setText(filename)
 
     def getDirName(self, counter):
         filename = QtGui.QFileDialog.getExistingDirectory(
             directory=src.logic.helper.getTreeViewInitialPath())
-        self.texts[counter].setText(filename)
+        if filename:
+            self.texts[counter].setText(filename)
 
     def getDefaultValue(self, parametro):
         defaultValueFunc = ""

@@ -111,14 +111,13 @@ class paramForm(QtGui.QDialog):
         self.texts[counter].setText(filename)
 
     def getDefaultValue(self, parametro):
-        for startPos, char in enumerate(parametro):
-            if char == "[":
-                break
-        for endPos, char in enumerate(parametro):
-            if char == "]":
-                break
-        defaultValueFunc=parametro[startPos+1:endPos]
-        parametro = parametro.replace(parametro[startPos:endPos+1],"")
+        defaultValueFunc = ""
+        if parametro.find("[") is not -1:
+            startPos = parametro.find("[")
+            endPos = parametro.find("]")
+            defaultValueFunc = parametro[startPos+1:endPos]
+            parametro = parametro.replace(parametro[startPos:endPos+1], "")
+
         return defaultValueFunc, parametro
 
 

@@ -63,12 +63,10 @@ class Process():
             if filePathExists:
                 self.MainWindowInstance.showOutputInTerminal(
                     "iniciando proceso: " + instruccion["comando"])
-                # if not instruccion['parametro']:  # Si no hay parámetros
-                self.proc.start(self.current_process)  # lanzo sin parámetros
-                # else:  # ya no hay parámetros
-                # lanzo con parámetros
-                #   parametros = " ".join(instruccion['parametro'])
-                #  self.proc.start(self.current_process + " " + parametros)
+                if self.current_process.startswith("c:\windows\system32\cmd.exe"):
+                    self.proc.startDetached(self.current_process)  # lanzo sin parámetros
+                else:
+                    self.proc.start(self.current_process)  # lanzo sin parámetros
             else:
                 print "no se encontro el archivo"
 

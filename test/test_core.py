@@ -5,7 +5,7 @@ import os
 
 class TestCore(unittest.TestCase):
     def setUp(self):
-        pass
+        self.dataSet = core.fullDataSet("./test/tabla_test.csv")
 
     def tearDown(self):
         pass
@@ -19,6 +19,12 @@ class TestCore(unittest.TestCase):
         path_esperado = "pathRoot"
         core.CFG_PATH = os.getcwd() + "/test/cfg_test"
         self.assertEqual(path_esperado, core.getTreeViewRootPath())
+
+    def test_menuOrder(self):
+        menu = "archivo"
+        menuList = core.subMenuList(menu, self.dataSet)
+        ordenEsperado = ["guardar como", "abrir"]
+        self.assertEqual(ordenEsperado, menuList)
 
 
 if __name__ == '__main__':

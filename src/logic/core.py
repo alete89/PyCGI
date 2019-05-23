@@ -90,14 +90,15 @@ def menuList(dataSet):
 def subMenuList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
     subMenuDistinct = csvdb.distinct(subMenuFilter, 2)
-    subMenuColumn = csvdb.getColumn(subMenuDistinct, 2)
-    subMenuSorted = csvdb.sortDataSet(subMenuColumn, 0)
-    return subMenuSorted
+    subMenuSorted = csvdb.sortDataSet(subMenuDistinct, 3)
+    subMenuColumn = csvdb.getColumn(subMenuSorted, 2)
+    return subMenuColumn
 
 
 def idList(menu, dataSet):
     subMenuFilter = csvdb.dataFilter(dataSet, 1, menu)
-    return csvdb.getColumn(subMenuFilter, 0)
+    subMenuSorted = csvdb.sortDataSet(subMenuFilter, 3)
+    return csvdb.getColumn(subMenuSorted, 0)
 
 
 def PreEjecutarComandos(subMenu, mw):

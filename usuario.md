@@ -1,7 +1,8 @@
 # nPy
+#### Instrucciones para sistemas Windows
 nPy es una interfaz configurable capaz de lanzar cualquier aplicación gráfica o de consola, y que ofrece una forma amigable para ingresar parámetros y definir secuencias.
 
-#### Iniciar nPy
+## Iniciar nPy
 Para iniciar nPy, hacé doble click en el ícono del escritorio, o buscá nPy.exe en el directorio nPy en el disco local de tu PC: C:\nPy\, D:\nPy\, etc.
 
 ## Pantalla principal
@@ -68,3 +69,8 @@ La opción "Treeview path" indica el directorio raíz (nivel más alto) del árb
 
 Modificar los programas que aparecen listados en el menú, se hace de manera simple desde la solapa la solapa Application -> Sequence Table. Más instrucciones al respecto serán provistas en el manual para el administrador.
 
+
+## Instalación de nPy
+Para instalar nPy en un nuevo sistema, basta con copiar el directorio de nPy que contiene nPy.exe, la tabla de secuencias y eventualmente otros programas anexos para ejecutar dentro de nPy.
+
+Consejo: Al copiar una tabla de secuencias de una computadora hacia otra, revisá que las direcciones absolutas que figuren allí sean válidas en el nuevo sistema. 
